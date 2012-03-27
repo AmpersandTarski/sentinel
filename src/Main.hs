@@ -7,7 +7,11 @@ import System.IO
 import System.Directory
 import System.FilePath               
 import Network
+import Network.BSD
 import Data.Char
+
+testServerHostname :: String
+testServerHostname = "AmpersandTestTroll"
 
 main::IO()
 main =
@@ -107,8 +111,10 @@ notifyByMail recipient subject message =
 
 sendMail :: String -> String -> String -> String -> String -> IO ()
 sendMail sender senderName recipient subject body =
- do { let mailServer = "mail.kpnmail.nl"
-    ; -- let mailServer = "smtp1.inter.NL.net"
+ do { hostName <- getHostName  
+    ; let mailServer = if hostName == testServerHostname 
+                       then "mail.kpnmail.nl"
+                       else "smtp1.inter.NL.net"
     ; putStrLn $ "connnecting to " ++ mailServer
     
     ; handle <- connectTo mailServer (PortNumber 25)
@@ -132,7 +138,8 @@ sendMail sender senderName recipient subject body =
              then return False
              else do { message <- hGetLine handle
                      --; putStrLn $ "SMTP server:" ++ message
-                     ; if "Queued mail for delivery" `isInfixOf` message
+                     ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
+                          "Message accepted for delivery" `isInfixOf` message -- InterNLnet
                        then return True 
                        else processResponse handle
                      }
