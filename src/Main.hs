@@ -14,7 +14,7 @@ main =
  do { -- cabal "update" "Ampersand"
     ; -- clean
     --; mail
-    ; sendMessage
+    ; notifyByMail "martijn@oblomov.com" "Testing" "One two three"
     --; r2 <- svnUpdate "Ampersand"
     --; print r2
     --; cabalCleanBuild "Ampersand"
@@ -100,130 +100,46 @@ execute cmd args dir =
             ; return (outputStr, errStr)
             }
     }
-
-executeI :: String -> [String] -> String -> String -> IO (String,String)
-executeI cmd args dir inp =
- do { let cp = CreateProcess
-                { cmdspec      = RawCommand cmd args
-                , cwd          = Just dir
-                , env          = Nothing -- environment
-                , std_in       = CreatePipe
-                , std_out      = CreatePipe
-                , std_err      = CreatePipe
-                , close_fds    = False -- no need to close all other file descriptors
-                }
-                 
-    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args        
-    ; (mStdIn, mStdOut, mStdErr, pHandle) <- createProcess cp 
-    ; case (mStdIn, mStdOut, mStdErr) of
-        (Nothing, _, _) -> error "no input handle"
-        (_, Nothing, _) -> error "no output handle"
-        (_, _, Nothing) -> error "no error handle"
-        (Just stdInH, Just stdOutH, Just stdErrH) ->
-         do { putStrLn "1"
-            ; hSetBuffering stdInH LineBuffering
-    ; hSetNewlineMode stdInH $ NewlineMode LF LF
-            ; hPutStrLn stdInH inp
-            ; hFlush stdInH
-            ; putStrLn "2"
-           ; eof <- hIsEOF stdOutH
-; hSetNewlineMode stdInH $ NewlineMode CRLF CRLF
-            ; hPutStr stdInH "\n.\n"
-               ; putStrLn $ "isEOF: "++show eof
-          -- ; getResponse stdOutH
-                     {-  ; errStr <- hGetContents stdErrH
-            ; seq (length errStr) $ return ()
-            ; hClose stdErrH -}
-    
-            ; putStrLn "3"
---            ;  outputStr <- hGetContents stdErrH --and fetch the results from the output pipe
---            ; print outputStr
-            --; seq (length outputStr) $ return ()
-            ; putStrLn "4" 
-            ; mExitCode <- waitForProcess pHandle
-            ; hClose stdInH
-            ; hClose stdErrH
-            ; hClose stdOutH
-            ; print mExitCode
- --           ; hClose stdOutH
            
-            --; putStrLn $ "Results:\n" ++ outputStr
-            ; return ("outputStr", "")--errStr)
-            }
-    }
-
-           
-mail :: IO ()
-mail  =
- do { --(resp, err) <- execute "echo" ["blaaa"] "" -- "Inp"
-                                           -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
-    
-    ; homeDir <- getHomeDirectory
-    ; let mailStr = mailTxt "Ampersand Sentinel" "martijn@oblomov.com" "martijn@oblomov.com" "Tezzzt" "This is just a test!"
-    --; putStrLn mailStr
-    ; (resp, err) <- executeI "telnet" ["mail.kpnmail.nl","25"] homeDir mailStr
-    ; 
-    ; putStrLn resp
-    ; if null err then return () else error $ "sending mail failed: "++show (resp,err)
-    }
-
-sendMessage =
-  sendMail "Ampersand Sentinel" "martijn@oblomov.com" "martijn@oblomov.com" "Tezzzt" "This is just a test!"
+notifyByMail :: String -> String -> String -> IO ()
+notifyByMail recipient subject message =
+  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipient ("[Sentinel] "++subject) message
 
 sendMail :: String -> String -> String -> String -> String -> IO ()
 sendMail sender senderName recipient subject body =
  do { let mailServer = "mail.kpnmail.nl"
     ; -- let mailServer = "smtp1.inter.NL.net"
-    ; --let mailServer = "smtp.googlemail.com"
     ; putStrLn $ "connnecting to " ++ mailServer
     
-    
-    
-    ; handle <- connectTo mailServer (PortNumber 25) 
-    ; hSetNewlineMode handle $ NewlineMode LF CRLF
-    --; hSetBuffering handle LineBuffering
-    
---    ; hSetEncoding handle utf8
-    ; str <- hShow handle
-    ; putStrLn $ "handle: "++ str
-    ; isw <- hIsWritable handle
-    ; putStrLn $ "isWritable: "++show isw
+    ; handle <- connectTo mailServer (PortNumber 25)
+    ; hSetNewlineMode handle $ NewlineMode LF CRLF -- NOTE: The output line mode needs to be CRLF for KPN
     ; putStrLn "connected"
-    ; putStr $ mailTxt sender senderName recipient subject body
-    ; hPutStr handle $ mailTxt sender senderName recipient subject body
+
+    ; let mailStr = mkMailStr sender senderName recipient subject body
+    --; putStrLn $ "Output to mail server:\n" ++ mailStr
+    ; hPutStr handle mailStr
     ; hFlush handle
-  --; hPutStrLn handle
-    ; hFlush handle
-    
-    ; putStrLn "message sent"
-    ; success <- printResponses handle
-    ; print success
+    ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
+    ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
+                          -- Might be buffer related, but changing Buffering mode does not help    
+
+    ; success <- processResponse handle
+    ; if success then putStrLn "message sent" else error "Sending mail failed"
     }
- where printResponses handle = 
+ where processResponse handle = 
         do { eof <- hIsEOF handle
-           ; putStrLn "2"
-           ; putStrLn $ show eof
            ; if eof 
              then return False
              else do { message <- hGetLine handle
-                     ; putStrLn $ "SMTP server:" ++ message
+                     --; putStrLn $ "SMTP server:" ++ message
                      ; if "Queued mail for delivery" `isInfixOf` message
                        then return True 
-                       else printResponses handle
+                       else processResponse handle
                      }
            }
-       getResponse h =
-        do { l <- hGetLine h
-           ; print l
-           ; if "Queued mail" `isInfixOf` l then return () else getResponse h
-           }
-hShowGetLine h =
- do { l <- hGetLine h
-    ; putStrLn l
-    ; return l
-    }
 
-mailTxt senderName sender recipient subject body =
+mkMailStr :: String -> String -> String -> String -> String -> String
+mkMailStr senderName sender recipient subject body =
             "HELO amprersand.oblomov.com\n"
          ++ "MAIL From: "++ sender ++ "\n"
          ++ "RCPT To: "++ recipient ++ "\n"
