@@ -13,6 +13,12 @@ import Data.Char
 testServerHostname :: String
 testServerHostname = "AmpersandTestTroll"
 
+testServerSvnPath :: String
+testServerSvnPath = "svn"
+
+oblomovSvnPath :: String
+oblomovSvnPath = "svn/EclipseHaskell" -- used if we're not on testServer
+
 main::IO()
 main =
  do { -- cabal "update" "Ampersand"
@@ -30,17 +36,26 @@ main =
     ; return ()
     }
 
+getSvnDir :: IO FilePath
+getSvnDir =
+ do { homeDir <- getHomeDirectory
+    ; hName <- getHostName  
+    ; return $ combine homeDir (if hName == testServerHostname
+                                then testServerSvnPath
+                                else oblomovSvnPath) 
+    }
+{-
 cabalRun :: String -> [String] -> IO String
 cabalRun project args =
- do { homeDir <- getHomeDirectory
-    ; let executable = homeDir ++ "/svn/EclipseHaskell/" ++ project
+ do { svnDir <- getSvnDir
+    ; let executable = svnDir ++ "/" ++ project
                        ++ "/dist/build/" ++ project ++ "/" ++ project
     
     ; (resp, err) <- execute executable args $ homeDir ++ "/Dropbox/Oblomov/Projecten/Ampersand/ADL" 
     ; putStrLn resp
     ; if null err then return resp else error $ "running "++project++" failed: "++show (resp,err)
     }
-
+-}
 cabalCleanBuild :: String -> IO ()
 cabalCleanBuild project =
  do { cabal "clean" project
@@ -50,25 +65,25 @@ cabalCleanBuild project =
 
 cabal :: String -> String -> IO ()
 cabal cmd project =
- do { homeDir <- getHomeDirectory
-    ; (resp, err) <- execute "cabal" [cmd] $ homeDir++"/svn/EclipseHaskell/"++project
+ do { svnDir <- getSvnDir
+    ; (resp, err) <- execute "cabal" [cmd] $ svnDir ++ project
     ; putStrLn resp
     ; if null err then return () else error $ "cabal "++cmd++" failed: "++show (resp,err)
     }
 
 svnUpdate :: String -> IO ()
 svnUpdate project =
- do { homeDir <- getHomeDirectory
-    ; (resp, err) <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ homeDir++"/svn/EclipseHaskell/"++project
-                                           -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
+ do { svnDir <- getSvnDir
+    ; (resp, err) <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ svnDir ++ project
+                                              -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
     ; putStrLn resp
     ; if null err then return () else error $ "svn update failed: "++show (resp,err)
     }
  
 getRevision :: String -> IO Int
 getRevision project =
- do { homeDir <- getHomeDirectory
-    ; (rev, err) <- execute "svnversion" [] $ homeDir++"/svn/EclipseHaskell/"++project
+ do { svnDir <- getSvnDir
+    ; (rev, err) <- execute "svnversion" [] $ svnDir ++ project
     ; case (rev,err) of
              ((_:_), "") | all isDigit $ init rev -> return $ read (init rev)
              _                                    -> error $ "incorrect response from svnversion: "++show (rev,err)
@@ -111,8 +126,8 @@ notifyByMail recipient subject message =
 
 sendMail :: String -> String -> String -> String -> String -> IO ()
 sendMail sender senderName recipient subject body =
- do { hostName <- getHostName  
-    ; let mailServer = if hostName == testServerHostname 
+ do { hName <- getHostName  
+    ; let mailServer = if hName == testServerHostname 
                        then "mail.kpnmail.nl"
                        else "smtp1.inter.NL.net"
     ; putStrLn $ "connnecting to " ++ mailServer
