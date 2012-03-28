@@ -39,13 +39,13 @@ take --enable-tests into account
 main :: IO ()
 main =
  do { cabalClean "Ampersand" []
-    --; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
-    --; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
+    ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
+    ; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
     ; cabalClean "Prototype" []
-    --; reportResult $ testBuild "Prototype" []
+    ; reportResult $ testBuild "Prototype" []
     ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
     ; sequence_ $ map (reportResult . runTest "Ampersand" []) testFiles
-    ; sequence_ $ map (reportResult . runTest "Prototype" ["--validate"]) testFiles
+    ; sequence_ $ map (reportResult . runTest "Prototype" []) testFiles
     ; return ()
     }
     
@@ -74,25 +74,7 @@ collectFilePaths absFileSpec =
     }
    
 getProperDirectoryContents pth = fmap (filter (`notElem` [".","..",".svn"])) $ getDirectoryContents pth
-           
-{-
-collectFilePaths base fileOrDir = 
-  do { let path = combine base fileOrDir
-     ; isDir <- doesDirectoryExist path
-     ; if isDir then 
-        do { fOrDs <- getProperDirectoryContents path
-           ; fmap concat $ mapM (\fOrD -> readStaticFiles isBin base (combine fileOrDir fOrD)) fOrDs
-           }
-       else
-        do { timeStamp@(TOD sec pico) <- getModificationTime path
-           ; fileContents <- if isBin then fmap show $ BS.readFile path 
-                                      else readFile path
-           ; return ["SF "++show fileOrDir++" (TOD "++show sec++" "++show pico++"){- "++show timeStamp++" -} "++
-                            show isBin++" "++show fileContents]
-           }
-     }
-     
--} 
+
 type TestFailure = String
 type TestSuccess = String
 
@@ -110,8 +92,8 @@ reportResult :: IO TestResult -> IO ()
 reportResult test =
  do { result <- test
     ; case result of
-        Right outp -> putStrLn $ "Success: "-- ++outp
-        Left err ->   putStrLn $ "Failure: "++err 
+        Right outp -> putStrLn $ "Success: " {- ++ outp -} ++ "\n\n\n" 
+        Left err ->   putStrLn $ "Failure: "++err++"\n\n\n" 
     } 
     
 testBuild :: String -> [String] -> IO TestResult
@@ -136,10 +118,11 @@ runTest project args testFile =
  do { putStrLn $ "Testing "++project++" "++show args++" on "++testFile
     ; svnDir <- getSvnDir
     ; let executable = svnDir ++ "/" ++ project
-                       ++ "/dist/build/" ++ project ++ "/" ++ project
+                       ++ "/dist/build/" ++ decapitalize project ++ "/" ++ decapitalize project
     ; result <- execute executable (testFile : args) $ takeDirectory testFile 
     ; return result 
     }
+ where decapitalize str = map toLower (take 1 str) ++ drop 1 str
 {-
 cabalRun :: String -> [String] -> IO String
 cabalRun project args =
@@ -204,7 +187,7 @@ execute cmd args dir =
                 , close_fds    = False -- no need to close all other file descriptors
                 }
                  
-    --; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
+    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
     ; (_, mStdOut, mStdErr, pHandle) <- createProcess cp 
     ; case (mStdOut, mStdErr) of
         (Nothing, _) -> error "no output handle"
