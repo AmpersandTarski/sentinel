@@ -23,8 +23,16 @@ oblomovSvnPath = "svn/EclipseHaskell" -- used if we're not on testServer
 
 {-
 todo:
+maybe put info about test in result
+maybe keep testfiles relative until test, so reporting is less verbose
+
+collectFilePaths failures should be reported (but not internal ones, these should just fail (and won't occur))
 
 configure fail should also be reported
+
+copy all test failures to a www page for an easy overview
+
+low priority:
 take --enable-tests into account
 
 -}
@@ -35,11 +43,56 @@ main =
     --; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
     ; cabalClean "Prototype" []
     --; reportResult $ testBuild "Prototype" []
-    ; svnDir <- getSvnDir
-    ; reportResult $ runTest "Ampersand" (combine svnDir "Prototype/apps/Simple/DeliverySimple.adl") []
+    ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
+    ; sequence_ $ map (reportResult . runTest "Ampersand" []) testFiles
+    ; sequence_ $ map (reportResult . runTest "Prototype" ["--validate"]) testFiles
     ; return ()
     }
     
+getTestFiles :: [String] -> IO [String]   
+getTestFiles fileSpecs =
+ do { svnDir <- getSvnDir
+    ; let absFileSpecs = map (combine svnDir) fileSpecs
+    ; filePathss <- mapM collectFilePaths absFileSpecs
+    ; return $ concat filePathss
+    }
+
+-- need extra indirection if we want single-file filespecs for test files with other extension than .adl
+collectFilePaths absFileSpec =
+ do { dirExists <- doesDirectoryExist absFileSpec
+    ; if not dirExists 
+      then
+       do { fileExists <- doesFileExist absFileSpec
+          ; if not fileExists 
+            then error $ "Incorrect test spec: "++absFileSpec 
+            else return $ if takeExtension absFileSpec /= ".adl" then [] else [absFileSpec]
+          }
+      else
+       do { filesOrDirs <- getProperDirectoryContents absFileSpec
+          ; fmap concat $ mapM (\fOrD -> collectFilePaths (combine absFileSpec fOrD)) filesOrDirs
+          }
+    }
+   
+getProperDirectoryContents pth = fmap (filter (`notElem` [".","..",".svn"])) $ getDirectoryContents pth
+           
+{-
+collectFilePaths base fileOrDir = 
+  do { let path = combine base fileOrDir
+     ; isDir <- doesDirectoryExist path
+     ; if isDir then 
+        do { fOrDs <- getProperDirectoryContents path
+           ; fmap concat $ mapM (\fOrD -> readStaticFiles isBin base (combine fileOrDir fOrD)) fOrDs
+           }
+       else
+        do { timeStamp@(TOD sec pico) <- getModificationTime path
+           ; fileContents <- if isBin then fmap show $ BS.readFile path 
+                                      else readFile path
+           ; return ["SF "++show fileOrDir++" (TOD "++show sec++" "++show pico++"){- "++show timeStamp++" -} "++
+                            show isBin++" "++show fileContents]
+           }
+     }
+     
+-} 
 type TestFailure = String
 type TestSuccess = String
 
@@ -57,7 +110,7 @@ reportResult :: IO TestResult -> IO ()
 reportResult test =
  do { result <- test
     ; case result of
-        Right outp -> putStrLn $ "Success: "++outp
+        Right outp -> putStrLn $ "Success: "-- ++outp
         Left err ->   putStrLn $ "Failure: "++err 
     } 
     
@@ -78,9 +131,10 @@ testInstall project flags =
     }
     
 -- execute project executable in directory of testFile (which is absolute). First arg is testFile
-runTest :: String -> FilePath -> [String] -> IO TestResult
-runTest project testFile args =
- do { svnDir <- getSvnDir
+runTest :: String -> [String] -> FilePath -> IO TestResult
+runTest project args testFile =
+ do { putStrLn $ "Testing "++project++" "++show args++" on "++testFile
+    ; svnDir <- getSvnDir
     ; let executable = svnDir ++ "/" ++ project
                        ++ "/dist/build/" ++ project ++ "/" ++ project
     ; result <- execute executable (testFile : args) $ takeDirectory testFile 
@@ -150,7 +204,7 @@ execute cmd args dir =
                 , close_fds    = False -- no need to close all other file descriptors
                 }
                  
-    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
+    --; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
     ; (_, mStdOut, mStdErr, pHandle) <- createProcess cp 
     ; case (mStdOut, mStdErr) of
         (Nothing, _) -> error "no output handle"
@@ -164,7 +218,6 @@ execute cmd args dir =
             ; seq (length outputStr) $ return ()
             ; hClose stdOutH
             ; exitCode <- waitForProcess pHandle
-            ; print exitCode
             --; putStrLn $ "Results:\n" ++ outputStr
             ; return $ case exitCode of
                          ExitSuccess   -> Right outputStr
@@ -234,22 +287,3 @@ mkMailStr senderName sender recipient subject body =
          ++ body ++ "\n"
          ++ ".\n"       
          ++ "QUIT\n"
-{-
-collectFilePaths base fileOrDir = 
-  do { let path = combine base fileOrDir
-     ; isDir <- doesDirectoryExist path
-     ; if isDir then 
-        do { fOrDs <- getProperDirectoryContents path
-           ; fmap concat $ mapM (\fOrD -> readStaticFiles isBin base (combine fileOrDir fOrD)) fOrDs
-           }
-       else
-        do { timeStamp@(TOD sec pico) <- getModificationTime path
-           ; fileContents <- if isBin then fmap show $ BS.readFile path 
-                                      else readFile path
-           ; return ["SF "++show fileOrDir++" (TOD "++show sec++" "++show pico++"){- "++show timeStamp++" -} "++
-                            show isBin++" "++show fileContents]
-           }
-     }
-     
-getProperDirectoryContents pth = fmap (filter (`notElem` [".","..",".svn"])) $ getDirectoryContents pth
--} 
