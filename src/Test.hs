@@ -59,7 +59,7 @@ runTest testSpec testFile =
     ; result <- execute executable (testFile : args) $ takeDirectory testFile 
     
     ; case result of
-        Right _ -> putStrLn $ "Execution success: "
+        Right _ -> putStrLn $ "Execution success"
         Left err -> putStrLn $ "Execution failure: "++err
                          
     ; return $ case (getDesiredOutcome testSpec, result) of

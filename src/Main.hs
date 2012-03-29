@@ -12,7 +12,11 @@ import TestSpecs
 
 {-
 todo:
-maybe put info about test in result
+put info about test in result
+put message in test
+read testSpecs instead of compile
+send e-mail in case of error
+fix dir structure with bug dirs
 maybe keep testfiles relative until test, so reporting is less verbose
 
 different types for testResult and executionResult
