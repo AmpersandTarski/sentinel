@@ -12,7 +12,9 @@ executable sentinel
                    process >= 1.0 && < 1.1,
                    network >= 2.3 && < 2.4,
                    directory >= 1.1 && < 1.2,
-                   filepath >= 1.2 && < 1.3
+                   filepath >= 1.2 && < 1.3,
+                   time,
+                   old-locale
   ghc-options:     -Wall
   other-modules:   
                    Test,

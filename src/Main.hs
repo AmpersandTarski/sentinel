@@ -1,6 +1,9 @@
 module Main where
 
 import System.IO
+import Network.BSD
+import System.Locale
+import Data.Time
 import Utils
 import Test
 import Execute
@@ -24,9 +27,7 @@ take --enable-tests into account
 -}
 main :: IO ()
 main =
- do { hSetBuffering stdout LineBuffering
-    ; hSetBuffering stderr LineBuffering
-    
+ do { initialize
     {-
     ; cabalClean "Ampersand" []
     ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
@@ -39,4 +40,13 @@ main =
     
     ; return ()
     }
-  
+
+initialize :: IO ()
+initialize =
+ do { hSetBuffering stdout LineBuffering
+    ; hSetBuffering stderr LineBuffering
+    ; hName <- getHostName
+    ; ct <- getCurrentTime
+    ; let time = formatTime defaultTimeLocale "%-T %-d-%b-%y" ct
+    ; putStrLn $ "######## Sentinel started on "++show hName++" at "++time++" ########\n\n"
+    }
