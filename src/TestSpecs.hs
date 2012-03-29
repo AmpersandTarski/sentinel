@@ -9,5 +9,7 @@ testSpecs =
                                      , "Prototype/apps/Tests/ShouldSucceed"
                                      , "Prototype/apps/INDOORS/INDOORS.adl"
                                      ]
+  , TestSpec Ampersand ShouldFail [ "Prototype/apps/Tests/ShouldFail" 
+                                  ]
   ]
 
