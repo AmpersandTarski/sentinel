@@ -6,6 +6,7 @@ type TestSuccess = String
 type TestResult = Either TestFailure TestSuccess
 
 data DesiredOutcome = ShouldSucceed | ShouldFail deriving Show
+-- note that ShouldFail should not fail with a fatal
 
 data TestExecutable = Ampersand | Prototype deriving Show
 

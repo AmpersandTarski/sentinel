@@ -28,6 +28,9 @@ take --enable-tests into account
 main :: IO ()
 main =
  do { initialize
+    ; svnUpdate "Ampersand"
+    ; svnUpdate "Prototype"
+    -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
     {-
     ; cabalClean "Ampersand" []
     ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
@@ -38,7 +41,7 @@ main =
     
     ; mapM runTestSpec testSpecs
     
-    ; return ()
+    ; exit
     }
 
 initialize :: IO ()
@@ -46,7 +49,12 @@ initialize =
  do { hSetBuffering stdout LineBuffering
     ; hSetBuffering stderr LineBuffering
     ; hName <- getHostName
-    ; ct <- getCurrentTime
-    ; let time = formatTime defaultTimeLocale "%-T %-d-%b-%y" ct
-    ; putStrLn $ "######## Sentinel started on "++show hName++" at "++time++" ########\n\n"
+    ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getCurrentTime
+    ; putStrLn $ "######## Sentinel started on "++hName++" at "++time++" ########\n\n"
+    }
+    
+exit :: IO ()
+exit =
+ do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getCurrentTime
+    ; putStrLn $ "######## Sentinel exited at "++time++" ########\n\n"
     }
