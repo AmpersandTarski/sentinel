@@ -52,15 +52,23 @@ svnUpdate project =
         ExecSuccess _   -> return ()
         ExecFailure err -> error $ "error during svn update: " ++ err
     }
- 
-getRevision :: String -> IO Int
-getRevision project =
+
+getRevisionStr :: String -> IO String
+getRevisionStr project =
  do { svnDir <- getSvnDir
     ; result <- execute "svnversion" [] $ combine svnDir project
     ; case result of
-             ExecSuccess rev | all isDigit $ init rev -> return $ read (init rev)
-                             | otherwise              -> error $ "incorrect response from svnversion: "++rev
-             ExecFailure err                          -> error $ "error from svnversion: "++err                                               
+             ExecSuccess rev@(_:_) -> return $ init rev -- only remove the newline
+             ExecSuccess rev       -> error $ "incorrect response from svnversion: "++rev
+             ExecFailure err       -> error $ "error from svnversion: "++err                                               
+    }
+
+getRevision :: String -> IO Int
+getRevision project =
+ do { revStr <- getRevisionStr project
+    ; if all isDigit revStr
+      then return $ read revStr
+      else error $ "incorrect revision for "++project++": "++show revStr -- happens when a revision was locally modified
     }
 
 -- call the command-line php with phpStr as input

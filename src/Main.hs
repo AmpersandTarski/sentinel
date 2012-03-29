@@ -20,6 +20,12 @@ put message in test
 read testSpecs instead of compile
 send e-mail in case of error
 fix dir structure with bug dirs
+fix module names and structure
+
+
+catch errors and report
+keep track of what has been reported
+
 maybe keep testfiles relative until test, so reporting is less verbose
 
 different types for testResult and executionResult
@@ -68,9 +74,10 @@ initialize :: IO ()
 initialize =
  do { hSetBuffering stdout LineBuffering
     ; hSetBuffering stderr LineBuffering
+    ; revStr <- getRevisionStr "Sentinel"
     ; hName <- getHostName
     ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
-    ; putStrLn $ "######## Sentinel started on "++hName++" at "++time++" ########\n\n"
+    ; putStrLn $ "######## Sentinel ("++show revStr++") started on "++hName++" at "++time++" ########\n\n"
     }
     
 exit :: IO ()
