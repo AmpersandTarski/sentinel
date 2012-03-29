@@ -1,0 +1,12 @@
+echo Running  most-recent ampersand
+$HOME/svn/Ampersand/dist/build/ampersand/ampersand --version
+if [ $# -ne 0 ]; then
+if [ ! -s $1 ]; then # check is necessary since otherwise ampersand creates directory even if the filename was incorrect
+echo File not found error: $1
+exit 1
+else
+noExtension=${1%\.*}  # is filename without extension
+echo ampersand --outputDir=$HOME/www/$noExtension/FSpec $1 --verbose --fspec=latex $2 $3 $4 $5 $6 $7 $8 $9
+$HOME/svn/Ampersand/dist/build/ampersand/ampersand --outputDir=$HOME/www/$noExtension/FSpec $1 --verbose  --fspec=latex $2 $3 $4 $5 $6 $7 $8 $9
+fi
+fi

@@ -1,0 +1,3 @@
+echo copy from zachar to local \(make sure to quote wildcards\)
+echo scp -pr -P8122 martijn@server.oblomov.com:$@
+scp -pr -P8122 martijn@server.oblomov.com:$@

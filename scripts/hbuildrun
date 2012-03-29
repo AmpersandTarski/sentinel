@@ -1,0 +1,5 @@
+hbuild $@
+if [ "$?" -eq "0" ]; then
+    echo "Build successful"
+    hrun
+fi

@@ -1,0 +1,6 @@
+cd $HOME/svn/Sentinel
+rm *.cabal
+rm -rf src
+svn update
+cabal clean
+cabal install
