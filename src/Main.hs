@@ -28,16 +28,23 @@ take --enable-tests into account
 main :: IO ()
 main =
  do { initialize
-    ; svnUpdate "Ampersand"
-    ; svnUpdate "Prototype"
-    -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
-    {-
-    ; cabalClean "Ampersand" []
-    ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
-    ; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
-    ; cabalClean "Prototype" []
-    ; reportResult $ testBuild "Prototype" []
-    -}
+    
+    ; isTestSrv <- isTestServer
+    ; if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
+      then
+       do { svnUpdate "Ampersand"
+          ; svnUpdate "Prototype"
+          -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
+          
+          ; cabalClean "Ampersand" []
+          ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
+          ; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
+          ; cabalClean "Prototype" []
+          ; reportResult $ testBuild "Prototype" []
+          }
+      else
+       do { return ()
+          }
     
     ; mapM runTestSpec testSpecs
     

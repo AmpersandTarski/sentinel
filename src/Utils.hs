@@ -22,11 +22,17 @@ reportResult test =
         Left err ->   putStrLn $ "Failure: "++err++"\n\n\n" 
     } 
     
+-- return True if we're running on the dedicated test server
+isTestServer :: IO Bool
+isTestServer = 
+ do { fmap (== testServerHostname) getHostName
+    }
+    
 getSvnDir :: IO FilePath
 getSvnDir =
  do { homeDir <- getHomeDirectory
-    ; hName <- getHostName  
-    ; return $ combine homeDir (if hName == testServerHostname
+    ; isTestSrv <- isTestServer  
+    ; return $ combine homeDir (if isTestSrv
                                 then testServerSvnPath
                                 else oblomovSvnPath) 
     }
