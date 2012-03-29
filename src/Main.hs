@@ -15,6 +15,7 @@ todo:
 maybe put info about test in result
 maybe keep testfiles relative until test, so reporting is less verbose
 
+different types for testResult and executionResult
 collectFilePaths failures should be reported (but not internal ones, these should just fail (and won't occur))
 
 configure fail should also be reported
@@ -41,6 +42,7 @@ main =
           ; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
           ; cabalClean "Prototype" []
           ; reportResult $ testBuild "Prototype" []
+          ; return ()
           }
       else
        do { return ()
