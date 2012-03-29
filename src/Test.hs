@@ -8,10 +8,10 @@ import Utils
 import Execute
 
 
-runTestSpec :: TestSpec -> IO ()
-runTestSpec (TestSpec exec outcome fileSpecs) =
- do { testFiles <- getTestFiles fileSpecs
-    ; sequence_ $ map (reportResult . runTest exec []) testFiles
+runTestSpec :: TestSpec -> IO [TestResult]
+runTestSpec testSpec =
+ do { testFiles <- getTestFiles $ getTestFileSpecs testSpec
+    ; mapM (reportResult . runTest testSpec) testFiles
     }
 {-
     ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
@@ -46,14 +46,26 @@ collectFilePaths absFileSpec =
    
 
 -- execute project executable in directory of testFile (which is absolute). First arg is testFile
-runTest :: TestExecutable -> [String] -> FilePath -> IO TestResult
-runTest exec args testFile =
- do { putStrLn $ "Testing "++show exec++" "++show args++" on "++testFile
+runTest :: TestSpec -> FilePath -> IO TestResult
+runTest testSpec testFile =
+ do { let exec = getTestExecutable testSpec
+          args = getTestArgs testSpec
+    ; putStrLn $ "Testing "++show exec++" "++show args++" on "++testFile
     ; svnDir <- getSvnDir
     ; let executable =
             case exec of
               Ampersand -> svnDir ++ "/Ampersand/dist/build/ampersand/ampersand"
               Prototype -> svnDir ++ "/Prototype/dist/build/prototype/prototype"
     ; result <- execute executable (testFile : args) $ takeDirectory testFile 
-    ; return result 
+    
+    ; case result of
+        Right outp -> putStrLn $ "Execution success: " {- ++ outp -}
+        Left err   -> putStrLn $ "Execution failure: "
+                         
+    ; return $ case (getDesiredOutcome testSpec, result) of
+                 (ShouldFail,    Left err)   -> Right err
+                 (ShouldFail,    Right outp) -> Left outp
+                 (ShouldSucceed, Left err)   -> Left err
+                 (ShouldSucceed, Right outp) -> Right outp         
     }
+    

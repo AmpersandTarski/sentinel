@@ -14,12 +14,13 @@ failOnError errMsg test =
         Left err -> error $ errMsg ++ err
     }
     
-reportResult :: IO TestResult -> IO ()
+reportResult :: IO TestResult -> IO TestResult
 reportResult test =
- do { result <- test
-    ; case result of
-        Right outp -> putStrLn $ "Success: " {- ++ outp -} ++ "\n\n\n" 
-        Left err ->   putStrLn $ "Failure: "++err++"\n\n\n" 
+ do { testResult <- test
+    ; case testResult of
+        Right _ -> putStrLn $ "Test succeeded\n"
+        Left _  -> putStrLn $ "Test failed\n"
+    ; return testResult -- return the result, so we can easily add this function to a computation
     } 
     
 -- return True if we're running on the dedicated test server

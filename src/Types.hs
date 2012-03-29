@@ -10,8 +10,9 @@ data DesiredOutcome = ShouldSucceed | ShouldFail deriving Show
 
 data TestExecutable = Ampersand | Prototype deriving Show
 
-data TestSpec = TestSpec { getExecutable :: TestExecutable 
+data TestSpec = TestSpec { getTestExecutable :: TestExecutable 
+                         , getTestArgs       :: [String] 
                          , getDesiredOutcome :: DesiredOutcome
-                         , getTestFileSpecs :: [String] -- relative to svn directory
+                         , getTestFileSpecs  :: [String] -- relative to svn directory
                          } deriving Show
                
