@@ -13,6 +13,7 @@ import TestSpecs
 
 {-
 todo:
+don't log at execute
 fix how execution tests are put in testResult now (see "todo: this is wrong")
 make html page
 put crontab contents somewhere
