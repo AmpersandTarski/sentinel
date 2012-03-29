@@ -38,7 +38,9 @@ take --enable-tests into account
 -}
 main :: IO ()
 main =
- do { cabalClean "Ampersand" []
+ do { hSetBuffering stdout LineBuffering
+    ; hSetBuffering stderr LineBuffering
+    ; cabalClean "Ampersand" []
     ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
     ; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
     ; cabalClean "Prototype" []
