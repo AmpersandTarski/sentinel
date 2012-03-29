@@ -58,12 +58,12 @@ initialize =
  do { hSetBuffering stdout LineBuffering
     ; hSetBuffering stderr LineBuffering
     ; hName <- getHostName
-    ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getCurrentTime
+    ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
     ; putStrLn $ "######## Sentinel started on "++hName++" at "++time++" ########\n\n"
     }
     
 exit :: IO ()
 exit =
- do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getCurrentTime
+ do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
     ; putStrLn $ "######## Sentinel exited at "++time++" ########\n\n"
     }
