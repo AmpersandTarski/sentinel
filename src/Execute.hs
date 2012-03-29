@@ -13,7 +13,7 @@ import Utils
 import Types
 
 testBuild :: String -> [String] -> IO TestResult
-testBuild project flags =
+testBuild project flags = mkExecutionTest $
  do { cabalConfigure project flags 
     ; result <- cabal "build" project []
     ; return $ result
@@ -22,7 +22,7 @@ testBuild project flags =
 
 -- doing install without also building is not possible with cabal
 testInstall :: String -> [String] -> IO TestResult
-testInstall project flags =
+testInstall project flags = mkExecutionTest $
  do { cabalConfigure project flags 
     ; result <- cabal "install" project []
     ; return $ result
@@ -30,14 +30,13 @@ testInstall project flags =
 
 cabalClean :: String -> [String] -> IO ()
 cabalClean project flags = failOnError ("error during cabal clean for "++project++": ") $
-  --cabal "clean" project flags
-  return $ Right "Clean is disabled"
+  cabal "clean" project flags
   
 cabalConfigure :: String -> [String] -> IO ()
 cabalConfigure project flags = failOnError ("error during cabal configure for "++project++": ") $
   cabal "configure" project flags
    
-cabal :: String -> String -> [String] -> IO TestResult
+cabal :: String -> String -> [String] -> IO ExecutionOutcome
 cabal cmd project flags =
  do { svnDir <- getSvnDir
     ; result <- execute "cabal" (cmd : flags) $ combine svnDir project
@@ -50,8 +49,8 @@ svnUpdate project =
     ; result <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
                                          -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
     ; case result of
-        Right _ -> return ()
-        Left err -> error $ "error during svn update: " ++ err
+        ExecSuccess _   -> return ()
+        ExecFailure err -> error $ "error during svn update: " ++ err
     }
  
 getRevision :: String -> IO Int
@@ -59,13 +58,13 @@ getRevision project =
  do { svnDir <- getSvnDir
     ; result <- execute "svnversion" [] $ combine svnDir project
     ; case result of
-             Right rev | all isDigit $ init rev -> return $ read (init rev)
-                       | otherwise              -> error $ "incorrect response from svnversion: "++rev
-             Left err                           -> error $ "error from svnversion: "++err                                               
+             ExecSuccess rev | all isDigit $ init rev -> return $ read (init rev)
+                             | otherwise              -> error $ "incorrect response from svnversion: "++rev
+             ExecFailure err                          -> error $ "error from svnversion: "++err                                               
     }
 
 -- call the command-line php with phpStr as input
-execute :: String -> [String] -> String -> IO TestResult
+execute :: String -> [String] -> String -> IO ExecutionOutcome
 execute cmd args dir =
  do { let cp = CreateProcess
                 { cmdspec      = RawCommand cmd args
@@ -93,8 +92,8 @@ execute cmd args dir =
             ; exitCode <- waitForProcess pHandle
             --; putStrLn $ "Results:\n" ++ outputStr
             ; return $ case exitCode of
-                         ExitSuccess   -> Right outputStr
-                         ExitFailure c -> Left $ "Exit code " ++ show c ++ ": " ++ errStr
+                         ExitSuccess   -> ExecSuccess outputStr
+                         ExitFailure c -> ExecFailure $ "Exit code " ++ show c ++ ": " ++ errStr
             }
     }
 

@@ -11,7 +11,7 @@ import Execute
 runTestSpec :: TestSpec -> IO [TestResult]
 runTestSpec testSpec =
  do { testFiles <- getTestFiles $ getTestFileSpecs testSpec
-    ; mapM (reportResult . runTest testSpec) testFiles
+    ; mapM (reportTestResult . runTest testSpec) testFiles
     }
 {-
     ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
@@ -59,13 +59,14 @@ runTest testSpec testFile =
     ; result <- execute executable (testFile : args) $ takeDirectory testFile 
     
     ; case result of
-        Right _ -> putStrLn $ "Execution success"
-        Left err -> putStrLn $ "Execution failure: "++err
+        ExecSuccess _ -> putStrLn $ "Execution success"
+        ExecFailure err -> putStrLn $ "Execution failure: "++err
                          
-    ; return $ case (getDesiredOutcome testSpec, result) of
-                 (ShouldFail,    Left err)   -> Right err
-                 (ShouldFail,    Right outp) -> Left outp
-                 (ShouldSucceed, Left err)   -> Left err
-                 (ShouldSucceed, Right outp) -> Right outp         
+    ; let testOutcome = case (getDesiredOutcome testSpec, result) of
+                          (ShouldFail,    ExecFailure err)  -> TestSuccess err
+                          (ShouldFail,    ExecSuccess outp) -> TestFailure outp
+                          (ShouldSucceed, ExecFailure err)  -> TestFailure err
+                          (ShouldSucceed, ExecSuccess outp) -> TestSuccess outp
+    ; return $ TestResult testOutcome testSpec
     }
     

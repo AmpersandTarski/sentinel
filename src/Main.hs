@@ -4,6 +4,7 @@ import System.IO
 import Network.BSD
 import System.Locale
 import Data.Time
+import Types
 import Utils
 import Test
 import Execute
@@ -12,7 +13,7 @@ import TestSpecs
 
 {-
 todo:
-put info about test in result
+fix how execution tests are put in testResult now (see "todo: this is wrong")
 put message in test
 read testSpecs instead of compile
 send e-mail in case of error
@@ -42,18 +43,22 @@ main =
           -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
           
           ; cabalClean "Ampersand" []
-          ; reportResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
-          ; reportResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
+          ; reportTestResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
+          ; reportTestResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
           ; cabalClean "Prototype" []
-          ; reportResult $ testBuild "Prototype" []
+          ; reportTestResult $ testBuild "Prototype" []
           ; return ()
           }
       else
        do { return ()
           }
     
-    ; mapM runTestSpec testSpecs
-    
+    ; testResults <- fmap concat $ mapM runTestSpec testSpecs
+    ; let failedTestResults = filter (not . isTestSuccessful) testResults
+    ; putStrLn $ unlines [ "\n\n--------"
+                         , "Total number of tests: " ++ show (length testResults)
+                         , "Number of failed tests: " ++ show (length failedTestResults)
+                         ]
     ; exit
     }
 

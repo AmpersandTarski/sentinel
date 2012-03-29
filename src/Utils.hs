@@ -6,20 +6,29 @@ import Network.BSD
 import Types
 import Defaults
     
-failOnError :: String -> IO TestResult -> IO ()
+failOnError :: String -> IO ExecutionOutcome -> IO ()
 failOnError errMsg test =
  do { result <- test
     ; case result of
-        Right _  -> return ()
-        Left err -> error $ errMsg ++ err
+        ExecSuccess _  -> return ()
+        ExecFailure err -> error $ errMsg ++ err
+    }
+ 
+mkExecutionTest :: IO ExecutionOutcome -> IO TestResult 
+mkExecutionTest exec =
+ do { execOutcome <- exec
+    ; let testOutcome = case execOutcome of
+                          ExecSuccess outp -> TestSuccess outp
+                          ExecFailure err  -> TestFailure err
+    ; return $ TestResult testOutcome $ TestSpec Ampersand ["todo: this is wrong"] ShouldSucceed []  
     }
     
-reportResult :: IO TestResult -> IO TestResult
-reportResult test =
+reportTestResult :: IO TestResult -> IO TestResult
+reportTestResult test =
  do { testResult <- test
-    ; case testResult of
-        Right _ -> putStrLn $ "Test succeeded\n"
-        Left _  -> putStrLn $ "Test failed\n"
+    ; case getResultOutcome testResult of
+        TestSuccess _ -> putStrLn $ "Test succeeded\n"
+        TestFailure _ -> putStrLn $ "Test failed\n"
     ; return testResult -- return the result, so we can easily add this function to a computation
     } 
     
