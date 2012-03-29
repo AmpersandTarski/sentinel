@@ -1,0 +1,2 @@
+cd $HOME/svn/Sentinel
+cabal build

@@ -1,0 +1,2 @@
+#killall -v -g sentinel
+nohup $HOME/svn/Sentinel/dist/build/sentinel/sentinel < /dev/null > $HOME/www/SentinelOutput.txt 2>&1 &
