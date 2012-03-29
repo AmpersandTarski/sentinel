@@ -14,8 +14,8 @@ testSpecs =
       [ "Prototype/apps/Simple"
       , "Prototype/apps/Misc"
       , "Prototype/apps/Tests/ShouldSucceed"
-      --, "Prototype/apps/INDOORS/INDOORS.adl"
-      , "Prototype/apps/Bugs/SQL/fixed"
+      , "Prototype/apps/INDOORS/INDOORS.adl"
+      , "Prototype/apps/Bugs/SQL/Fixed"
       ]
   , TestSpec Ampersand [] ShouldFail
       [ "Prototype/apps/Tests/ShouldFail" 
