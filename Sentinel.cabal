@@ -17,5 +17,8 @@ executable sentinel
   other-modules:   
                    Test,
                    Utils,
-                   Defaults
+                   Defaults,
+                   Execute,
+                   TestSpecs,
+                   Types
 
