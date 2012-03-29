@@ -14,6 +14,8 @@ import TestSpecs
 {-
 todo:
 fix how execution tests are put in testResult now (see "todo: this is wrong")
+make html page
+put crontab contents somewhere
 put message in test
 read testSpecs instead of compile
 send e-mail in case of error
