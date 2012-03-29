@@ -1,18 +1,16 @@
 module Main where
 
-import Control.Monad
 import Data.List
 import System.Process
 import System.Exit
 import System.IO
-import System.Directory hiding (executable)
 import System.FilePath               
 import Network
 import Network.BSD
 import Data.Char
-import Test
+import Defaults
 import Utils
-
+import Test
 
 {-
 todo:
