@@ -10,7 +10,8 @@ import Types
 
 testBuild :: String -> [String] -> IO TestResult
 testBuild project flags = mkExecutionTest $
- do { cabalConfigure project flags 
+ do { putStrLn $ "Test: building "++project
+    ; cabalConfigure project flags 
     ; result <- cabal "build" project []
     ; return $ result
     }
@@ -19,7 +20,8 @@ testBuild project flags = mkExecutionTest $
 -- doing install without also building is not possible with cabal
 testInstall :: String -> [String] -> IO TestResult
 testInstall project flags = mkExecutionTest $
- do { cabalConfigure project flags 
+ do { putStrLn $ "Test: installing "++project
+    ; cabalConfigure project flags 
     ; result <- cabal "install" project []
     ; return $ result
     }
