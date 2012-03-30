@@ -1,0 +1,24 @@
+# script that is called by root with user martijn
+# path and env are not set correctly though
+
+
+
+HOME="/home/martijn"
+LANG=en_US.UTF-8
+PATH=/home/martijn/svn/Sentinel/scripts:/home/martijn/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+
+export HOME
+export LANG
+export PATH
+
+# leaving the dist sometimes causes cabal clean problems
+rm -rf /home/martijn/svn/Sentinel/dist
+cd /home/martijn/svn/Sentinel
+svn cleanup
+svn update
+
+echo before cabal
+cabal clean 
+cabal configure 
+cabal build
+echo $? after cabal

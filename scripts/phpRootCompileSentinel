@@ -1,0 +1,6 @@
+echo "Running phpRootCompileSentinel<br/>"
+# script that is called by the www server (from php)
+
+#whoami
+killall --quiet sentinel
+sudo -u martijn /home/martijn/svn/Sentinel/scripts/phpMartijnCompileSentinel
