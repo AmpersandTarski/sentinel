@@ -1,0 +1,33 @@
+<html>
+<!-- Make a non-symbolic link for this file and the php files to ~/www on the test server
+  
+ln ~/svn/Sentinel/scripts/sentinel.html ~/www
+ln ~/svn/Sentinel/scripts/CompileSentinel.php ~/www
+ln ~/svn/Sentinel/scripts/RunSentinel.php ~/www
+  
+  
+crontab contents:
+# for real, every night at 5
+0 5 * * * $HOME/svn/Sentinel/scripts/runSentinel
+
+# for testing, every two minutes
+#*/2 * * * * $HOME/svn/Sentinel/scripts/runSentinel
+
+visudo addition:
+# allow apache to run php as root
+www-data ALL=NOPASSWD: ALL
+
+   -->
+  <head>
+  <title>Ampersand Sentinel</title>
+  </head>
+<body>
+  <button onclick="location.href='RunSentinel.php'">Run tests</button>
+  
+  <p>
+  If the sentinel source has been modified, recompile it with the button below. Note that no output is shown until compilation has finished.
+  <p>
+  <button onclick="location.href='CompileSentinel.php'">Recompile sentinel</button>
+  
+</body>
+</html>
