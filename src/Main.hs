@@ -1,8 +1,10 @@
 module Main where
 
+import Control.Monad
 import System.IO
 import Network.BSD
 import System.Locale
+import Data.List
 import Data.Time
 import Types
 import Utils
@@ -62,10 +64,20 @@ main =
     
     ; testResults <- fmap concat $ mapM runTestSpec testSpecs
     ; let failedTestResults = filter (not . isTestSuccessful) testResults
+          nrOfFailed = length failedTestResults
     ; putStrLn $ unlines [ "\n\n--------"
                          , "Total number of tests: " ++ show (length testResults)
                          , "Number of failed tests: " ++ show (length failedTestResults)
                          ]
+                         
+    ; when (not $ null failedTestResults) $
+       do { authors <- getAuthors
+          ; putStrLn $ "Notifying "++intercalate ", " authors
+          ; notifyByMail authors "Test failure" $ 
+              "This is an automated mail from the Ampersand Sentinel\n\n" ++
+              show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++" have failed.\n\n"++
+              "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
+          } 
     ; exit
     }
 

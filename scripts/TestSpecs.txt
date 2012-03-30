@@ -1,4 +1,5 @@
 -- format is a bit awkward because Haskell's read is not very powerful
+-- note that comments have to start at the beginning of the line
   
 [ TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldSucceed

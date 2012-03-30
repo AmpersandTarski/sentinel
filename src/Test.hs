@@ -7,7 +7,7 @@ import System.FilePath
 import Types
 import Utils
 import Execute
-
+import Defaults
 
 runTestSpec :: TestSpec -> IO [TestResult]
 runTestSpec testSpec =
@@ -75,14 +75,13 @@ runTest testSpec testFile =
 parseTestSpecs :: IO [TestSpec]
 parseTestSpecs =
  do { svnDir <- getSvnDir
-    ; let testSpecsFile = combine svnDir "Sentinel/scripts/TestSpecs.txt"
-    ; testSpecsStr <- readFile $ testSpecsFile
-    ; seq (length $ show testSpecsStr) $ return ()
+    ; let testSpecsFilePath = combine svnDir testSpecsFile
+    ; testSpecsStr <- readFile testSpecsFilePath
     ; let lexedTestSpecsStr = reverse . dropWhile isSpace . reverse -- read doesn't like trailing whitespace 
                             . unlines . filter (not . ("--" `isPrefixOf`)) . lines   -- line comments are only allowed at start of line 
                             $ testSpecsStr                          -- (otherwise we also need to escape strings for "--validate")
     ; putStrLn $ "Parsing test specs:\n" ++ lexedTestSpecsStr ++ "\n\n"
     ; case readMaybe lexedTestSpecsStr :: Maybe [TestSpec] of
-        Nothing  -> error $ "ERROR: cannot parse file "++testSpecsFile
+        Nothing  -> error $ "ERROR: cannot parse file "++testSpecsFilePath
         Just tss -> return tss
     }

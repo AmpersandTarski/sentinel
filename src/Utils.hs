@@ -57,13 +57,20 @@ readMaybe :: Read a => String -> Maybe a
 readMaybe str = case reads str of
                   [(a,"")] -> Just a
                   _        -> Nothing
-    
-notifyByMail :: String -> String -> String -> IO ()
-notifyByMail recipient subject message =
-  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipient ("[Sentinel] "++subject) message
+getAuthors :: IO [String]
+getAuthors =
+ do { svnDir <- getSvnDir
+    ; let authorsFilePath = combine svnDir authorsFile
+    ; authors <- readFile authorsFilePath
+    ; return $ filter (not . null) . filter (not . ("--" `isPrefixOf`)) . lines $ authors
+    }
+        
+notifyByMail :: [String] -> String -> String -> IO ()
+notifyByMail recipients subject message =
+  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipients ("[Sentinel] "++subject) message
 
-sendMail :: String -> String -> String -> String -> String -> IO ()
-sendMail sender senderName recipient subject body =
+sendMail :: String -> String -> [String] -> String -> String -> IO ()
+sendMail sender senderName recipients subject body =
  do { hName <- getHostName  
     ; let mailServer = if hName == testServerHostname 
                        then "mail.kpnmail.nl"
@@ -74,7 +81,7 @@ sendMail sender senderName recipient subject body =
     ; hSetNewlineMode handle $ NewlineMode LF CRLF -- NOTE: The output line mode needs to be CRLF for KPN
     ; putStrLn "connected"
 
-    ; let mailStr = mkMailStr sender senderName recipient subject body
+    ; let mailStr = mkMailStr sender senderName recipients subject body
     --; putStrLn $ "Output to mail server:\n" ++ mailStr
     ; hPutStr handle mailStr
     ; hFlush handle
@@ -90,7 +97,7 @@ sendMail sender senderName recipient subject body =
            ; if eof 
              then return False
              else do { message <- hGetLine handle
-                     --; putStrLn $ "SMTP server:" ++ message
+--                     ; putStrLn $ "SMTP server:" ++ message
                      ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
                           "Message accepted for delivery" `isInfixOf` message -- InterNLnet
                        then return True 
@@ -98,17 +105,17 @@ sendMail sender senderName recipient subject body =
                      }
            }
 
-mkMailStr :: String -> String -> String -> String -> String -> String
-mkMailStr senderName sender recipient subject body =
+mkMailStr :: String -> String -> [String] -> String -> String -> String
+mkMailStr senderName sender recipients subject body =
             "HELO amprersand.oblomov.com\n"
          ++ "MAIL From: "++ sender ++ "\n"
-         ++ "RCPT To: "++ recipient ++ "\n"
+         ++ unlines [ "RCPT To: "++recipient | recipient <- recipients ]
          ++ "DATA\n"
-         ++ "X-Mailer: Piglet 2.0\n"
+         ++ "X-Mailer: Ampersand Sentinel\n"
          ++ "From: " ++ senderName ++ " <" ++ sender ++ ">\n"
-         ++ "To: " ++ recipient ++ "\n"
+         ++ "To: " ++ intercalate ", " recipients ++ "\n"
          ++ "Subject: " ++ subject ++ "\n\n"
          ++ body ++ "\n"
          ++ ".\n"       
          ++ "QUIT\n"
-    
+ 
