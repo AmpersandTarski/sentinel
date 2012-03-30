@@ -1,7 +1,10 @@
 module Utils where
 
+import Data.List
 import System.Directory hiding (executable)
-import System.FilePath               
+import System.FilePath
+import System.IO               
+import Network
 import Network.BSD
 import Types
 import Defaults
@@ -54,4 +57,58 @@ readMaybe :: Read a => String -> Maybe a
 readMaybe str = case reads str of
                   [(a,"")] -> Just a
                   _        -> Nothing
+    
+notifyByMail :: String -> String -> String -> IO ()
+notifyByMail recipient subject message =
+  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipient ("[Sentinel] "++subject) message
+
+sendMail :: String -> String -> String -> String -> String -> IO ()
+sendMail sender senderName recipient subject body =
+ do { hName <- getHostName  
+    ; let mailServer = if hName == testServerHostname 
+                       then "mail.kpnmail.nl"
+                       else "smtp1.inter.NL.net"
+    ; putStrLn $ "connnecting to " ++ mailServer
+    
+    ; handle <- connectTo mailServer (PortNumber 25)
+    ; hSetNewlineMode handle $ NewlineMode LF CRLF -- NOTE: The output line mode needs to be CRLF for KPN
+    ; putStrLn "connected"
+
+    ; let mailStr = mkMailStr sender senderName recipient subject body
+    --; putStrLn $ "Output to mail server:\n" ++ mailStr
+    ; hPutStr handle mailStr
+    ; hFlush handle
+    ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
+    ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
+                          -- Might be buffer related, but changing Buffering mode does not help    
+
+    ; success <- processResponse handle
+    ; if success then putStrLn "message sent" else error "Sending mail failed"
+    }
+ where processResponse handle = 
+        do { eof <- hIsEOF handle
+           ; if eof 
+             then return False
+             else do { message <- hGetLine handle
+                     --; putStrLn $ "SMTP server:" ++ message
+                     ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
+                          "Message accepted for delivery" `isInfixOf` message -- InterNLnet
+                       then return True 
+                       else processResponse handle
+                     }
+           }
+
+mkMailStr :: String -> String -> String -> String -> String -> String
+mkMailStr senderName sender recipient subject body =
+            "HELO amprersand.oblomov.com\n"
+         ++ "MAIL From: "++ sender ++ "\n"
+         ++ "RCPT To: "++ recipient ++ "\n"
+         ++ "DATA\n"
+         ++ "X-Mailer: Piglet 2.0\n"
+         ++ "From: " ++ senderName ++ " <" ++ sender ++ ">\n"
+         ++ "To: " ++ recipient ++ "\n"
+         ++ "Subject: " ++ subject ++ "\n\n"
+         ++ body ++ "\n"
+         ++ ".\n"       
+         ++ "QUIT\n"
     

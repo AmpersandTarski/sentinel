@@ -16,13 +16,12 @@ todo:
 fix how execution tests are put in testResult now (see "todo: this is wrong")
 put message in test
 send e-mail in case of error
-fix dir structure with bug dirs
 fix module names and structure
 
 
 catch errors and report
 keep track of what has been reported
-
+maybe create a type TestCase, a list of which is created from TestSpec
 maybe keep testfiles relative until test, so reporting is less verbose
 
 different types for testResult and executionResult
