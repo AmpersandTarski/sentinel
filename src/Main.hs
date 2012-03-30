@@ -13,12 +13,8 @@ import TestSpecs
 
 {-
 todo:
-don't log at execute
 fix how execution tests are put in testResult now (see "todo: this is wrong")
-make html page
-put crontab contents somewhere
 put message in test
-read testSpecs instead of compile
 send e-mail in case of error
 fix dir structure with bug dirs
 fix module names and structure
