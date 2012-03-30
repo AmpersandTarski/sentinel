@@ -39,8 +39,8 @@ cabalConfigure project flags = failOnError ("error during cabal configure for "+
 cabal :: String -> String -> [String] -> IO ExecutionOutcome
 cabal cmd project flags =
  do { svnDir <- getSvnDir
-    ; result <- execute "cabal" (cmd : flags) $ combine svnDir project
-    ; return result
+    ; result <- execute "cabal" (cmd : flags {- ++ ["--verbose"] -}) $ combine svnDir project
+    ; return result -- when cabal fails silently, add --verbose
     }
 
 svnUpdate :: String -> IO ()
@@ -84,21 +84,21 @@ execute cmd args dir =
                 , close_fds    = False -- no need to close all other file descriptors
                 }
                  
-    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
+--    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
     ; (_, mStdOut, mStdErr, pHandle) <- createProcess cp 
     ; case (mStdOut, mStdErr) of
         (Nothing, _) -> error "no output handle"
         (_, Nothing) -> error "no error handle"
         (Just stdOutH, Just stdErrH) ->
          do { --putStrLn "done"
+            ; exitCode <- waitForProcess pHandle
             ; errStr <- hGetContents stdErrH
             ; seq (length errStr) $ return ()
             ; hClose stdErrH
             ; outputStr <- hGetContents stdOutH --and fetch the results from the output pipe
             ; seq (length outputStr) $ return ()
             ; hClose stdOutH
-            ; exitCode <- waitForProcess pHandle
-            --; putStrLn $ "Results:\n" ++ outputStr
+  --          ; putStrLn $ "Results:\n" ++ outputStr ++ "\nErrors\n:"++errStr++"\nDone<"
             ; return $ case exitCode of
                          ExitSuccess   -> ExecSuccess outputStr
                          ExitFailure c -> ExecFailure $ "Exit code " ++ show c ++ ": " ++ errStr
