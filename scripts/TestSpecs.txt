@@ -1,0 +1,21 @@
+-- format is a bit awkward because Haskell's read is not very powerful
+  
+  [ TestSpec { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldSucceed
+                   , getTestFileSpecs = [ "Prototype/apps/Simple"
+																						      , "Prototype/apps/Misc"
+																						      , "Prototype/apps/Tests/ShouldSucceed"
+--																						      , "Prototype/apps/INDOORS/INDOORS.adl"
+																						      ]
+                   }
+  , TestSpec { getTestExecutable = Prototype, getTestArgs = ["--validate"], getDesiredOutcome = ShouldSucceed
+                   , getTestFileSpecs = [ "Prototype/apps/Simple"
+																						      , "Prototype/apps/Misc"
+																						      , "Prototype/apps/Tests/ShouldSucceed"
+--																						      , "Prototype/apps/INDOORS/INDOORS.adl"
+																						      , "Prototype/apps/Bugs/SQL/Fixed"
+																						      ]
+                   }
+  , TestSpec { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldFail
+                   , getTestFileSpecs = []
+                   }
+  ]

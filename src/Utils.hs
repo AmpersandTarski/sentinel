@@ -49,4 +49,9 @@ getSvnDir =
 
 getProperDirectoryContents :: FilePath -> IO [String]
 getProperDirectoryContents pth = fmap (filter (`notElem` [".","..",".svn"])) $ getDirectoryContents pth
+
+readMaybe :: Read a => String -> Maybe a
+readMaybe str = case reads str of
+                  [(a,"")] -> Just a
+                  _        -> Nothing
     

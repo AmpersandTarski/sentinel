@@ -44,6 +44,9 @@ main :: IO ()
 main =
  do { initialize
     
+    ; svnUpdate "Sentinel/scripts" -- update the scripts directory, so we get the most recent TestSpecs.txt
+    ; testSpecs <- parseTestSpecs
+    
     ; isTestSrv <- isTestServer
     ; if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
       then

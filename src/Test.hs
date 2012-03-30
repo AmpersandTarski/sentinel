@@ -1,6 +1,7 @@
 module Test where
 
 import Data.Char
+import Data.List
 import System.Directory hiding (executable)
 import System.FilePath               
 import Types
@@ -70,3 +71,18 @@ runTest testSpec testFile =
     ; return $ TestResult testOutcome testSpec
     }
     
+-- yes, parse is a rather big word for this function
+parseTestSpecs :: IO [TestSpec]
+parseTestSpecs =
+ do { svnDir <- getSvnDir
+    ; let testSpecsFile = combine svnDir "Sentinel/scripts/TestSpecs.txt"
+    ; testSpecsStr <- readFile $ testSpecsFile
+    ; seq (length $ show testSpecsStr) $ return ()
+    ; let lexedTestSpecsStr = reverse . dropWhile isSpace . reverse -- read doesn't like trailing whitespace 
+                            . unlines . filter (not . ("--" `isPrefixOf`)) . lines   -- line comments are only allowed at start of line 
+                            $ testSpecsStr                          -- (otherwise we also need to escape strings for "--validate")
+    ; putStrLn $ lexedTestSpecsStr
+    ; case readMaybe lexedTestSpecsStr :: Maybe [TestSpec] of
+        Nothing  -> error $ "ERROR: cannot parse file "++testSpecsFile
+        Just tss -> return tss
+    }

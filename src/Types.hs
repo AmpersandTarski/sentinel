@@ -12,14 +12,14 @@ data ExecutionOutcome = ExecFailure String | ExecSuccess String deriving Show
                              
 data TestOutcome = TestFailure String | TestSuccess String deriving Show
 
-data DesiredOutcome = ShouldFail | ShouldSucceed deriving Show
+data DesiredOutcome = ShouldFail | ShouldSucceed deriving (Show, Read)
 -- note that ShouldFail should not fail with a fatal
 
-data TestExecutable = Ampersand | Prototype deriving Show
+data TestExecutable = Ampersand | Prototype deriving (Show, Read)
 
 data TestSpec = TestSpec { getTestExecutable :: TestExecutable 
                          , getTestArgs       :: [String] 
                          , getDesiredOutcome :: DesiredOutcome
                          , getTestFileSpecs  :: [String] -- relative to svn directory
-                         } deriving Show
+                         } deriving (Show, Read)
                
