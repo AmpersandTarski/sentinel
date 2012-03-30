@@ -1,7 +1,7 @@
+echo Running phpMartijnCompileSentinel
+
 # script that is called by root with user martijn
 # path and env are not set correctly though
-
-
 
 HOME="/home/martijn"
 LANG=en_US.UTF-8
@@ -21,4 +21,3 @@ echo before cabal
 cabal clean 
 cabal configure 
 cabal build
-echo $? after cabal

@@ -1,4 +1,4 @@
-echo "Test<br/>"
+echo Running phpMartijnRunSentinel
 
 # script that is called by the www server (from php)
 # has absolute paths instead of $HOME
@@ -17,7 +17,7 @@ export HOME
 export LANG
 export PATH
 
-whoami
+#whoami
 killall sentinel
 rm -rf /home/martijn/svn/Ampersand/dist
 rm -rf /home/martijn/svn/Prototype/dist
