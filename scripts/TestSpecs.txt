@@ -6,7 +6,8 @@
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
          , "Prototype/apps/Tests/ShouldSucceed"
---         , "Prototype/apps/INDOORS/INDOORS.adl"
+         , "Prototype/apps/INDOORS/INDOORS.adl"
+         , "Prototype/apps/Bug/Fixed"
          ]
      }
 , TestSpec 
@@ -15,14 +16,22 @@
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
          , "Prototype/apps/Tests/ShouldSucceed"
---         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Bugs/SQL/Fixed"
+         , "Prototype/apps/INDOORS/INDOORS.adl"
+         , "Prototype/apps/Bug/Fixed"
          ]
      }
+-- known bugs: it's not that we want them to fail, but we don't want to be notified. And we do want to be notified when they are fixed
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
-         [
+         [ "Prototype/apps/Bugs/Current"
          ]
      }
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "Prototype/apps/Bugs/SQL"
+         ]
+     }
+
 ]
