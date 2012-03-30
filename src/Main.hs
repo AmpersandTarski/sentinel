@@ -15,16 +15,21 @@ import TestSpecs
 
 {-
 todo:
+fix hard links: they don't survive svn update
+catch errors and report
+
+
 fix how execution tests are put in testResult now (see "todo: this is wrong")
 put message in test
-send e-mail in case of error
 fix module names and structure
-
-
-catch errors and report
 keep track of what has been reported
 maybe create a type TestCase, a list of which is created from TestSpec
 maybe keep testfiles relative until test, so reporting is less verbose
+
+
+Make scripts more robust and allow svn update without first having to remove everything.
+Currently we need to clean everything every time, so an Ampersand or Prototype compilation fail
+will also cause a lot of test fails.
 
 different types for testResult and executionResult
 collectFilePaths failures should be reported (but not internal ones, these should just fail (and won't occur))
@@ -59,7 +64,8 @@ main =
           ; return ()
           }
       else
-       do { return ()
+       do { reportTestResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
+          ; return ()
           }
     
     ; testResults <- fmap concat $ mapM runTestSpec testSpecs
