@@ -1,4 +1,4 @@
-echo "Running phpRootCompileSentinel<br/>"
+echo Running phpRootCompileSentinel
 # script that is called by the www server (from php)
 
 #whoami

@@ -1,2 +1,4 @@
 <?php
-system('sudo /home/martijn/svn/Sentinel/scripts/phpRootCompileSentinel',$exitCode);
+exec('sudo /home/martijn/svn/Sentinel/scripts/phpRootCompileSentinel',$output,$exitCode);
+echo implode("<br/>", $output);
+?>
