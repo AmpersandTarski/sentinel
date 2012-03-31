@@ -25,6 +25,8 @@ keep track of what has been reported
 maybe create a type TestCase, a list of which is created from TestSpec
 if the message is not in the result we can print it before executing the test
 Also keep desired result in TestResult, so we can give a less confusing message (e.g. this test succeeded but should have failed)
+and only print output in case of failed run, rather than a failed test (output from successful tests that should have failed is probably not interesting)
+
 maybe even use something like Passed/NotPassed for tests instead of Success/Failure
 
 maybe keep testfiles relative until test, so reporting is less verbose
@@ -78,12 +80,12 @@ performTests =
             ; return [t1,t2,t3] -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
         else
-         do { --cabalClean "Ampersand" []
-            ; --t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]     "the Ampersand executable"
-            ; --t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
-            ; --cabalClean "Prototype" []
-            ; --t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
-            ; return [] -- [t1,t2,t3]
+         do { cabalClean "Ampersand" []
+            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]     "the Ampersand executable"
+            ; t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
+            ; cabalClean "Prototype" []
+            ; t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
+            ; return [t1,t2,t3]
             }
     
     ; executionTestResults <- fmap concat $ mapM runTestSpec testSpecs
