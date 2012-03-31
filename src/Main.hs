@@ -37,6 +37,8 @@ configure fail should also be reported
 
 copy all test failures to a www page for an easy overview
 
+figure out what to do when we get dependency problems after cabal update
+
 low priority:
 take --enable-tests into account
 
