@@ -3,29 +3,31 @@ module Execute where
 import System.Process
 import System.Exit
 import System.IO
-import System.FilePath               
+import System.FilePath 
+import Data.List              
 import Data.Char
 import Utils
 import Types
 
-testBuild :: String -> [String] -> IO TestResult
-testBuild project flags = mkExecutionTest $
- do { putStrLn $ "Test: building "++project
+testBuild :: String -> [String] -> String -> IO TestResult
+testBuild project flags targetDescr = mkExecutionTest testDescr $
+ do { putStrLn testDescr
     ; cabalConfigure project flags 
     ; result <- cabal "build" project []
-    ; return $ result
+    ; return result
     }
-
+ where testDescr = "Building "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
 -- doing install without also building is not possible with cabal
-testInstall :: String -> [String] -> IO TestResult
-testInstall project flags = mkExecutionTest $
- do { putStrLn $ "Test: installing "++project
+testInstall :: String -> [String] -> String -> IO TestResult
+testInstall project flags targetDescr = mkExecutionTest testDescr $
+ do { putStrLn testDescr
     ; cabalConfigure project flags 
     ; result <- cabal "install" project []
-    ; return $ result
+    ; return result
     }
-
+ where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
+ 
 cabalClean :: String -> [String] -> IO ()
 cabalClean project flags = failOnError ("error during cabal clean for "++project++": ") $
   cabal "clean" project flags

@@ -48,10 +48,8 @@ collectFilePaths absFileSpec =
 
 -- execute project executable in directory of testFile (which is absolute). First arg is testFile
 runTest :: TestSpec -> FilePath -> IO TestResult
-runTest testSpec testFile =
- do { let exec = getTestExecutable testSpec
-          args = getTestArgs testSpec
-    ; putStrLn $ "Testing "++show exec++" "++show args++" on "++testFile
+runTest testSpec@(TestSpec exec args desOutcome _) testFile =
+ do { putStrLn $ testDescr
     ; svnDir <- getSvnDir
     ; let executable =
             case exec of
@@ -60,7 +58,7 @@ runTest testSpec testFile =
     ; result <- execute executable (testFile : args) $ takeDirectory testFile 
     
     ; case result of
-        ExecSuccess _ -> putStrLn $ "Execution success"
+        ExecSuccess _   -> putStrLn   "Execution success"
         ExecFailure err -> putStrLn $ "Execution failure: "++err
                          
     ; let testOutcome = case (getDesiredOutcome testSpec, result) of
@@ -68,9 +66,9 @@ runTest testSpec testFile =
                           (ShouldFail,    ExecSuccess outp) -> TestFailure outp
                           (ShouldSucceed, ExecFailure err)  -> TestFailure err
                           (ShouldSucceed, ExecSuccess outp) -> TestSuccess outp
-    ; return $ TestResult testOutcome testSpec
+    ; return $ TestResult testOutcome testDescr
     }
-    
+ where testDescr = "Running "++show exec++" "++show args++" on "++testFile ++ ". {"++showDesiredOutcome desOutcome ++"}"
 -- yes, parse is a rather big word for this function
 parseTestSpecs :: IO [TestSpec]
 parseTestSpecs =

@@ -17,21 +17,21 @@ failOnError errMsg test =
         ExecFailure err -> error $ errMsg ++ err
     }
  
-mkExecutionTest :: IO ExecutionOutcome -> IO TestResult 
-mkExecutionTest exec =
+mkExecutionTest :: String -> IO ExecutionOutcome -> IO TestResult 
+mkExecutionTest testDescr exec =
  do { execOutcome <- exec
     ; let testOutcome = case execOutcome of
                           ExecSuccess outp -> TestSuccess outp
                           ExecFailure err  -> TestFailure err
-    ; return $ TestResult testOutcome $ TestSpec Ampersand ["todo: this is wrong"] ShouldSucceed []  
+    ; return $ TestResult testOutcome testDescr  
     }
     
 reportTestResult :: IO TestResult -> IO TestResult
 reportTestResult test =
  do { testResult <- test
     ; case getResultOutcome testResult of
-        TestSuccess _ -> putStrLn $ "Test succeeded\n"
-        TestFailure _ -> putStrLn $ "Test failed\n"
+        TestSuccess _ -> putStrLn $ "Test passed\n"
+        TestFailure _ -> putStrLn $ "Test did not pass\n"
     ; return testResult -- return the result, so we can easily add this function to a computation
     } 
     

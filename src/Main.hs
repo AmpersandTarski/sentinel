@@ -2,7 +2,6 @@ module Main where
 
 import Prelude hiding (catch)
 import Control.Exception
-import Control.Monad
 import System.IO
 import Network.BSD
 import System.Locale
@@ -13,25 +12,23 @@ import Utils
 import Test
 import Execute
 
-import TestSpecs
-
 {-
 todo:
 
-
-fix how execution tests are put in testResult now (see "todo: this is wrong")
-put message in test
-fix module names and structure
-keep track of what has been reported
-maybe create a type TestCase, a list of which is created from TestSpec
-maybe keep testfiles relative until test, so reporting is less verbose
-
-
+Avoid needing root and martijn permissions for executing server.
 Make scripts more robust and allow svn update without first having to remove everything.
 Currently we need to clean everything every time, so an Ampersand or Prototype compilation fail
 will also cause a lot of test fails.
 
-different types for testResult and executionResult
+fix module names and structure, as well as refactor test data types. Everything is rather messy now.
+keep track of what has been reported
+maybe create a type TestCase, a list of which is created from TestSpec
+if the message is not in the result we can print it before executing the test
+Also keep desired result in TestResult, so we can give a less confusing message (e.g. this test succeeded but should have failed)
+maybe even use something like Passed/NotPassed for tests instead of Success/Failure
+
+maybe keep testfiles relative until test, so reporting is less verbose
+
 collectFilePaths failures should be reported (but not internal ones, these should just fail (and won't occur))
 
 configure fail should also be reported
@@ -53,7 +50,7 @@ main =
          do { authors <- getAuthors
             ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
             ; notifyByMail authors "Test failure" $ 
-                "This is an automated mail from the Ampersand Sentinel\n\n" ++
+                "This is an automated mail from the Ampersand Sentinel.\n\n" ++
                 failureMessage ++ "\n\n"++
                 "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
           } 
@@ -66,35 +63,48 @@ performTests =
     ; testSpecs <- parseTestSpecs
     
     ; isTestSrv <- isTestServer
-    ; if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
-      then
-       do { svnUpdate "Ampersand"
-          ; svnUpdate "Prototype"
-          -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
-          
-          ; cabalClean "Ampersand" []
-          ; reportTestResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
-          ; reportTestResult $ testInstall "Ampersand" ["-f-executable"] -- test building the library
-          ; cabalClean "Prototype" []
-          ; reportTestResult $ testBuild "Prototype" []
-          ; return ()
-          }
-      else
-       do { --reportTestResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
-          ; return ()
-          }
+    ; buildTestResults <-
+        if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
+        then
+         do { svnUpdate "Ampersand"
+            ; svnUpdate "Prototype"
+            -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
+            
+            ; cabalClean "Ampersand" []
+            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]     "the Ampersand executable"
+            ; t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
+            ; cabalClean "Prototype" []
+            ; t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
+            ; return [t1,t2,t3] -- TODO: probably want a monad here, since it's too easy to miss tests now
+            }
+        else
+         do { --cabalClean "Ampersand" []
+            ; --t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]     "the Ampersand executable"
+            ; --t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
+            ; --cabalClean "Prototype" []
+            ; --t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
+            ; return [] -- [t1,t2,t3]
+            }
     
-    ; testResults <- fmap concat $ mapM runTestSpec testSpecs
-    ; let failedTestResults = filter (not . isTestSuccessful) testResults
+    ; executionTestResults <- fmap concat $ mapM runTestSpec testSpecs
+    ; let allTestResults = buildTestResults ++ executionTestResults
+    
+    ; let failedTestResults = filter (not . isTestSuccessful) allTestResults
           nrOfFailed = length failedTestResults
+    
     ; putStrLn $ unlines [ "\n\n--------"
-                         , "Total number of tests: " ++ show (length testResults)
+                         , "Total number of tests: " ++ show (length allTestResults)
                          , "Number of failed tests: " ++ show nrOfFailed
                          ]
-                         
-    ; return $ if nrOfFailed == 0
-               then Nothing
-               else Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++" have failed."
+    ; let failedTestsTxt = intercalate "\n\n" . map showTestResult $ failedTestResults
+                                
+    ; if nrOfFailed == 0
+      then return Nothing
+      else do { putStrLn failedTestsTxt
+              ; return $ Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++
+                                " did not pass:\n\n"++
+                                failedTestsTxt
+              }    
     } `catch` \e -> do { let message = 
                                "An unexpected exception has occurred during Sentinel execution.\n" ++
                                show (e :: SomeException) ++ "\nTesting was aborted."
