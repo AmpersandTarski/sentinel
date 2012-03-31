@@ -100,7 +100,9 @@ execute cmd args dir =
   --          ; putStrLn $ "Results:\n" ++ outputStr ++ "\nErrors\n:"++errStr++"\nDone<"
             ; return $ case exitCode of
                          ExitSuccess   -> ExecSuccess outputStr
-                         ExitFailure c -> ExecFailure $ "Exit code " ++ show c ++ ": " ++ errStr
+                         ExitFailure c -> ExecFailure $ "Exit code " ++ show c ++ 
+                                                        "\nstdout:\n"  ++ outputStr ++ -- also show stdout, since many programs
+                                                        "\nstderr:\n"  ++ errStr    -- show errors on stdout instead of stderr
             }
     }
 
