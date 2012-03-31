@@ -1,11 +1,9 @@
 <html>
-<!-- Make a non-symbolic link for this file and the php files to ~/www on the test server
-update: does not always seem to work
+<!-- Make a symbolic link for this file and the php files to /var/www on the test server
 
-ln ~/svn/Sentinel/scripts/sentinel.html ~/www
-ln ~/svn/Sentinel/scripts/CompileSentinel.php ~/www
-ln ~/svn/Sentinel/scripts/RunSentinel.php ~/www
-  
+sudo ln -s ~/scripts/sentinel.html /var/www
+sudo ln -s ~/scripts/CompileSentinel.php /var/www
+sudo ln -s ~/scripts/RunSentinel.php /var/www
   
 crontab contents:
 # for real, every night at 5
