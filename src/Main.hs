@@ -18,7 +18,8 @@ todo:
 Avoid needing root and martijn permissions for executing server.
 Make scripts more robust and allow svn update without first having to remove everything.
 Currently we need to clean everything every time, so an Ampersand or Prototype compilation fail
-will also cause a lot of test fails.
+will also cause a lot of test fails. (there is an ugly fix for this now)
+Maybe we should even manually keep old versions of the executables, since doing things incremental might be more fragile
 
 fix module names and structure, as well as refactor test data types. Everything is rather messy now.
 keep track of what has been reported
@@ -67,7 +68,7 @@ performTests =
     ; testSpecs <- parseTestSpecs
     
     ; isTestSrv <- isTestServer
-    ; buildTestResults <-
+    ; (ampersandOk, prototypeOk, buildTestResults) <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
          do { svnUpdate "Ampersand"
@@ -75,22 +76,32 @@ performTests =
             -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
             
             ; cabalClean "Ampersand" []
-            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]     "the Ampersand executable"
+            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]      "the Ampersand executable"
             ; t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
             ; cabalClean "Prototype" []
             ; t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
-            ; return [t1,t2,t3] -- TODO: probably want a monad here, since it's too easy to miss tests now
+            ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
+            -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
         else
          do { cabalClean "Ampersand" []
-            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]     "the Ampersand executable"
+            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]      "the Ampersand executable"
             ; t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
             ; cabalClean "Prototype" []
             ; t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
-            ; return [t1,t2,t3]
+            ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
+            --; return (False, True, [])
             }
-    
-    ; executionTestResults <- fmap concat $ mapM runTestSpec testSpecs
+            
+            
+    ; let getTestResultsFor _          False = return []
+          getTestResultsFor executable True  =
+            fmap concat $ mapM runTestSpec [ ts | ts <- testSpecs, getTestExecutable ts == executable ]
+    -- only execute tests if building the executable succeeded
+    -- not very elegant, but only here until we can use the old executables in case of build failures
+    ; ampersandExecTestResults <- getTestResultsFor Ampersand ampersandOk
+    ; prototypeExecTestResults <- getTestResultsFor Prototype prototypeOk
+    ; let executionTestResults = ampersandExecTestResults ++ prototypeExecTestResults
     ; let allTestResults = buildTestResults ++ executionTestResults
     
     ; let failedTestResults = filter (not . isTestSuccessful) allTestResults

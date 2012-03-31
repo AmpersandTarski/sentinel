@@ -13,7 +13,7 @@ isTestSuccessful _                              = False
 
 data ExecutionOutcome = ExecFailure String | ExecSuccess String deriving Show
                              
-data TestOutcome = TestFailure String | TestSuccess String deriving Show
+data TestOutcome = TestFailure String | TestSuccess String deriving (Show, Eq)
 
 data DesiredOutcome = ShouldFail | ShouldSucceed deriving (Show, Read)
 -- note that a ShouldFail test should not fail with a fatal
@@ -22,7 +22,7 @@ showDesiredOutcome :: DesiredOutcome -> String
 showDesiredOutcome ShouldSucceed = "should succeed"
 showDesiredOutcome ShouldFail    = "should fail"
 
-data TestExecutable = Ampersand | Prototype deriving (Show, Read)
+data TestExecutable = Ampersand | Prototype deriving (Show, Read, Eq)
 
 data TestSpec = TestSpec { getTestExecutable :: TestExecutable 
                          , getTestArgs       :: [String] 
