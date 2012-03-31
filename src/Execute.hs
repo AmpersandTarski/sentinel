@@ -22,8 +22,7 @@ testBuild project flags targetDescr = mkExecutionTest testDescr $
 testInstall :: String -> [String] -> String -> IO TestResult
 testInstall project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
-    ; cabalConfigure project flags 
-    ; result <- cabal "install" project []
+    ; result <- cabal "install" project flags
     ; return result
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
