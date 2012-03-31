@@ -1,5 +1,7 @@
 module Main where
 
+import Prelude hiding (catch)
+import Control.Exception
 import Control.Monad
 import System.IO
 import Network.BSD
@@ -15,8 +17,6 @@ import TestSpecs
 
 {-
 todo:
-fix hard links: they don't survive svn update
-catch errors and report
 
 
 fix how execution tests are put in testResult now (see "todo: this is wrong")
@@ -42,11 +42,27 @@ low priority:
 take --enable-tests into account
 
 -}
+
 main :: IO ()
-main =
+main = 
  do { initialize
+    ; mFailureMessage <- performTests
+    ; case mFailureMessage of
+        Nothing -> return ()
+        Just failureMessage ->
+         do { authors <- getAuthors
+            ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
+            ; notifyByMail authors "Test failure" $ 
+                "This is an automated mail from the Ampersand Sentinel\n\n" ++
+                failureMessage ++ "\n\n"++
+                "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
+          } 
+    ; exit
+    }
     
-    ; svnUpdate "Sentinel/scripts" -- update the scripts directory, so we get the most recent TestSpecs.txt
+performTests :: IO (Maybe String)
+performTests =
+ do { svnUpdate "Sentinel/scripts" -- update the scripts directory, so we get the most recent TestSpecs.txt
     ; testSpecs <- parseTestSpecs
     
     ; isTestSrv <- isTestServer
@@ -64,7 +80,7 @@ main =
           ; return ()
           }
       else
-       do { reportTestResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
+       do { --reportTestResult $ testBuild "Ampersand" ["-f-library"] -- test building the executable
           ; return ()
           }
     
@@ -73,20 +89,19 @@ main =
           nrOfFailed = length failedTestResults
     ; putStrLn $ unlines [ "\n\n--------"
                          , "Total number of tests: " ++ show (length testResults)
-                         , "Number of failed tests: " ++ show (length failedTestResults)
+                         , "Number of failed tests: " ++ show nrOfFailed
                          ]
                          
-    ; when (not $ null failedTestResults) $
-       do { authors <- getAuthors
-          ; putStrLn $ "Notifying "++intercalate ", " authors
-          ; notifyByMail authors "Test failure" $ 
-              "This is an automated mail from the Ampersand Sentinel\n\n" ++
-              show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++" have failed.\n\n"++
-              "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
-          } 
-    ; exit
-    }
-
+    ; return $ if nrOfFailed == 0
+               then Nothing
+               else Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++" have failed."
+    } `catch` \e -> do { let message = 
+                               "An unexpected exception has occurred during Sentinel execution.\n" ++
+                               show (e :: SomeException) ++ "\nTesting was aborted."
+                       ; putStrLn $ "\n\nERROR: " ++ message
+                       ; return $ Just message
+                       }
+                       
 initialize :: IO ()
 initialize =
  do { hSetBuffering stdout LineBuffering
@@ -100,5 +115,5 @@ initialize =
 exit :: IO ()
 exit =
  do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
-    ; putStrLn $ "######## Sentinel exited at "++time++" ########\n\n"
+    ; putStrLn $ "\n######## Sentinel exited at "++time++" ########\n\n"
     }
