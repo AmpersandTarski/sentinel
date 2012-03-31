@@ -31,7 +31,8 @@ reportTestResult test =
  do { testResult <- test
     ; case getResultOutcome testResult of
         TestSuccess _ -> putStrLn $ "Test passed\n"
-        TestFailure _ -> putStrLn $ "Test did not pass\n"
+        TestFailure outp -> putStrLn $ "Output:\n"++outp++"\nTest did not pass\n\n"
+                            -- todo: only show output for tests that should succeed
     ; return testResult -- return the result, so we can easily add this function to a computation
     } 
     
