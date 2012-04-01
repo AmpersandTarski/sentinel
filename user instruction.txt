@@ -1,0 +1,6 @@
+The Sentinel is a tester that runs test sets on Ampersand periodically.
+If you like, you can run it on  http://sentinel.oblomov.com.
+The code can be found in the repository http://svnint.ou.nl:8080/svn/ADL/Sentinel/trunk.
+Tests can be specified in  Sentinel/scripts/TestSpecs.txt and you may add
+your e-mail adress to Sentinel/scripts/Authors.txt. Tests are run automatically each night at 5AM,
+and upon request through the (rather primitive) web interface.
