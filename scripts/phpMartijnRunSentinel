@@ -32,4 +32,4 @@ svn cleanup
 #echo $? after cabal
 
 
-/home/martijn/svn/Sentinel/dist/build/sentinel/sentinel  < /dev/null > /home/martijn/www/SentinelOutput.txt 2>&1 &
+/home/martijn/svn/Sentinel/dist/build/sentinel/sentinel  < /dev/null > /home/martijn/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
