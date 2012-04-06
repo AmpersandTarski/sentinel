@@ -22,6 +22,18 @@
          ]
      }
 
+-- prototype build tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "Prototype/apps/Simple"
+         , "Prototype/apps/Misc"
+         , "Prototype/apps/Tests/ShouldSucceed"
+         , "Prototype/apps/INDOORS/INDOORS.adl"
+         , "Prototype/apps/Bugs/Fixed"
+         ]
+     }
+
 -- explicit tests (for Ampersand parser and typechecker only)
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldSucceed

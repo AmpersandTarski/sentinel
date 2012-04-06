@@ -14,3 +14,6 @@ testSpecsFile = "Sentinel/www/TestSpecs.txt"
 
 authorsFile :: String
 authorsFile = "Sentinel/www/Authors.txt"
+
+outputDir :: String
+outputDir = "Sentinel/www/ampersand"

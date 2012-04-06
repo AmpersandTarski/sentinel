@@ -47,6 +47,10 @@ collectFilePaths absFileSpec =
    
 
 -- execute project executable in directory of testFile (which is absolute). First arg is testFile
+-- an implicit --outputDir/--proto is added for  $svnDir / outputDir / filename ( and /fSpec for Ampersand) 
+-- Because the prototype generator does not respect outputDir, we need to use protoDir, which also forces
+-- generation of a prototype. However, this implicit argument will be replaced by a more general mechanism to
+-- allow filename to be used in the test spec (e.g. ["--outputDir=$OUTPUTDIR/$FILENAME/fSpec"])
 runTest :: TestSpec -> FilePath -> IO TestResult
 runTest testSpec@(TestSpec exec args desOutcome _) testFile =
  do { putStrLn $ testDescr
@@ -55,7 +59,12 @@ runTest testSpec@(TestSpec exec args desOutcome _) testFile =
             case exec of
               Ampersand -> svnDir ++ "/Ampersand/dist/build/ampersand/ampersand"
               Prototype -> svnDir ++ "/Prototype/dist/build/prototype/prototype"
-    ; result <- execute executable (testFile : args) $ takeDirectory testFile 
+    ; let absOutputDir = joinPath $ [svnDir, outputDir, dropExtension (takeFileName testFile)] ++
+                                    if exec == Ampersand then ["fSpec"] else []
+          absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
+    ; putStrLn $ "\n\n\n\n\n\n"++absOutputDirArg
+    ; result <- execute executable (testFile : absOutputDirArg 
+                                   : args) $ takeDirectory testFile 
     
     ; case result of
         ExecSuccess _   -> putStrLn   "Execution success"
