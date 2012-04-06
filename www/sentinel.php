@@ -23,7 +23,7 @@ function runSentinel() {
   <button onclick="location.href='CompileSentinel.php'">Recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
-  <button onclick="runSentinel()">Run Sentinel</button>
+  <button onclick="runSentinel()">Run Sentinel</button> (<a href="/www/ampersand/">view generated prototypes</a>)
   <p>
 <hr/>
 <?php
