@@ -10,7 +10,7 @@ oblomovSvnPath :: String
 oblomovSvnPath = "svn/EclipseHaskell" -- used if we're not on testServer
 
 testSpecsFile :: String
-testSpecsFile = "Sentinel/scripts/TestSpecs.txt"
+testSpecsFile = "Sentinel/www/TestSpecs.txt"
 
 authorsFile :: String
-authorsFile = "Sentinel/scripts/Authors.txt"
+authorsFile = "Sentinel/www/Authors.txt"
