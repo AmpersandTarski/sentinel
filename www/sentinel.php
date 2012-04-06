@@ -20,11 +20,10 @@ function runSentinel() {
 <body>
   
   <p>
-  <button onclick="location.href='CompileSentinel.php'">Recompile sentinel</button>
-  Only necessary if the sentinel source has been modified. Note that no output is shown until compilation has finished.
+  <button onclick="location.href='CompileSentinel.php'">Recompile Sentinel</button>
+  (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
-  <button onclick="runSentinel()">Run tests</button>
-  Takes a couple of minutes before any output is shown. Follow the link on the next page and press refresh after a while.
+  <button onclick="runSentinel()">Run Sentinel</button>
   <p>
 <hr/>
 <?php
@@ -38,13 +37,16 @@ $authors = array_filter($authors, "isNoComment");
 echo "Authors that will be notified: ".implode(", ", $authors);
 ?>
 <hr/>
+<?php
+$sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
+if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
+  echo '<span style="color: red">Tests are still running, refresh this page to update the results.</span><br/><br/>';
+else
+  echo 'Results of the latest test run.';
+?>
 <p style="color: blue">
 <?php
-$sentinelOutput = file('ampersand/SentinelOutput.txt');
-if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
-  echo '<span style="color: red">Tests are currently running. Refresh this page to update the results.</span><br/><br/>';
-
-echo implode("<br/>\n", $sentinelOutput);
+echo $sentinelOutput;
 ?>
 </p>
 </body>
