@@ -70,7 +70,7 @@ main =
     
 performTests :: IO (Maybe String)
 performTests =
- do { svnUpdate "Sentinel/scripts" -- update the scripts directory, so we get the most recent TestSpecs.txt
+ do { svnUpdate "Sentinel/www" -- update the www directory for the latest Authors.txt and TestSpecs.txt
     ; testSpecs <- parseTestSpecs
  
     ; isTestSrv <- isTestServer
