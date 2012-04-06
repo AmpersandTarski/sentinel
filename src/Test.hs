@@ -62,7 +62,6 @@ runTest testSpec@(TestSpec exec args desOutcome _) testFile =
     ; let absOutputDir = joinPath $ [svnDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     if exec == Ampersand then ["fSpec"] else []
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
-    ; putStrLn $ "\n\n\n\n\n\n"++absOutputDirArg
     ; result <- execute executable (testFile : absOutputDirArg 
                                    : args) $ takeDirectory testFile 
     
