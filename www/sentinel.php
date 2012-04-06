@@ -42,7 +42,7 @@ $sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
 if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
   echo '<span style="color: red">Tests are still running, refresh this page to update the results.</span><br/><br/>';
 else
-  echo 'Results of the latest test run.';
+  echo 'Results of the last test run.';
 ?>
 <p style="color: blue">
 <?php
