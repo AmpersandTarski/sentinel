@@ -142,7 +142,7 @@ initialize =
     ; revStr <- getRevisionStr "Sentinel"
     ; hName <- getHostName
     ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
-    ; putStrLn $ "######## Sentinel ("++revStr++") started on "++hName++" at "++time++" ########\n\n"
+    ; putStrLn $ "######## Sentinel (r"++revStr++") started on "++hName++" at "++time++" ########\n\n"
     }
     
 exit :: IO ()
