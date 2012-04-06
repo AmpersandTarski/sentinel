@@ -1,10 +1,10 @@
 <html>
-<!-- Make a symbolic link for this file and the php files to /var/www on the test server
+<!-- 
 
-sudo ln -s ~/scripts/sentinel.html /var/www
-sudo ln -s ~/scripts/CompileSentinel.php /var/www
-sudo ln -s ~/scripts/RunSentinel.php /var/www
-  
+Make a symbolic link for the Sentinel/www directory in /var/www on the test server (path will be /var/www/www)
+
+sudo ln -s /home/martijn/svn/Sentinel/www /var/www
+
 crontab contents:
 # for real, every night at 5
 0 5 * * * $HOME/svn/Sentinel/scripts/runSentinel
