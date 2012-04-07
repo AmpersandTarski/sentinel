@@ -1,2 +1,2 @@
 #killall -v -g sentinel
-nohup $HOME/svn/Sentinel/dist/build/sentinel/sentinel < /dev/null > $HOME/www/SentinelOutput.txt 2>&1 &
+nohup $HOME/svn/Sentinel/dist/build/sentinel/sentinel < /dev/null > $HOME/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
