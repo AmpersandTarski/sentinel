@@ -1,7 +1,7 @@
 module Defaults where
 
 testServerHostname :: String
-testServerHostname = "AmpersandTestTroll"
+testServerHostname = "Sentinel"
 
 testServerSvnPath :: String
 testServerSvnPath = "svn"
