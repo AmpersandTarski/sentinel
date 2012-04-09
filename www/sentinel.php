@@ -40,12 +40,10 @@ echo "Authors that will be notified: ".implode(", ", $authors);
 <?php
 $sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
 if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
-  echo '<span style="color: red">Tests are still running, refresh this page to update the results.</span><br/><br/>';
+  echo '<span style="color: red">Tests are still running, refresh this page to update the results.</span>';
 else
   echo 'Results of the last test run.';
-?>
-<?php
-echo $sentinelOutput;
+echo '<br/><br/>'.$sentinelOutput;
 ?>
 </body>
 </html>
