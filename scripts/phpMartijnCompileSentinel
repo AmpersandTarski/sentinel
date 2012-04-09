@@ -19,5 +19,4 @@ svn update
 
 echo before cabal
 cabal clean 
-cabal configure 
-cabal build
+cabal install
