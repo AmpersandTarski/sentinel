@@ -1,2 +1,3 @@
-#killall -v -g sentinel
-nohup $HOME/svn/Sentinel/dist/build/sentinel/sentinel < /dev/null > $HOME/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
+# called by crontab
+killall -v -g sentinel
+nohup $HOME/svn/Sentinel/dist/build/sentinel/sentinel --html < /dev/null > $HOME/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
