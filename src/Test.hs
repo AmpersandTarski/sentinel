@@ -9,10 +9,10 @@ import Utils
 import Execute
 import Defaults
 
-runTestSpec :: TestSpec -> IO [TestResult]
-runTestSpec testSpec =
+runTestSpec :: Options -> TestSpec -> IO [TestResult]
+runTestSpec opts testSpec =
  do { testFiles <- getTestFiles $ getTestFileSpecs testSpec
-    ; mapM (reportTestResult . runTest testSpec) testFiles
+    ; mapM (reportTestResult opts . runTest opts testSpec) testFiles
     }
 {-
     ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
@@ -51,8 +51,8 @@ collectFilePaths absFileSpec =
 -- Because the prototype generator does not respect outputDir, we need to use protoDir, which also forces
 -- generation of a prototype. However, this implicit argument will be replaced by a more general mechanism to
 -- allow filename to be used in the test spec (e.g. ["--outputDir=$OUTPUTDIR/$FILENAME/fSpec"])
-runTest :: TestSpec -> FilePath -> IO TestResult
-runTest testSpec@(TestSpec exec args desOutcome _) testFile =
+runTest :: Options -> TestSpec -> FilePath -> IO TestResult
+runTest opts testSpec@(TestSpec exec args desOutcome _) testFile =
  do { putStrLn $ testDescr
     ; svnDir <- getSvnDir
     ; let executable =
@@ -67,7 +67,8 @@ runTest testSpec@(TestSpec exec args desOutcome _) testFile =
     
     ; case result of
         ExecSuccess _   -> putStrLn   "Execution success"
-        ExecFailure err -> putStrLn $ "Execution failure: "++err
+        ExecFailure err -> putStrLn $ "Execution failure: " ++
+                                      bracketHtml opts "<div style='font-family:courier; font-size:85%'>" "</div>" err
                          
     ; let testOutcome = case (getDesiredOutcome testSpec, result) of
                           (ShouldFail,    ExecFailure err)  -> TestSuccess err
@@ -78,15 +79,16 @@ runTest testSpec@(TestSpec exec args desOutcome _) testFile =
     }
  where testDescr = "Running "++show exec++" "++show args++" on "++testFile ++ ". {"++showDesiredOutcome desOutcome ++"}"
 -- yes, parse is a rather big word for this function
-parseTestSpecs :: IO [TestSpec]
-parseTestSpecs =
+parseTestSpecs :: Options -> IO [TestSpec]
+parseTestSpecs opts =
  do { svnDir <- getSvnDir
     ; let testSpecsFilePath = combine svnDir testSpecsFile
     ; testSpecsStr <- readFile testSpecsFilePath
     ; let lexedTestSpecsStr = reverse . dropWhile isSpace . reverse -- read doesn't like trailing whitespace 
                             . unlines . filter (not . ("--" `isPrefixOf`)) . lines   -- line comments are only allowed at start of line 
                             $ testSpecsStr                          -- (otherwise we also need to escape strings for "--validate")
-    ; putStrLn $ "Parsing test specs:\n" ++ lexedTestSpecsStr ++ "\n\n"
+    ; putStrLn $ bracketHtml opts "<div style='font-family: courier'>" "</div>" $
+                   "Parsing test specs:\n" ++ lexedTestSpecsStr ++ "\n\n"
     ; case readMaybe lexedTestSpecsStr :: Maybe [TestSpec] of
         Nothing  -> error $ "ERROR: cannot parse file "++testSpecsFilePath
         Just tss -> return tss

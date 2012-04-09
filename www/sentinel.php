@@ -44,10 +44,8 @@ if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
 else
   echo 'Results of the last test run.';
 ?>
-<p style="color: blue">
 <?php
 echo $sentinelOutput;
 ?>
-</p>
 </body>
 </html>

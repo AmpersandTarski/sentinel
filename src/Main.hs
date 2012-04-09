@@ -2,9 +2,11 @@ module Main where
 
 import Prelude hiding (catch)
 import Control.Exception
+import Control.Monad
 import System.IO
 import Network.BSD
 import System.Locale
+import Options (runCommand)
 import Data.List
 import Data.Time
 import Types
@@ -43,6 +45,7 @@ copy all test failures to a www page for an easy overview
 figure out what to do when we get dependency problems after cabal update
 
 low priority:
+use class tags and css instead of hard-coded styles
 take --enable-tests into account
 
 Send a notification if the server does not terminate within a certain period of time.
@@ -51,13 +54,15 @@ This would not be signaled by the server, so we need a safe guard.
 
 -}
 
+ 
 main :: IO ()
-main = 
+main = runCommand $ \opts _ ->
  do { initialize
-    ; mFailureMessage <- performTests
+    ; isTestSrv <- isTestServer
+    ; mFailureMessage <- performTests opts
     ; case mFailureMessage of
         Nothing -> return ()
-        Just failureMessage ->
+        Just failureMessage -> when isTestSrv $
          do { authors <- getAuthors
             ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
             ; notifyByMail authors "Test failure" $ 
@@ -67,11 +72,11 @@ main =
             } 
     ; exit
     }
-    
-performTests :: IO (Maybe String)
-performTests =
+
+performTests :: Options -> IO (Maybe String)
+performTests opts =
  do { svnUpdate "Sentinel/www" -- update the www directory for the latest Authors.txt and TestSpecs.txt
-    ; testSpecs <- parseTestSpecs
+    ; testSpecs <- parseTestSpecs opts
  
     ; isTestSrv <- isTestServer
     ; (ampersandOk, prototypeOk, buildTestResults) <-
@@ -82,10 +87,10 @@ performTests =
             -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
             
             ; cabalClean "Ampersand" []
-            ; t1 <- reportTestResult $ testBuild "Ampersand" ["-f-library"]      "the Ampersand executable"
-            ; t2 <- reportTestResult $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
+            ; t1 <- reportTestResult opts $ testBuild "Ampersand" ["-f-library"]      "the Ampersand executable"
+            ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
             ; cabalClean "Prototype" []
-            ; t3 <- reportTestResult $ testBuild "Prototype" [] "the prototype generator"
+            ; t3 <- reportTestResult opts $ testBuild "Prototype" [] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
@@ -104,7 +109,7 @@ performTests =
             
     ; let getTestResultsFor _          False = return []
           getTestResultsFor executable True  =
-            fmap concat $ mapM runTestSpec [ ts | ts <- testSpecs, getTestExecutable ts == executable ]
+            fmap concat $ mapM (runTestSpec opts) [ ts | ts <- testSpecs, getTestExecutable ts == executable ]
     -- only execute tests if building the executable succeeded
     -- not very elegant, but only here until we can use the old executables in case of build failures
     ; ampersandExecTestResults <- getTestResultsFor Ampersand ampersandOk
@@ -115,15 +120,17 @@ performTests =
     ; let failedTestResults = filter (not . isTestSuccessful) allTestResults
           nrOfFailed = length failedTestResults
     
-    ; putStrLn $ unlines [ "\n\n--------"
-                         , "Total number of tests: " ++ show (length allTestResults)
-                         , "Number of failed tests: " ++ show nrOfFailed
-                         ]
-    ; let failedTestsTxt = intercalate "\n\n" . map showTestResult $ failedTestResults
-                                
+    ; putStr $ if optHtml opts then "<hr/>" else "\n\n--------"
+    ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>" "</p>" $
+                   unlines [ "Total number of tests: " ++ show (length allTestResults)
+                           , "Number of failed tests: " ++ show nrOfFailed
+                           ]
+
     ; if nrOfFailed == 0
       then return Nothing
-      else do { putStrLn failedTestsTxt
+      else do { let failedTestsTxt = intercalate "\n\n" . map showTestResult $ failedTestResults
+              
+              ; putStrLn $ "\nList of tests that did not pass" ++ failedTestsTxt
               ; return $ Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++
                                 " did not pass:\n\n"++
                                 failedTestsTxt

@@ -3,7 +3,8 @@ module Utils where
 import Data.List
 import System.Directory hiding (executable)
 import System.FilePath
-import System.IO               
+import System.IO
+import Control.Monad               
 import Network
 import Network.BSD
 import Types
@@ -26,16 +27,22 @@ mkExecutionTest testDescr exec =
     ; return $ TestResult testOutcome testDescr  
     }
     
-reportTestResult :: IO TestResult -> IO TestResult
-reportTestResult test =
- do { testResult <- test
+reportTestResult :: Options -> IO TestResult -> IO TestResult
+reportTestResult opts test =
+ do { when (optHtml opts) $ putStrLn "<hr/>"
+    ; testResult <- test
     ; case getResultOutcome testResult of
-        TestSuccess _ -> putStrLn $ "Test passed\n"
-        TestFailure outp -> putStrLn $ "Output:\n"++outp++"\nTest did not pass\n\n"
+        TestSuccess _ -> putStrLn $ bracketHtml opts "<div style='color: green'>" "</div>"
+                                      "Test passed"
+        TestFailure outp -> putStrLn $ bracketHtml opts "<div style='color: red'>" "</div>"
+                                         "Test did not pass"
                             -- todo: only show output for tests that should succeed
     ; return testResult -- return the result, so we can easily add this function to a computation
     } 
-    
+
+bracketHtml :: Options -> String -> String -> String -> String
+bracketHtml opts open close str = if optHtml opts then open ++ str ++ close else str  
+
 -- return True if we're running on the dedicated test server
 isTestServer :: IO Bool
 isTestServer = 

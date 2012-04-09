@@ -1,4 +1,7 @@
+{-# LANGUAGE TemplateHaskell #-}
 module Types where
+
+import Options hiding (Options)
 
 data TestResult = TestResult { getResultOutcome :: TestOutcome
                              , getResultTestDescr :: String
@@ -29,4 +32,7 @@ data TestSpec = TestSpec { getTestExecutable :: TestExecutable
                          , getDesiredOutcome :: DesiredOutcome
                          , getTestFileSpecs  :: [String] -- relative to svn directory
                          } deriving (Show, Read)
-               
+
+
+defineOptions "Options" $ boolOption "optHtml" "html" False "Generate html output."
+          
