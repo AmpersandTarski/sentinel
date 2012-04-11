@@ -35,15 +35,25 @@ function isNoComment($author)
 $authors = file('Authors.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 $authors = array_filter($authors, "isNoComment");
 echo "Authors that will be notified: ".implode(", ", $authors);
-?>
-<hr/>
-<?php
+
+echo '<hr/></br><div style="font-size: 120%">';
+
 $sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
 if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
-  echo '<span style="color: red">Tests are still running, refresh this page to update the results.</span>';
-else
-  echo 'Results of the last test run.';
-echo '<br/><br/>'.$sentinelOutput;
+  echo '<span style="color: darkblue">Tests are still running, refresh this page to update the results.</span>';
+else {
+  echo 'Results of the last test run: ';
+  $matches = array();
+  preg_match("/Total number of tests: ([0-9]+)/", $sentinelOutput, $matches);
+  $total = $matches[1];
+  preg_match("/Number of failed tests: ([0-9]+)/", $sentinelOutput, $matches);
+  $notPassed = $matches[1];
+  if ($notPassed == 0)
+    echo "<span style=\"color: green\">All $total tests passed.</span>";
+  else
+    echo "<span style=\"color: red\">$notPassed out of $total tests did not pass.</span>";
+}
+echo '<br/><br/></div>Sentinel output:<br/></br>'.$sentinelOutput;
 ?>
 </body>
 </html>
