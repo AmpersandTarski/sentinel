@@ -44,14 +44,18 @@ if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
 else {
   echo 'Results of the last test run: ';
   $matches = array();
-  preg_match("/Total number of tests: ([0-9]+)/", $sentinelOutput, $matches);
-  $total = $matches[1];
-  preg_match("/Number of failed tests: ([0-9]+)/", $sentinelOutput, $matches);
-  $notPassed = $matches[1];
-  if ($notPassed == 0)
-    echo "<span style=\"color: green\">All $total tests passed.</span>";
-  else
-    echo "<span style=\"color: red\">$notPassed out of $total tests did not pass.</span>";
+  $m1 = preg_match("/Total number of tests: ([0-9]+)/", $sentinelOutput, $matches1);
+  $m2 = preg_match("/Number of failed tests: ([0-9]+)/", $sentinelOutput, $matches2);
+  if (!$m1 || !$m2)
+    echo "<span style=\"color: red\">Error, Sentinel terminated unexpectedly.</span>"; 
+  else {
+    $total = $matches1[1];
+    $notPassed = $matches2[1];
+    if ($notPassed == 0)
+      echo "<span style=\"color: green\">All $total tests passed.</span>";
+    else
+      echo "<span style=\"color: red\">$notPassed out of $total tests did not pass.</span>";
+  }
 }
 echo '<br/><br/></div>Sentinel output:<br/></br>'.$sentinelOutput;
 ?>
