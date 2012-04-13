@@ -34,7 +34,7 @@ function isNoComment($author)
 
 $authors = file('Authors.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 $authors = array_filter($authors, "isNoComment");
-echo "Authors that will be notified: ".implode(", ", $authors);
+echo "Authors that will be notified on nightly tests: ".implode(", ", $authors);
 
 echo '<hr/></br><div style="font-size: 120%">';
 
