@@ -39,7 +39,6 @@
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
-         , "Prototype/apps/INDOORS/DemoBeslissingen.adl"
          , "Prototype/apps/INDOORS/Advocatentableau.adl"
          ]
      }
