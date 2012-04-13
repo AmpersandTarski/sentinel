@@ -59,6 +59,7 @@
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getDesiredOutcome = ShouldFail
      , getTestFileSpecs = 
          [ "Prototype/apps/Bugs/Current/SQL"
+         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
          ]
      }
 
