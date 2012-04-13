@@ -2,7 +2,7 @@
 -- note that comments have to start at the beginning of the line
   
 [ TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=latex"], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -50,7 +50,7 @@
 
 -- known bugs: it's not that we want them to fail, but we don't want to be notified. And we do want to be notified when they are fixed
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=latex"], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
          [ "Prototype/apps/Bugs/Current/Other"
          ]

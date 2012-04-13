@@ -30,6 +30,10 @@ if the message is not in the result we can print it before executing the test
 Also keep desired result in TestResult, so we can give a less confusing message (e.g. this test succeeded but should have failed)
 and only print output in case of failed run, rather than a failed test (output from successful tests that should have failed is probably not interesting)
 
+Use a Haskell server, so calling svn and cabal will be much easier. (Sentinel installation will also be easier).
+
+Fix hanging of sentinel when Ampersand hangs (for example for bug #327)
+
 check test specs before building anything, so you see quickly when there is a mistake
 
 maybe even use something like Passed/NotPassed for tests instead of Success/Failure
