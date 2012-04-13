@@ -60,16 +60,17 @@ main = runCommand $ \opts _ ->
  do { initialize
     ; isTestSrv <- isTestServer
     ; mFailureMessage <- performTests opts
-    ; case mFailureMessage of
-        Nothing -> return ()
-        Just failureMessage -> when isTestSrv $
-         do { authors <- getAuthors
-            ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
-            ; notifyByMail authors "Test failure" $ 
-                "This is an automated mail from the Ampersand Sentinel.\n\n" ++
-                failureMessage ++ "\n\n"++
-                "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
-            } 
+    ; when (optMail opts) $
+        case mFailureMessage of
+          Nothing -> return ()
+          Just failureMessage -> when isTestSrv $
+           do { authors <- getAuthors
+              ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
+              ; notifyByMail authors "Test failure" $ 
+                  "This is an automated mail from the Ampersand Sentinel.\n\n" ++
+                  failureMessage ++ "\n\n"++
+                  "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
+              } 
     ; exit
     }
 

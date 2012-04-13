@@ -34,5 +34,7 @@ data TestSpec = TestSpec { getTestExecutable :: TestExecutable
                          } deriving (Show, Read)
 
 
-defineOptions "Options" $ boolOption "optHtml" "html" False "Generate html output."
+defineOptions "Options" $ do { boolOption "optHtml" "html" False "Generate html output."
+                             ; boolOption "optMail" "mail" False "Notify authors by e-mail."
+                             }
           
