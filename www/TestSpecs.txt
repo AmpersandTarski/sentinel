@@ -22,15 +22,25 @@
          ]
      }
 
--- prototype build tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
+-- prototype type-check tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--dev"], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/Tests/ShouldSucceed"
+         [ "Prototype/apps/Tests/ShouldSucceed"
          , "Prototype/apps/INDOORS/INDOORS.adl"
          , "Prototype/apps/Bugs/Fixed"
+         ]
+     }
+
+-- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
+-- TODO: all Koppelvlakdemos should be listed here
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "Prototype/apps/Simple"
+         , "Prototype/apps/Misc"
+         , "Prototype/apps/INDOORS/DemoBeslissingen.adl"
+         , "Prototype/apps/INDOORS/Advocatentableau.adl"
          ]
      }
 
