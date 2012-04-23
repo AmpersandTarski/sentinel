@@ -1,17 +1,17 @@
-echo Running phpMartijnRunSentinel
+echo Running phpSentinelRunSentinel
 
 # script that is called by the www server (from php)
 # has absolute paths instead of $HOME
 # NOTE: make sure that www directory of SentinelOutput is writable for 'other'
 
 #echo "x<br/>"
-#sudo -u martijn /bin/ls -al 2>&1
+#sudo -u sentinel /bin/ls -al 2>&1
 #echo $?
 #echo "x<br/>"
 
-HOME="/home/martijn"
+HOME="/home/sentinel"
 LANG=en_US.UTF-8
-PATH=/home/martijn/svn/Sentinel/scripts:/home/martijn/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+PATH=/home/sentinel/svn/Sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
 
 export HOME
 export LANG
@@ -19,11 +19,11 @@ export PATH
 
 #whoami
 killall sentinel
-rm -rf /home/martijn/svn/Ampersand/dist
-rm -rf /home/martijn/svn/Prototype/dist
-cd /home/martijn/svn/Ampersand
+rm -rf /home/sentinel/svn/Ampersand/dist
+rm -rf /home/sentinel/svn/Prototype/dist
+cd /home/sentinel/svn/Ampersand
 svn cleanup
-cd /home/martijn/svn/Prototype
+cd /home/sentinel/svn/Prototype
 svn cleanup
 
 #echo before cabal
@@ -32,4 +32,4 @@ svn cleanup
 #echo $? after cabal
 
 
-/home/martijn/svn/Sentinel/dist/build/sentinel/sentinel --html  < /dev/null > /home/martijn/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
+/home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html  < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
