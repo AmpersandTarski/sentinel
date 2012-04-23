@@ -92,10 +92,10 @@ performTests opts =
             -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
             
             ; cabalClean "Ampersand" []
-            ; t1 <- reportTestResult opts $ testBuild "Ampersand" ["-f-library"]      "the Ampersand executable"
+            ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["-f-library"]      "the Ampersand executable"
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
             ; cabalClean "Prototype" []
-            ; t3 <- reportTestResult opts $ testBuild "Prototype" [] "the prototype generator"
+            ; t3 <- reportTestResult opts $ testInstall "Prototype" [] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
