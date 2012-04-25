@@ -46,7 +46,7 @@ configure fail should also be reported
 
 copy all test failures to a www page for an easy overview
 
-figure out what to do when we get dependency problems after cabal update
+figure out what to do when we get dependency problems after cabal update (probably should use cabal-dev instead of cabal, to sandbox builds)
 
 low priority:
 use class tags and css instead of hard-coded styles
