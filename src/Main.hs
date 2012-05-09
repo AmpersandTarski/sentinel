@@ -73,7 +73,7 @@ main = runCommand $ \opts _ ->
               ; notifyByMail authors "Test failure" $ 
                   "This is an automated mail from the Ampersand Sentinel.\n\n" ++
                   failureMessage ++ "\n\n"++
-                  "Please consult http://sentinel.oblomov.com/ampersand/SentinelOutput.txt for more details."
+                  "Please consult http://sentinel.tarski.nl for more details."
               } 
     ; exit
     }
@@ -92,8 +92,8 @@ performTests opts =
             -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
             
             ; cabalClean "Ampersand" []
-            ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["-f-library"]      "the Ampersand executable"
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
+            ; t1 <- reportTestResult opts $ testInstall "Ampersand" []                "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
             ; cabalClean "Prototype" []
             ; t3 <- reportTestResult opts $ testInstall "Prototype" [] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
