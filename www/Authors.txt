@@ -1,3 +1,5 @@
 -- list of e-mail addresses that should be notified in case of a test error
 martijn@oblomov.com
 stef.joosten@ou.nl
+han.joosten@atos.net
+gerard.michels@ou.nl
