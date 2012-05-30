@@ -8,7 +8,7 @@
          , "Prototype/apps/Misc"
          , "Prototype/apps/Tests/ShouldSucceed"
          , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Atlas/RAP.adl"
+--         , "Prototype/apps/Atlas/RAP.adl"
          , "Prototype/apps/Bugs/Fixed"
          ]
      }
