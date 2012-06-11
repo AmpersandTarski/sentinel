@@ -87,13 +87,18 @@ performTests opts =
     ; (ampersandOk, prototypeOk, buildTestResults) <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
-         do { svnUpdate "Ampersand"
+         do { putStrLn "Performing svn update for Ampersand"
+            ; svnUpdate "Ampersand"
+            ; putStrLn "Performing svn update for Prototype"
             ; svnUpdate "Prototype"
             -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
+            ; putStrLn "Performing cabal update"
             ; cabalUpdate
+            ; putStrLn "Cleaning Ampersand"
             ; cabalClean "Ampersand" []
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" []                "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
+            ; putStrLn "Cleaning Prototype"
             ; cabalClean "Prototype" []
             ; t3 <- reportTestResult opts $ testInstall "Prototype" [] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
