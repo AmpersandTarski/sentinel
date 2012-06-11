@@ -8,7 +8,7 @@ data TestResult = TestResult { getResultOutcome :: TestOutcome
                              } deriving Show
 
 showTestResult :: TestResult -> String
-showTestResult (TestResult outcome descr) = "Test: " ++ descr 
+showTestResult (TestResult _ descr) = "Test: " ++ descr 
        
 isTestSuccessful :: TestResult -> Bool
 isTestSuccessful (TestResult (TestSuccess _) _) = True
