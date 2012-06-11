@@ -26,6 +26,10 @@ testInstall project flags targetDescr = mkExecutionTest testDescr $
     ; return result
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
+
+cabalUpdate :: IO ()
+cabalUpdate = failOnError ("error during cabal update") $
+  cabal "update" "." [] -- just pass . as project dir
  
 cabalClean :: String -> [String] -> IO ()
 cabalClean project flags = failOnError ("error during cabal clean for "++project++": ") $

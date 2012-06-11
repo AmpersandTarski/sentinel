@@ -90,7 +90,7 @@ performTests opts =
          do { svnUpdate "Ampersand"
             ; svnUpdate "Prototype"
             -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
-            
+            ; cabalUpdate
             ; cabalClean "Ampersand" []
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" []                "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
