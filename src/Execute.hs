@@ -85,6 +85,7 @@ execute cmd args dir =
                 , std_out      = CreatePipe
                 , std_err      = CreatePipe
                 , close_fds    = False -- no need to close all other file descriptors
+                , create_group = False
                 }
                  
 --    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
