@@ -115,7 +115,7 @@ sendMail sender senderName recipients subject body =
 
 mkMailStr :: String -> String -> [String] -> String -> String -> String
 mkMailStr senderName sender recipients subject body =
-            "HELO amprersand.oblomov.com\n"  --<-- staat hier een tiepfout?
+            "HELO amprersand.oblomov.com\n"  -- <-- staat hier een tiepfout?
          ++ "MAIL From: "++ sender ++ "\n"
          ++ unlines [ "RCPT To: "++recipient | recipient <- recipients ]
          ++ "DATA\n"
