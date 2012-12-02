@@ -142,6 +142,7 @@ performTests opts =
               
               ; putStrLn $ "\nList of tests that did not pass" ++ failedTestsTxt
               ; return $ Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++
+                                " out of "++ show (length allTestResults)++
                                 " did not pass:\n\n"++
                                 failedTestsTxt
               }    
