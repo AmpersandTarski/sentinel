@@ -52,7 +52,9 @@ svnUpdate project =
     ; result <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
                                          -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
     ; case result of
-        ExecSuccess _   -> return ()
+        ExecSuccess _   -> do { revStr <- getRevisionStr project
+                              ; putStr $ project ++ " revision: " ++ revStr 
+                              }
         ExecFailure err -> error $ "error during svn update: " ++ err
     }
 
