@@ -11,7 +11,7 @@ ini_set("display_errors", 1);
 function runSentinel() {
   $.ajax({ url: 'RunSentinel.php',
            cache: false,
-           success: function(data){ setTimeout( function() {window.location.reload()}, 100);
+           success: function(data){ setTimeout( function() {window.location.reload()}, 250);
            // delay reload to ensure sentinel process started (function() is necessary to make reload lazy)
          }
   });
