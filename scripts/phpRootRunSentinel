@@ -2,8 +2,8 @@ echo Running phpRootRunSentinel
 # script that is called by the www server (from php)
 
 
-killall --quiet sentinel
-killall --quiet phpSentinelRunSentinel
-# probably enough to kill phpSentinelRunSentinel, but killing both doesn't harm
+killall --quiet -g sentinel
+killall --quiet -g runSentinel
+# probably enough to kill runSentinel, but killing both doesn't harm
 
-sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelRunSentinel
+sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/runSentinel

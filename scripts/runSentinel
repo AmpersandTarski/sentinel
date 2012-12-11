@@ -1,6 +1,6 @@
-echo Running phpSentinelRunSentinel
+echo Running runSentinel
 
-# script that is called by the www server (from php)
+# script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
 # has absolute paths instead of $HOME
 # NOTE: make sure that www directory of SentinelOutput is writable for 'other'
 
