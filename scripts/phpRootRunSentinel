@@ -6,4 +6,4 @@ killall --quiet sentinel
 killall --quiet phpSentinelRunSentinel
 # probably enough to kill phpSentinelRunSentinel, but killing both doesn't harm
 
-sudo -u "sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelRunSentinel &"
+sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelRunSentinel

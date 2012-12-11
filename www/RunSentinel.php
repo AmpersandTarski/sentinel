@@ -1,3 +1,3 @@
 <?php
-exec('sudo /home/sentinel/svn/Sentinel/scripts/phpRootRunSentinel'); // redirects its own output
+exec('sudo -b /home/sentinel/svn/Sentinel/scripts/phpRootRunSentinel > /dev/null &'); // redirects its own output
 ?>
