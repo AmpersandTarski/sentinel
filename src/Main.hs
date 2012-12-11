@@ -132,8 +132,8 @@ performTests opts =
     
     ; putStr $ if optHtml opts then "<hr/>" else "\n\n--------"
     ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>" "</p>" $
-                   unlines [ "Total number of tests: " ++ show (length allTestResults)
-                           , "Number of failed tests: " ++ show nrOfFailed
+                   unlines [ "Total number of tests: " ++ show (length allTestResults) -- NOTE: scripts/runSentinel depends on the exact
+                           , "Number of failed tests: " ++ show nrOfFailed             --       format of these two lines.
                            ]
 
     ; if nrOfFailed == 0
@@ -166,5 +166,5 @@ initialize =
 exit :: IO ()
 exit =
  do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
-    ; putStrLn $ "\n######## Sentinel exited at "++time++" ########\n\n"
+    ; putStrLn $ "\n######## Sentinel exited at "++time++" ########\n\n" -- NOTE: www/index.php depends on the exact format of this line.
     }
