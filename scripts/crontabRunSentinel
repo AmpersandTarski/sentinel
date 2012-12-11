@@ -1,3 +1,4 @@
 # called by crontab
-killall -q -g sentinel
-nohup $HOME/svn/Sentinel/dist/build/sentinel/sentinel --html --mail < /dev/null > $HOME/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
+killall --quiet sentinel
+
+$HOME/svn/Sentinel/scripts/runSentinel --mail > /dev/null 2>&1

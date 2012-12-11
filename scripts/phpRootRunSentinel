@@ -3,7 +3,5 @@ echo Running phpRootRunSentinel
 
 
 killall --quiet sentinel
-killall --quiet runSentinel
-# probably enough to kill runSentinel, but killing both doesn't harm
 
 sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/runSentinel
