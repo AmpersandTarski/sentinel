@@ -4,11 +4,6 @@ echo Running runSentinel
 # has absolute paths instead of $HOME
 # NOTE: make sure that www directory of SentinelOutput is writable for 'other'
 
-#echo "x<br/>"
-#sudo -u sentinel /bin/ls -al 2>&1
-#echo $?
-#echo "x<br/>"
-
 HOME="/home/sentinel"
 LANG=en_US.UTF-8
 PATH=/home/sentinel/svn/Sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
@@ -17,8 +12,7 @@ export HOME
 export LANG
 export PATH
 
-#whoami
-killall sentinel
+killall --quiet sentinel
 rm -rf /home/sentinel/svn/Ampersand/dist
 rm -rf /home/sentinel/svn/Prototype/dist
 cd /home/sentinel/svn/Ampersand

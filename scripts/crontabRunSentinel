@@ -1,4 +1,2 @@
 # called by crontab
-killall --quiet sentinel
-
 $HOME/svn/Sentinel/scripts/runSentinel --mail > /dev/null 2>&1
