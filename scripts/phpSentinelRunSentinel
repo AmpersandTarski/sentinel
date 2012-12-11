@@ -30,7 +30,7 @@ svn cleanup
 Timestamp=`date +%Y-%m-%d_%H:%M:%S`
 
 # execute Sentinel
-/home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html  < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
+/home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html  < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
 
 # get svn revision numbers for all components (after running sentinel, so svn updates are taken into account)
 cd /home/sentinel/svn/Ampersand

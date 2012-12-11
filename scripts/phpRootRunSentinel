@@ -4,4 +4,4 @@ echo Running phpRootRunSentinel
 #whoami
 killall --quiet sentinel
 
-sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelRunSentinel
+sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelRunSentinel &
