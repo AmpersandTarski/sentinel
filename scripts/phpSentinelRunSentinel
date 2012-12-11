@@ -26,10 +26,21 @@ svn cleanup
 cd /home/sentinel/svn/Prototype
 svn cleanup
 
-#echo before cabal
-#cabal clean 
-#cabal configure 
-#echo $? after cabal
+# get timestamp at the start of sentinel execution
+Timestamp=`date +%Y-%m-%d_%H:%M:%S`
 
-
+# execute Sentinel
 /home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html  < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1 &
+
+# get svn revision numbers for all components (after running sentinel, so svn updates are taken into account)
+cd /home/sentinel/svn/Ampersand
+AmpersandRevision=`svnversion`
+cd /home/sentinel/svn/Prototype
+PrototypeRevision=`svnversion`
+cd /home/sentinel/svn/Sentinel
+SentinelRevision=`svnversion`
+
+Filename=SentinelOutput_${Timestamp}_Amp:${AmpersandRevision}_Proto:${PrototypeRevision}_Sent:${SentinelRevision}.html
+
+# put a </br> at the end of each line and store in logs directory
+sed 's/$/<\/br>/' /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt > /home/sentinel/svn/Sentinel/www/logs/$Filename
