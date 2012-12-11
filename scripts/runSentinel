@@ -26,7 +26,13 @@ svn cleanup
 Timestamp=`date +%Y-%m-%d_%H:%M:%S`
 
 # execute Sentinel with extra arguments passed to this script ($@)
-/home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
+#/home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
+
+# Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
+# take the 5th field using space as separator
+NrOfFailed=`grep "Number of failed tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
+# take the 7th field using space as separator
+NrOfTests=`grep "Total number" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f7`
 
 # get svn revision numbers for all components (after running sentinel, so svn updates are taken into account)
 cd /home/sentinel/svn/Ampersand
@@ -36,7 +42,7 @@ PrototypeRevision=`svnversion`
 cd /home/sentinel/svn/Sentinel
 SentinelRevision=`svnversion`
 
-Filename=SentinelOutput_${Timestamp}_Amp:${AmpersandRevision}_Proto:${PrototypeRevision}_Sent:${SentinelRevision}.html
+Filename=SentinelOutput_${Timestamp}__${NrOfFailed}_of_${NrOfTests}__Amp:${AmpersandRevision}_Pro:${PrototypeRevision}_Sen:${SentinelRevision}.html
 
 # put a </br> at the end of each line and store in logs directory
 sed 's/$/<\/br>/' /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt > /home/sentinel/svn/Sentinel/www/logs/$Filename
