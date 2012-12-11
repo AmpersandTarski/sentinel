@@ -53,7 +53,7 @@ svnUpdate project =
                                          -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
     ; case result of
         ExecSuccess _   -> do { revStr <- getRevisionStr project
-                              ; putStr $ project ++ " revision: " ++ revStr 
+                              ; putStrLn $ project ++ " revision: " ++ revStr 
                               }
         ExecFailure err -> error $ "error during svn update: " ++ err
     }
