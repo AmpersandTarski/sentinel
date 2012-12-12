@@ -14,7 +14,7 @@ isTestSuccessful :: TestResult -> Bool
 isTestSuccessful (TestResult (TestSuccess _) _) = True
 isTestSuccessful _                              = False
 
-data ExecutionOutcome = ExecFailure String | ExecSuccess String deriving Show
+data ExecutionOutcome = ExecFailure Int String | ExecSuccess String deriving Show
                              
 data TestOutcome = TestFailure String | TestSuccess String deriving (Show, Eq)
 
@@ -29,6 +29,8 @@ data TestExecutable = Ampersand | Prototype deriving (Show, Read, Eq)
 
 data TestSpec = TestSpec { getTestExecutable :: TestExecutable 
                          , getTestArgs       :: [String] 
+                         , getPanicExitCodes :: [Int]    -- exit codes for which the TestOutcome will always be TestFailure, 
+                                                         -- even when the DesiredOutcome is ShouldFail
                          , getDesiredOutcome :: DesiredOutcome
                          , getTestFileSpecs  :: [String] -- relative to svn directory
                          } deriving (Show, Read)

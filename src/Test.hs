@@ -52,7 +52,7 @@ collectFilePaths absFileSpec =
 -- generation of a prototype. However, this implicit argument will be replaced by a more general mechanism to
 -- allow filename to be used in the test spec (e.g. ["--outputDir=$OUTPUTDIR/$FILENAME/fSpec"])
 runTest :: Options -> TestSpec -> FilePath -> IO TestResult
-runTest opts testSpec@(TestSpec exec args desOutcome _) testFile =
+runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile =
  do { putStrLn $ testDescr
     ; svnDir <- getSvnDir
     ; let executable =
@@ -67,14 +67,18 @@ runTest opts testSpec@(TestSpec exec args desOutcome _) testFile =
     
     ; case result of
         ExecSuccess _   -> putStrLn   "Execution success"
-        ExecFailure err -> putStrLn $ "Execution failure: " ++
-                                      bracketHtml opts "<div style='font-family:courier; font-size:85%'>" "</div>" err
+        ExecFailure exitCode err -> putStrLn $ (if exitCode `elem` panicExitCodes 
+                                                then "Execution exception (exit code is in panicExitCodes): " 
+                                                else "Execution failure: ") ++
+                                               bracketHtml opts "<div style='font-family:courier; font-size:85%'>" "</div>" err
                          
-    ; let testOutcome = case (getDesiredOutcome testSpec, result) of
-                          (ShouldFail,    ExecFailure err)  -> TestSuccess err
-                          (ShouldFail,    ExecSuccess outp) -> TestFailure outp
-                          (ShouldSucceed, ExecFailure err)  -> TestFailure err
-                          (ShouldSucceed, ExecSuccess outp) -> TestSuccess outp
+    ; let testOutcome = 
+                 case (result, getDesiredOutcome testSpec) of
+                   (ExecFailure exitCode err, _         ) | exitCode `elem` panicExitCodes -> TestFailure err
+                   (ExecFailure _ err,        ShouldFail)    -> TestSuccess err
+                   (ExecFailure _ err,        ShouldSucceed) -> TestFailure err
+                   (ExecSuccess outp,         ShouldFail)    -> TestFailure outp
+                   (ExecSuccess outp,         ShouldSucceed) -> TestSuccess outp
     ; return $ TestResult testOutcome testDescr
     }
  where testDescr = "Running "++show exec++" "++show args++" on "++testFile ++ ". {"++showDesiredOutcome desOutcome ++"}"

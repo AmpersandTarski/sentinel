@@ -15,7 +15,7 @@ failOnError errMsg test =
  do { result <- test
     ; case result of
         ExecSuccess _  -> return ()
-        ExecFailure err -> error $ errMsg ++ err
+        ExecFailure _ err -> error $ errMsg ++ err -- exit code is already included in errMsg
     }
  
 mkExecutionTest :: String -> IO ExecutionOutcome -> IO TestResult 
@@ -23,7 +23,7 @@ mkExecutionTest testDescr exec =
  do { execOutcome <- exec
     ; let testOutcome = case execOutcome of
                           ExecSuccess outp -> TestSuccess outp
-                          ExecFailure err  -> TestFailure err
+                          ExecFailure _ err  -> TestFailure err -- exit code is already included in errMsg
     ; return $ TestResult testOutcome testDescr  
     }
     

@@ -52,10 +52,10 @@ svnUpdate project =
     ; result <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
                                          -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
     ; case result of
-        ExecSuccess _   -> do { revStr <- getRevisionStr project
-                              ; putStrLn $ project ++ " revision: " ++ revStr 
-                              }
-        ExecFailure err -> error $ "error during svn update: " ++ err
+        ExecSuccess _     -> do { revStr <- getRevisionStr project
+                                ; putStrLn $ project ++ " revision: " ++ revStr 
+                                }
+        ExecFailure _ err -> error $ "error during svn update: " ++ err -- exit code is already included in errMsg
     }
 
 getRevisionStr :: String -> IO String
@@ -65,7 +65,7 @@ getRevisionStr project =
     ; case result of
              ExecSuccess rev@(_:_) -> return $ init rev -- only remove the newline
              ExecSuccess rev       -> error $ "incorrect response from svnversion: "++rev
-             ExecFailure err       -> error $ "error from svnversion: "++err                                               
+             ExecFailure _ err     -> error $ "error from svnversion: "++err -- exit code is already included in errMsg                                               
     }
 
 getRevision :: String -> IO Int
@@ -107,9 +107,9 @@ execute cmd args dir =
   --          ; putStrLn $ "Results:\n" ++ outputStr ++ "\nErrors\n:"++errStr++"\nDone<"
             ; return $ case exitCode of
                          ExitSuccess   -> ExecSuccess outputStr
-                         ExitFailure c -> ExecFailure $ "Exit code " ++ show c ++ 
-                                                        "\nstdout:\n"  ++ outputStr ++ -- also show stdout, since many programs
-                                                        "\nstderr:\n"  ++ errStr    -- show errors on stdout instead of stderr
+                         ExitFailure c -> ExecFailure c $ "Exit code " ++ show c ++  -- include exit code in message, so we don't need to show it later
+                                                          "\nstdout:\n"  ++ outputStr ++ -- also show stdout, since many programs
+                                                          "\nstderr:\n"  ++ errStr    -- show errors on stdout instead of stderr
             }
     }
 

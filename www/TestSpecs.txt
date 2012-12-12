@@ -1,8 +1,10 @@
 -- format is a bit awkward because Haskell's read is not very powerful
 -- note that comments have to start at the beginning of the line
   
+-- Note: Ampersand and Prototype use exit code 1 to signal a fatal error. Other errors yield higher exit codes.
+
 [ TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -12,7 +14,7 @@
          ]
      }
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -24,7 +26,7 @@
 
 -- prototype type-check tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Tests/ShouldSucceed"
          , "Prototype/apps/INDOORS/INDOORS.adl"
@@ -35,7 +37,7 @@
 -- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
 -- TODO: all Koppelvlakdemos should be listed here
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -45,13 +47,13 @@
 
 -- explicit tests (for Ampersand parser and typechecker only)
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs =
          [ "Prototype/apps/Tests/ShouldSucceed"
          ]
      }
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
          [ "Prototype/apps/Tests/ShouldFail"
          ]
@@ -59,13 +61,13 @@
 
 -- known bugs: it's not that we want them to fail, but we don't want to be notified. And we do want to be notified when they are fixed
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
          [ "Prototype/apps/Bugs/Current/Other"
          ]
      }
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs = 
          [ "Prototype/apps/Bugs/Current/SQL"
          , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
