@@ -49,7 +49,7 @@ PrototypeRevision=`svnversion | tr ":" "-"`
 cd /home/sentinel/svn/Sentinel
 SentinelRevision=`svnversion | tr ":" "-"`
 
-Filename=SentinelOutput_${Timestamp}__${Results}__Amp=${AmpersandRevision}_Pro=${PrototypeRevision}_Sen=${SentinelRevision}.html
+Filename=Sentinel_${Timestamp}_${Results}__Amp=${AmpersandRevision}_Pro=${PrototypeRevision}_Sen=${SentinelRevision}.html
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
