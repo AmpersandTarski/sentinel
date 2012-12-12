@@ -1,6 +1,10 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
+
+$sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
+$sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
+
 ?>
 <html>
   <head>
@@ -8,11 +12,24 @@ ini_set("display_errors", 1);
   
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
   <script type="text/javascript">
+
+var sentinelIsRunning = <?php echo $sentinelIsRunning ? 'true' : 'false' ?>; // value is set by PHP
+
+$(document).ready(function(){
+  if (sentinelIsRunning)
+    refreshPageIn(5000);
+});
+
+function refreshPageIn (ms) {
+  setTimeout( function () { window.location.reload()}, ms);
+  // extra function() is necessary to make reload lazy
+}
+
 function runSentinel() {
   $.ajax({ url: 'RunSentinel.php',
            cache: false,
-           success: function(data){ setTimeout( function() {window.location.reload()}, 250);
-           // delay reload to ensure sentinel process started (function() is necessary to make reload lazy)
+           success: function(data){ refreshPageIn(250);
+           // delay reload with 250ms to ensure sentinel process has started
          }
   });
 }
@@ -42,8 +59,8 @@ echo "Authors that will be notified on nightly tests: ".implode(", ", $authors);
 echo '<hr/></br><div style="font-size: 120%">';
 
 $sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
-if (!preg_match("/######## Sentinel exited/", $sentinelOutput))
-  echo '<span style="color: darkblue">Tests are still running, refresh this page to update the results.</span>';
+if ($sentinelIsRunning)
+  echo '<span style="color: darkblue">Tests are still running (this page is refreshed every 5 seconds to show the results).</span>';
 else {
   echo 'Results of the last test run: ';
   $matches = array();
