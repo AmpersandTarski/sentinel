@@ -42,7 +42,8 @@ PrototypeRevision=`svnversion`
 cd /home/sentinel/svn/Sentinel
 SentinelRevision=`svnversion`
 
-Filename=SentinelOutput_${Timestamp}__${NrOfFailed}_of_${NrOfTests}__Amp:${AmpersandRevision}_Pro:${PrototypeRevision}_Sen:${SentinelRevision}.html
+Filename=SentinelOutput_${Timestamp}__${NrOfFailed}_of_${NrOfTests}__Amp=${AmpersandRevision}_Pro=${PrototypeRevision}_Sen=${SentinelRevision}.html
+# first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
 sed 's/$/<\/br>/' /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt > /home/sentinel/svn/Sentinel/www/logs/$Filename
