@@ -36,11 +36,11 @@ NrOfTests=`grep "Total number" /home/sentinel/svn/Sentinel/www/ampersand/Sentine
 
 # get svn revision numbers for all components (after running sentinel, so svn updates are taken into account)
 cd /home/sentinel/svn/Ampersand
-AmpersandRevision=`svnversion`
+AmpersandRevision=`svnversion | tr ":" "-"`
 cd /home/sentinel/svn/Prototype
-PrototypeRevision=`svnversion`
+PrototypeRevision=`svnversion | tr ":" "-"`
 cd /home/sentinel/svn/Sentinel
-SentinelRevision=`svnversion`
+SentinelRevision=`svnversion | tr ":" "-"`
 
 Filename=SentinelOutput_${Timestamp}__${NrOfFailed}_of_${NrOfTests}__Amp=${AmpersandRevision}_Pro=${PrototypeRevision}_Sen=${SentinelRevision}.html
 # first '=' is assignment, the others are part of the filename
