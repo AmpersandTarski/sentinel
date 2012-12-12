@@ -131,7 +131,7 @@ performTests opts =
           nrOfFailed = length failedTestResults
     
     ; putStr $ if optHtml opts then "<hr/>" else "\n\n--------"
-    ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>" "</p>" $
+    ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>\n" "</p>" $
                    unlines [ "Total number of tests: " ++ show (length allTestResults) -- NOTE: scripts/runSentinel depends on the exact
                            , "Number of failed tests: " ++ show nrOfFailed             --       format of these two lines.
                            ]

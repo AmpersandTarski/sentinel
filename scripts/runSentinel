@@ -31,7 +31,7 @@ Timestamp=`date +%Y-%m-%d_%H:%M:%S`
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator
 NrOfFailed=`grep "Number of failed tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
-# take the 7th field using space as separator (2 more because of html markup in SentinelOutput.txt)
+# take the 5th field using space as separator
 NrOfTests=`grep "Total number of tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f7`
 
 # if NrOfFailed is empty then testing was aborted
