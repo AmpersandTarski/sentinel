@@ -13,6 +13,12 @@ testTestSpecs =
       , "Prototype/apps/Tests/ShouldSucceed"
 --      , "Prototype/apps/INDOORS/INDOORS.adl"
       ]
+  , TestSpec Ampersand ["--haskell"] [1] ShouldSucceed 
+      [ "Prototype/apps/Simple"
+      , "Prototype/apps/Misc"
+      , "Prototype/apps/Tests/ShouldSucceed"
+--      , "Prototype/apps/INDOORS/INDOORS.adl"
+      ]
   , TestSpec Prototype ["--validate"] [1] ShouldSucceed 
       [ "Prototype/apps/Simple"
       , "Prototype/apps/Misc"
