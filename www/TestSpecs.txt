@@ -14,7 +14,7 @@
          ]
      }
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
