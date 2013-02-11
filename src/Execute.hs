@@ -11,7 +11,7 @@ import Utils
 import Types
 
 maxTimeInSeconds :: Int
-maxTimeInSeconds = 10
+maxTimeInSeconds = 5 * 60
 
 timeoutExitCode :: Int
 timeoutExitCode = -1 -- -1 is not used by unix processes
