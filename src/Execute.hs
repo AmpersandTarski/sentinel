@@ -1,6 +1,7 @@
 module Execute where
 
 import System.Process
+import System.Timeout
 import System.Exit
 import System.IO
 import System.FilePath 
@@ -8,6 +9,14 @@ import Data.List
 import Data.Char
 import Utils
 import Types
+
+maxTimeInSeconds :: Int
+maxTimeInSeconds = 10
+
+timeoutExitCode :: Int
+timeoutExitCode = -1 -- -1 is not used by unix processes
+
+
 
 testBuild :: String -> [String] -> String -> IO TestResult
 testBuild project flags targetDescr = mkExecutionTest testDescr $
@@ -76,9 +85,15 @@ getRevision project =
       else error $ "incorrect revision for "++project++": "++show revStr -- happens when a revision was locally modified
     }
 
--- call the command-line php with phpStr as input
 execute :: String -> [String] -> String -> IO ExecutionOutcome
 execute cmd args dir =
+ do { result <- timeout (maxTimeInSeconds*1000000) $ executeIO cmd args dir
+    ; case result  of
+        Just executionOutcome -> return executionOutcome
+        Nothing -> return $ ExecFailure timeoutExitCode $ "Timeout: Execution time exceeded "++show maxTimeInSeconds++" seconds."
+    }
+executeIO :: String -> [String] -> String -> IO ExecutionOutcome
+executeIO cmd args dir =
  do { let cp = CreateProcess
                 { cmdspec      = RawCommand cmd args
                 , cwd          = Just dir

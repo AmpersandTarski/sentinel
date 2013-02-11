@@ -67,14 +67,14 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
     
     ; case result of
         ExecSuccess _   -> putStrLn   "Execution success"
-        ExecFailure exitCode err -> putStrLn $ (if exitCode `elem` panicExitCodes 
+        ExecFailure exitCode err -> putStrLn $ (if isPanicExitCode exitCode 
                                                 then "Execution exception (exit code is in panicExitCodes): " 
                                                 else "Execution failure: ") ++
                                                bracketHtml opts "<div style='font-family:courier; font-size:85%'>" "</div>" err
                          
     ; let testOutcome = 
                  case (result, getDesiredOutcome testSpec) of
-                   (ExecFailure exitCode err, _         ) | exitCode `elem` panicExitCodes -> TestFailure err
+                   (ExecFailure exitCode err, _         ) | isPanicExitCode exitCode -> TestFailure err
                    (ExecFailure _ err,        ShouldFail)    -> TestSuccess err
                    (ExecFailure _ err,        ShouldSucceed) -> TestFailure err
                    (ExecSuccess outp,         ShouldFail)    -> TestFailure outp
@@ -82,6 +82,9 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
     ; return $ TestResult testOutcome testDescr
     }
  where testDescr = "Running "++show exec++" "++show args++" on "++testFile ++ ". {"++showDesiredOutcome desOutcome ++"}"
+       
+       isPanicExitCode exitCode = exitCode `elem` timeoutExitCode:panicExitCodes -- timeout always yields a panic
+       
 -- yes, parse is a rather big word for this function
 parseTestSpecs :: Options -> IO [TestSpec]
 parseTestSpecs opts =
