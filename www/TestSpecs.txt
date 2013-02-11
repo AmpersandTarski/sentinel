@@ -9,8 +9,7 @@
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
          , "Prototype/apps/INDOORS/INDOORS.adl"
--- VOG demo temporarily disabled because of loop
---         , "Prototype/apps/VOGDemo/DEMO_VOG.adl"
+         , "Prototype/apps/VOGDemo/DEMO_VOG.adl"
 --         , "Prototype/apps/Atlas/RAP.adl"
          , "Prototype/apps/Bugs/Fixed"
          ]
