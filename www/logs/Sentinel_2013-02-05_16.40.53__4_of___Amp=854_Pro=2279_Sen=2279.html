@@ -1,0 +1,460 @@
+######## Sentinel (r2279) started on Sentinel at 16:40:53 5-Feb-13 ########</br>
+</br>
+</br>
+Sentinel/www revision: 2279</br>
+<div style='font-family: courier; font-size:85%; color:blue'>Parsing test specs:</br>
+  </br>
+</br>
+[ TestSpec</br>
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed</br>
+     , getTestFileSpecs = </br>
+         [ "Prototype/apps/Simple"</br>
+         , "Prototype/apps/Misc"</br>
+         , "Prototype/apps/INDOORS/INDOORS.adl"</br>
+         , "Prototype/apps/Bugs/Fixed"</br>
+         ]</br>
+     }</br>
+, TestSpec </br>
+     { getTestExecutable = Prototype, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed</br>
+     , getTestFileSpecs = </br>
+         [ "Prototype/apps/Simple"</br>
+         , "Prototype/apps/Misc"</br>
+         , "Prototype/apps/Tests/ShouldSucceed"</br>
+         , "Prototype/apps/INDOORS/INDOORS.adl"</br>
+         , "Prototype/apps/Bugs/Fixed"</br>
+         ]</br>
+     }</br>
+, TestSpec </br>
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed</br>
+     , getTestFileSpecs = </br>
+         [ "Prototype/apps/Simple"</br>
+         , "Prototype/apps/Misc"</br>
+         , "Prototype/apps/Tests/ShouldSucceed"</br>
+         , "Prototype/apps/INDOORS/INDOORS.adl"</br>
+         , "Prototype/apps/Bugs/Fixed"</br>
+         ]</br>
+     }</br>
+</br>
+, TestSpec </br>
+     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed</br>
+     , getTestFileSpecs = </br>
+         [ "Prototype/apps/Tests/ShouldSucceed"</br>
+         , "Prototype/apps/INDOORS/INDOORS.adl"</br>
+         , "Prototype/apps/Bugs/Fixed"</br>
+         ]</br>
+     }</br>
+</br>
+, TestSpec </br>
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed</br>
+     , getTestFileSpecs = </br>
+         [ "Prototype/apps/Simple"</br>
+         , "Prototype/apps/Misc"</br>
+         , "Prototype/apps/INDOORS/Advocatentableau.adl"</br>
+         ]</br>
+     }</br>
+</br>
+, TestSpec</br>
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed</br>
+     , getTestFileSpecs =</br>
+         [ "Prototype/apps/Tests/ShouldSucceed"</br>
+         ]</br>
+     }</br>
+, TestSpec</br>
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail</br>
+     , getTestFileSpecs =</br>
+         [ "Prototype/apps/Tests/ShouldFail"</br>
+         ]</br>
+     }</br>
+</br>
+, TestSpec</br>
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail</br>
+     , getTestFileSpecs =</br>
+         [ "Prototype/apps/Bugs/Current/Other"</br>
+         ]</br>
+     }</br>
+, TestSpec </br>
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail</br>
+     , getTestFileSpecs = </br>
+         [ "Prototype/apps/Bugs/Current/SQL"</br>
+         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"</br>
+         ]</br>
+     }</br>
+</br>
+]</br>
+</br>
+</div></br>
+Performing svn update for Ampersand</br>
+Ampersand revision: 854</br>
+Performing svn update for Prototype</br>
+Prototype revision: 2279</br>
+Performing cabal update</br>
+Cleaning Ampersand</br>
+<hr/></br>
+Building and installing the Ampersand library. (project: Ampersand, flags: [-f-executable]) {should succeed}</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Building and installing the Ampersand executable (and library). (project: Ampersand, flags: []) {should succeed}</br>
+<div style='color: green'>Test passed</div></br>
+Cleaning Prototype</br>
+<hr/></br>
+Building and installing the prototype generator. (project: Prototype, flags: []) {should succeed}</br>
+<div style='color: red'>Test did not pass:</br>
+</div><div style='font-family:courier; font-size:85%'>Exit code 1</br>
+stdout:</br>
+Resolving dependencies...</br>
+[1 of 1] Compiling Main             ( Setup.hs, dist/setup/Main.o )</br>
+Linking ./dist/setup/setup ...</br>
+Configuring ampersand-prototype-2.2.1...</br>
+Building ampersand-prototype-2.2.1...</br>
+Preprocessing executable 'prototype' for ampersand-prototype-2.2.1...</br>
+[ 1 of 17] Compiling DatabaseDesign.Ampersand_Prototype.StaticFiles_Generated ( src/DatabaseDesign/Ampersand_Prototype/StaticFiles_Generated.hs, dist/build/prototype/prototype-tmp/DatabaseDesign/Ampersand_Prototype/StaticFiles_Generated.o )</br>
+[ 2 of 17] Compiling DatabaseDesign.Ampersand_Prototype.BuildInfo_Generated ( src/DatabaseDesign/Ampersand_Prototype/BuildInfo_Generated.hs, dist/build/prototype/prototype-tmp/DatabaseDesign/Ampersand_Prototype/BuildInfo_Generated.o )</br>
+[ 3 of 17] Compiling DatabaseDesign.Ampersand_Prototype.GenBericht ( src/DatabaseDesign/Ampersand_Prototype/GenBericht.hs, dist/build/prototype/prototype-tmp/DatabaseDesign/Ampersand_Prototype/GenBericht.o )</br>
+</br>
+stderr:</br>
+</br>
+src/DatabaseDesign/Ampersand_Prototype/GenBericht.hs:74:43:</br>
+    Constructor `ERel' should have 2 arguments, but has been given 1</br>
+    In the pattern:</br>
+      ERel (Rel {reldcl = Sgn {decConceptDef = Just (RelConceptDef Tgt</br>
+                                                                   def')}})</br>
+    In a case alternative:</br>
+        ERel (Rel {reldcl = Sgn {decConceptDef = Just (RelConceptDef Tgt</br>
+                                                                     def')}})</br>
+          -> def'</br>
+    In the expression:</br>
+      case rel of {</br>
+        ERel (Rel {reldcl = Sgn {decConceptDef = Just (RelConceptDef Tgt</br>
+                                                                     def')}})</br>
+          -> def'</br>
+        EFlp (ERel (Rel {reldcl = Sgn {decConceptDef = Just (RelConceptDef Src</br>
+                                                                           def')}}))</br>
+          -> def'</br>
+        _ -> "" }</br>
+cabal: Error: some packages failed to install:</br>
+ampersand-prototype-2.2.1 failed during the building phase. The exception was:</br>
+ExitFailure 1</br>
+</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Simple/Roles.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Simple/DeliverySimple.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Simple/Delivery.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Misc/Hello.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Misc/Session.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/INDOORS/INDOORS.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/Other/Bug_GeneratedTables.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/Other/Bug_ColumnProperties.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/Other/Bug_InjectiveFunction_Fatal152.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/SQL/Bug_RelAdd.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/SQL/Bug_SingletonExpression.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/SQL/Bug_HaskellViolationTest.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Bugs/Fixed/SQL/Bug_Totality.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try12.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try9.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try10.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try14.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try20.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try11.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try4.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try6.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try1.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try7.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try21.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try2.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/EscapeTest.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try5.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/SelectExprTest.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try3.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try16.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl. {should succeed}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 8:12, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl":</br>
+    Relation  t  is not declared.</br>
+    The following relations have the same name:</br>
+      t[B*Y]:	 line 6:1, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl"</br>
+      t[Q*Y]:	 line 7:1, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl"</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: red'>Test did not pass:</br>
+</div><div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 8:12, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl":</br>
+    Relation  t  is not declared.</br>
+    The following relations have the same name:</br>
+      t[B*Y]:	 line 6:1, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl"</br>
+      t[Q*Y]:	 line 7:1, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl"</br>
+</br>
+stderr:</br>
+</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try15.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try8.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try19.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try13.adl. {should succeed}</br>
+Execution success</br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try12.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 6:8, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try12.adl"</br>
+    Ambiguous equation  r = r[A*A] /\ r[B*B]</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try9.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 5:8, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try9.adl":</br>
+    The target of  V  is ambiguous.</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try7.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 10</br>
+stdout:</br>
+Parsing error:</br>
+</br>
+Expecting symbol ) or symbol [ or "!" or "*" or "-" or "/" or "/\\" or ";" or "\\" or "\\/" or ("*" or "+" or "~" ...)*</br>
+before "=" at line 10, column 10 of file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try7.adl"</br>
+Try inserting symbol symbol )</br>
+</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try17b.adl. {should fail}</br>
+Execution success</br>
+<div style='color: red'>Test did not pass:</br>
+</div><div style='font-family:courier; font-size:85%'></div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try2.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 7:11, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try2.adl":</br>
+    Inside term  s;t,</br>
+</br>
+    between the target of  s  and the source of  t,</br>
+    concepts A and B are in conflict.</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/ParseFail.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 10</br>
+stdout:</br>
+Parsing error:</br>
+</br>
+Expecting "CONTEXT"</br>
+unexpected end of input</br>
+Try inserting symbol "CONTEXT"</br>
+</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/Try10.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 23:28, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/Try10.adl":</br>
+    The source of the term  s, which is C</br>
+    cannot be matched to B from its environment.</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try17.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 7:11, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try17.adl":</br>
+    Inside term  s;t,</br>
+</br>
+    between the target of  s  and the source of  t,</br>
+    concepts A and B are in conflict.</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/DoubleLabel.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 3:11, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/DoubleLabel.adl": Different attributes have the same name:</br>
+   (Unknown origin)	 "l" : V[ONE*ONE]</br>
+   (Unknown origin)	 "l" : V[ONE*ONE]</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try8.adl. {should fail}</br>
+Execution failure: <div style='font-family:courier; font-size:85%'>Exit code 20</br>
+stdout:</br>
+The following type errors were found:</br>
+</br>
+line 5:8, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try8.adl"</br>
+    The target of  r |- r~;r  is ambiguous.</br>
+</br>
+stderr:</br>
+</div></br>
+<div style='color: green'>Test passed</div></br>
+<hr/></br>
+Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try22.adl. {should fail}</br>
+Execution exception (exit code is in panicExitCodes): <div style='font-family:courier; font-size:85%'>Exit code 1</br>
+stdout:</br>
+</br>
+stderr:</br>
+ampersand: !fatal error 1601 (module ADL1.P2A_Converters, Ampersand v2.2.1.854)</br>
+  Term t (line 4:29, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try22.adl") was not found in 10 bindings.</br>
+</div></br>
+<div style='color: red'>Test did not pass:</br>
+</div><div style='font-family:courier; font-size:85%'>Exit code 1</br>
+stdout:</br>
+</br>
+stderr:</br>
+ampersand: !fatal error 1601 (module ADL1.P2A_Converters, Ampersand v2.2.1.854)</br>
+  Term t (line 4:29, file "/home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try22.adl") was not found in 10 bindings.</br>
+</div></br>
+<hr/><p style='font-weight: bold'></br>
+Total number of tests: 49</br>
+Number of failed tests: 4</br>
+</p></br>
+</br>
+List of tests that did not pass</br>
+</br>
+Test: Building and installing the prototype generator. (project: Prototype, flags: []) {should succeed}</br>
+</br>
+Test: Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldSucceed/try18.adl. {should succeed}</br>
+</br>
+Test: Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try17b.adl. {should fail}</br>
+</br>
+Test: Running Ampersand [] on /home/sentinel/svn/Prototype/apps/Tests/ShouldFail/try22.adl. {should fail}</br>
+</br>
+######## Sentinel exited at 16:55:49 5-Feb-13 ########</br>
+</br>
+</br>
