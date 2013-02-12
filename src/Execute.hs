@@ -111,8 +111,8 @@ executeIO cmd args dir =
     -- Use bracketOnError to kill the process on an exception. Otherwise processes that time out continue running.
     -- To keep things easy, we don't collect output in case of an exception. (not really necessary when testing 
     -- Ampersand, since tests can easily be reproduced)
-    ; bracketOnError (createProcess cp) 
-                     (\(_,_,_,pHandle)-> terminateProcess pHandle) $
+    ; bracketOnError (createProcess cp)                           -- wait for process to prevent creation of zombies
+                     (\(_,_,_,pHandle)-> terminateProcess pHandle >> waitForProcess pHandle) $
       \(_, mStdOut, mStdErr, pHandle) -> 
        do { case (mStdOut, mStdErr) of
               (Nothing, _) -> error "no output handle"
