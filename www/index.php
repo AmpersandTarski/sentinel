@@ -15,14 +15,24 @@ $sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
 
 var sentinelIsRunning = <?php echo $sentinelIsRunning ? 'true' : 'false' ?>; // value is set by PHP
 
+var refreshTimer;
+
 $(document).ready(function(){
   if (sentinelIsRunning)
     refreshPageIn(5000);
 });
 
 function refreshPageIn (ms) {
-  setTimeout( function () { window.location.reload()}, ms);
+  if (refreshTimer)
+    clearTimeout(refreshTimer);
+
+  refreshTimer = setTimeout( function () { window.location.reload()}, ms);
   // extra function() is necessary to make reload lazy
+}
+
+function compileSentinel() {
+  clearTimeout(refreshTimer); // need to disable refresh timer, or the page with compiler output will not be shown.
+  location.href='CompileSentinel.php';
 }
 
 function runSentinel() {
@@ -39,7 +49,7 @@ function runSentinel() {
 <body>
   
   <p>
-  <button onclick="location.href='CompileSentinel.php'">Recompile Sentinel</button>
+  <button onclick="compileSentinel()">Recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
   <button onclick="runSentinel()">Run Sentinel</button> (<a href="/ampersand/">view generated prototypes</a>)
