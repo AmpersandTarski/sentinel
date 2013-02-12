@@ -5,6 +5,7 @@ import System.Timeout
 import System.Exit
 import System.IO
 import System.FilePath 
+import Control.Exception
 import Data.List              
 import Data.Char
 import Utils
@@ -106,25 +107,32 @@ executeIO cmd args dir =
                 }
                  
 --    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
-    ; (_, mStdOut, mStdErr, pHandle) <- createProcess cp 
-    ; case (mStdOut, mStdErr) of
-        (Nothing, _) -> error "no output handle"
-        (_, Nothing) -> error "no error handle"
-        (Just stdOutH, Just stdErrH) ->
-         do { --putStrLn "done"
-            ; exitCode <- waitForProcess pHandle
-            ; errStr <- hGetContents stdErrH
-            ; seq (length errStr) $ return ()
-            ; hClose stdErrH
-            ; outputStr <- hGetContents stdOutH --and fetch the results from the output pipe
-            ; seq (length outputStr) $ return ()
-            ; hClose stdOutH
-  --          ; putStrLn $ "Results:\n" ++ outputStr ++ "\nErrors\n:"++errStr++"\nDone<"
-            ; return $ case exitCode of
-                         ExitSuccess   -> ExecSuccess outputStr
-                         ExitFailure c -> ExecFailure c $ "Exit code " ++ show c ++  -- include exit code in message, so we don't need to show it later
-                                                          "\nstdout:\n"  ++ outputStr ++ -- also show stdout, since many programs
-                                                          "\nstderr:\n"  ++ errStr    -- show errors on stdout instead of stderr
-            }
+
+    -- Use bracketOnError to kill the process on an exception. Otherwise processes that time out continue running.
+    -- To keep things easy, we don't collect output in case of an exception. (not really necessary when testing 
+    -- Ampersand, since tests can easily be reproduced)
+    ; bracketOnError (createProcess cp) 
+                     (\(_,_,_,pHandle)-> terminateProcess pHandle) $
+      \(_, mStdOut, mStdErr, pHandle) -> 
+       do { case (mStdOut, mStdErr) of
+              (Nothing, _) -> error "no output handle"
+              (_, Nothing) -> error "no error handle"
+              (Just stdOutH, Just stdErrH) ->
+               do { --putStrLn "done"
+                  ; exitCode <- waitForProcess pHandle
+                  ; errStr <- hGetContents stdErrH
+                  ; seq (length errStr) $ return ()
+                  ; hClose stdErrH
+                  ; outputStr <- hGetContents stdOutH --and fetch the results from the output pipe
+                  ; seq (length outputStr) $ return ()
+                  ; hClose stdOutH
+        --          ; putStrLn $ "Results:\n" ++ outputStr ++ "\nErrors\n:"++errStr++"\nDone<"
+                  ; return $ case exitCode of
+                               ExitSuccess   -> ExecSuccess outputStr
+                               ExitFailure c -> ExecFailure c $ "Exit code " ++ show c ++  -- include exit code in message, so we don't need to show it later
+                                                                "\nstdout:\n"  ++ outputStr ++ -- also show stdout, since many programs
+                                                                "\nstderr:\n"  ++ errStr    -- show errors on stdout instead of stderr
+                  }
+          }
     }
 
