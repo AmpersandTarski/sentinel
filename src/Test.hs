@@ -63,8 +63,8 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
                                     if exec == Ampersand then ["fSpec"] else []
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
     ; result <- execute executable (testFile : absOutputDirArg 
-                                   : args) $ takeDirectory testFile 
-    
+                                   : args ++ ["+RTS", "-M4G"]) $ takeDirectory testFile 
+                                   -- We set the max heap size to 4 Gb.
     ; case result of
         ExecSuccess _   -> putStrLn   "Execution success"
         ExecFailure exitCode err -> putStrLn $ (if isPanicExitCode exitCode 
