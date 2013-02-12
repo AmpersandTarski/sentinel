@@ -49,7 +49,7 @@ function runSentinel() {
 <body>
   
   <p>
-  <button onclick="compileSentinel()">Recompile Sentinel</button>
+  <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
   <button onclick="runSentinel()">Run Sentinel</button> (<a href="/ampersand/">view generated prototypes</a>)
