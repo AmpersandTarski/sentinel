@@ -63,14 +63,14 @@ main :: IO ()
 main = runCommand $ \opts _ ->
  do { initialize
     ; isTestSrv <- isTestServer
-    ; mFailureMessage <- performTests opts
+    ; (nrOfFailed, totalNrOfTests, mFailureMessage) <- performTests opts
     ; when (optMail opts) $
         case mFailureMessage of
           Nothing -> return ()
           Just failureMessage -> when isTestSrv $
            do { authors <- getAuthors
               ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
-              ; notifyByMail authors "Test failure" $ 
+              ; notifyByMail authors ("Test failure (" ++ show nrOfFailed ++ "/" ++ show totalNrOfTests ++ ")") $ 
                   "This is an automated mail from the Ampersand Sentinel.\n\n" ++
                   failureMessage ++ "\n\n"++
                   "Please consult http://sentinel.tarski.nl for more details."
@@ -78,7 +78,7 @@ main = runCommand $ \opts _ ->
     ; exit
     }
 
-performTests :: Options -> IO (Maybe String)
+performTests :: Options -> IO (Int, Int, Maybe String)
 performTests opts =
  do { svnUpdate "Sentinel/www" -- update the www directory for the latest Authors.txt and TestSpecs.txt
     ; testSpecs <- parseTestSpecs opts
@@ -129,28 +129,31 @@ performTests opts =
     
     ; let failedTestResults = filter (not . isTestSuccessful) allTestResults
           nrOfFailed = length failedTestResults
+          totalNrOfTests = length allTestResults
     
     ; putStr $ if optHtml opts then "<hr/>" else "\n\n--------"
     ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>\n" "</p>" $
-                   unlines [ "Total number of tests: " ++ show (length allTestResults) -- NOTE: scripts/runSentinel depends on the exact
+                   unlines [ "Total number of tests: " ++ show totalNrOfTests          -- NOTE: scripts/runSentinel depends on the exact
                            , "Number of failed tests: " ++ show nrOfFailed             --       format of these two lines.
                            ]
 
-    ; if nrOfFailed == 0
-      then return Nothing
-      else do { let failedTestsTxt = intercalate "\n\n" . map showTestResult $ failedTestResults
+    ; mFailureMessage <- 
+        if nrOfFailed == 0
+        then return Nothing
+        else do { let failedTestsTxt = intercalate "\n\n" . map showTestResult $ failedTestResults
               
-              ; putStrLn $ "\nList of tests that did not pass\n\n" ++ failedTestsTxt
-              ; return $ Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++
-                                " out of "++ show (length allTestResults)++
-                                " did not pass:\n\n"++
-                                failedTestsTxt
-              }    
+                ; putStrLn $ "\nList of tests that did not pass\n\n" ++ failedTestsTxt
+                ; return $ Just $ show nrOfFailed ++ " test"++(if nrOfFailed==1 then "" else "s")++
+                                  " out of "++ show (length allTestResults)++
+                                  " did not pass:\n\n"++
+                                  failedTestsTxt
+                } 
+    ; return (nrOfFailed, totalNrOfTests, mFailureMessage)   
     } `catch` \e -> do { let message = 
                                "An unexpected exception has occurred during Sentinel execution.\n" ++
                                show (e :: SomeException) ++ "\nTesting was aborted."
                        ; putStrLn $ "\n\nERROR: " ++ message
-                       ; return $ Just message
+                       ; return $ (0,0, Just message)
                        }
                        
 initialize :: IO ()
