@@ -32,7 +32,7 @@ Timestamp=`date +%Y-%m-%d_%H.%M.%S`
 # take the 5th field using space as separator
 NrOfFailed=`grep "Number of failed tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
 # take the 5th field using space as separator
-NrOfTests=`grep "Total number of tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f7`
+NrOfTests=`grep "Total number of tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
 
 # if NrOfFailed is empty then testing was aborted
 if [ -z "$NrOfFailed" ]; then
