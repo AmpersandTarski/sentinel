@@ -46,8 +46,8 @@ bracketHtml opts open close str = if optHtml opts then open ++ str ++ close else
 -- return True if we're running on the dedicated test server
 isTestServer :: IO Bool
 isTestServer = 
- do { fmap (== testServerHostname) getHostName
-    }
+  fmap (== testServerHostname) getHostName
+    
     
 getSvnDir :: IO FilePath
 getSvnDir =
@@ -80,7 +80,7 @@ notifyByMail recipients subject message =
 sendMail :: String -> String -> [String] -> String -> String -> IO ()
 sendMail sender senderName recipients subject body =
  do { hName <- getHostName  
-    ; let mailServer = if hName == testServerHostname 
+    ; let mailServer = if isTestServer 
                        then "mail.kpnmail.nl"
                        else "smtp1.inter.NL.net"
     ; putStrLn $ "connnecting to " ++ mailServer
