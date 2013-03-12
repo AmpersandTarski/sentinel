@@ -79,8 +79,8 @@ notifyByMail recipients subject message =
 
 sendMail :: String -> String -> [String] -> String -> String -> IO ()
 sendMail sender senderName recipients subject body =
- do { hName <- getHostName  
-    ; let mailServer = if isTestServer 
+ do { thisIstheTestserver <- isTestServer  
+    ; let mailServer = if thisIstheTestserver 
                        then "mail.kpnmail.nl"
                        else "smtp1.inter.NL.net"
     ; putStrLn $ "connnecting to " ++ mailServer
