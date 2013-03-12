@@ -11,6 +11,7 @@
          , "Prototype/apps/INDOORS/INDOORS.adl"
          , "Prototype/apps/INDOORS/overzichten/uitgangsscripts/VIROarch.adl"
          , "Prototype/apps/VOGDemo/DEMO_VOG.adl"
+         , "Prototype/apps/Misc/RepoRap/RAP.adl"
 --         , "Prototype/apps/Atlas/RAP.adl"
          , "Prototype/apps/Bugs/Fixed"
          ]
