@@ -7,7 +7,7 @@
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
-         , "Ampersand/ampersandData/RepoRap/RAP.adl"
+         , "Ampersand/AmpersandData/RepoRap/RAP.adl"
          , "Prototype/apps/Misc"
          , "Prototype/apps/INDOORS/INDOORS.adl"
          , "Prototype/apps/INDOORS/overzichten/uitgangsscripts/VIROarch.adl"
