@@ -15,6 +15,7 @@ $sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
 
 var sentinelIsRunning = <?php echo $sentinelIsRunning ? 'true' : 'false' ?>; // value is set by PHP
 
+<?php if(isset($_GET['norefresh'])) {echo "sentinelIsRunning=false;"}?> //add "?norefresh=" to the url to disable refresh
 var refreshTimer;
 
 $(document).ready(function(){
