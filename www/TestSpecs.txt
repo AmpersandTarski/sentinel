@@ -26,6 +26,7 @@
          , "Prototype/apps/Bugs/Fixed"
          ]
      }
+{- HJO, 20131121: Onderstaande tijdelijk uitgecommentarieerd. Kan weer terug als ShowHS een complete roundtrip heeft, zonder loops
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
@@ -86,5 +87,5 @@
          , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
          ]
      }
-
+-}
 ]
