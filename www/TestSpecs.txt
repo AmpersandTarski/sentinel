@@ -26,66 +26,66 @@
          , "Prototype/apps/Bugs/Fixed"
          ]
      }
-{- HJO, 20131121: Onderstaande tijdelijk uitgecommentarieerd. Kan weer terug als ShowHS een complete roundtrip heeft, zonder loops
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/Tests/ShouldSucceed"
-         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Bugs/Fixed"
-         ]
-     }
+---- HJO, 20131121: Onderstaande tijdelijk uitgecommentarieerd. Kan weer terug als ShowHS een complete roundtrip heeft, zonder loops
+--, TestSpec 
+--     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs = 
+--         [ "Prototype/apps/Simple"
+--         , "Prototype/apps/Misc"
+--         , "Prototype/apps/Tests/ShouldSucceed"
+--         , "Prototype/apps/INDOORS/INDOORS.adl"
+--         , "Prototype/apps/Bugs/Fixed"
+--         ]
+--     }
+--
+---- prototype type-check tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
+--, TestSpec 
+--     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs = 
+--         [ "Prototype/apps/Tests/ShouldSucceed"
+--         , "Prototype/apps/INDOORS/INDOORS.adl"
+--         , "Prototype/apps/Bugs/Fixed"
+--         ]
+--     }
+--
+---- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
+---- TODO: all Koppelvlakdemos should be listed here
+--, TestSpec 
+--     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs = 
+--         [ "Prototype/apps/Simple"
+--         , "Prototype/apps/Misc"
+--         , "Prototype/apps/INDOORS/Advocatentableau.adl"
+--         ]
+--     }
+--
+---- explicit tests (for Ampersand parser and typechecker only)
+--, TestSpec
+--     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs =
+--         [ "Prototype/apps/Tests/ShouldSucceed"
+--         ]
+--     }
+--, TestSpec
+--     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+--     , getTestFileSpecs =
+--         [ "Prototype/apps/Tests/ShouldFail"
+--         ]
+--     }
+--
+---- known bugs: it's not that we want them to fail, but we don't want to be notified. And we do want to be notified when they are fixed
+--, TestSpec
+--     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+--     , getTestFileSpecs =
+--         [ "Prototype/apps/Bugs/Current/Other"
+--         ]
+--     }
+--, TestSpec 
+--     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+--     , getTestFileSpecs = 
+--         [ "Prototype/apps/Bugs/Current/SQL"
+--         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
+--         ]
+--     }
 
--- prototype type-check tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "Prototype/apps/Tests/ShouldSucceed"
-         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Bugs/Fixed"
-         ]
-     }
-
--- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
--- TODO: all Koppelvlakdemos should be listed here
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/INDOORS/Advocatentableau.adl"
-         ]
-     }
-
--- explicit tests (for Ampersand parser and typechecker only)
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs =
-         [ "Prototype/apps/Tests/ShouldSucceed"
-         ]
-     }
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
-     , getTestFileSpecs =
-         [ "Prototype/apps/Tests/ShouldFail"
-         ]
-     }
-
--- known bugs: it's not that we want them to fail, but we don't want to be notified. And we do want to be notified when they are fixed
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
-     , getTestFileSpecs =
-         [ "Prototype/apps/Bugs/Current/Other"
-         ]
-     }
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
-     , getTestFileSpecs = 
-         [ "Prototype/apps/Bugs/Current/SQL"
-         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
-         ]
-     }
--}
 ]
