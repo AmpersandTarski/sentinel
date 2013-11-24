@@ -4,7 +4,7 @@
 -- Note: Ampersand and Prototype use exit code 1 to signal a fatal error. Other errors yield higher exit codes.
 
 [ TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = ["+RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Ampersand/AmpersandData/RepoRap/RAP.adl"
@@ -17,7 +17,7 @@
          ]
      }
 , TestSpec 
-     { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = ["--haskell +RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -27,7 +27,7 @@
          ]
      }
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--validate +RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -39,7 +39,7 @@
 
 -- prototype type-check tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--dev +RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Tests/ShouldSucceed"
          , "Prototype/apps/INDOORS/INDOORS.adl"
@@ -50,7 +50,7 @@
 -- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
 -- TODO: all Koppelvlakdemos should be listed here
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5 +RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
@@ -60,27 +60,27 @@
 
 -- explicit tests (for Ampersand parser and typechecker only)
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = ["+RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs =
          [ "Prototype/apps/Tests/ShouldSucceed"
          ]
      }
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Ampersand, getTestArgs = ["+RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
          [ "Prototype/apps/Tests/ShouldFail"
          ]
      }
 
--- known bugs: it's not that we want them to fail, but we don't want to be notified. And we do want to be notified when they are fixed
+-- known bugs: consider putting “ShouldFail” for known bugs, such that we’ll be notified when they get fixed.
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Ampersand, getTestArgs = ["+RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs =
          [ "Prototype/apps/Bugs/Current/Other"
          ]
      }
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+     { getTestExecutable = Prototype, getTestArgs = ["--validate +RTS -xc -RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Bugs/Current/SQL"
          , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
