@@ -1,2 +1,2 @@
-echo cabal build $@ --ghc-option=-fprof-auto
-cabal build $@ --ghc-option=-fprof-auto
+echo cabal build $@
+cabal build $@

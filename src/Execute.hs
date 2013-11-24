@@ -52,7 +52,7 @@ cabalConfigure project flags = failOnError ("error during cabal configure for "+
 cabal :: String -> String -> [String] -> IO ExecutionOutcome
 cabal cmd project flags =
  do { svnDir <- getSvnDir
-    ; result <- execute "cabal" (cmd : flags {- ++ ["--verbose"] -}) $ combine svnDir project
+    ; result <- execute "cabal" (cmd : flags ++ ["--ghc-option=-fprof-auto"] -}) $ combine svnDir project
     ; return result -- when cabal fails silently, add --verbose
     }
 
