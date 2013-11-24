@@ -21,6 +21,22 @@ cd /home/sentinel/svn/Ampersand
 svn cleanup
 cd /home/sentinel/svn/Prototype
 svn cleanup
+cabal install -p utf8-string
+cabal install -p graphviz
+cabal install -p pandoc-types
+cabal install -p pandoc
+cabal install -p bytestring
+cabal install -p filepath
+cabal install -p directory
+cabal install -p process
+cabal install -p old-locale
+cabal install -p containers
+cabal install -p mtl
+cabal install -p split
+cabal install -p SpreadsheetML
+cabal install -p array
+cabal install -p time
+cabal install -p hashable
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
