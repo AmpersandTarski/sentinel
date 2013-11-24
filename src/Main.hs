@@ -97,7 +97,6 @@ performTests opts =
             ; cabalClean "Ampersand" []
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable","--enable-executable-profiling","--ghc-option=-fprof-auto"] "the Ampersand library"
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["--enable-executable-profiling","--ghc-option=-fprof-auto"]                 "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
-            ; _ <- reportTestResult opts $ execute "ghc" ["--make",combine svnDir "ampersand/src/exec/Main.hs","-prof","-fprof-auto"]
             ; putStrLn "Cleaning Prototype"
             ; cabalClean "Prototype" []
             ; t3 <- reportTestResult opts $ testInstall "Prototype" ["-p","--enable-executable-profiling","--ghc-option=-fprof-auto"] "the prototype generator"
