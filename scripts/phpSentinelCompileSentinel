@@ -19,4 +19,4 @@ svn update
 
 echo before cabal
 cabal clean 
-cabal install
+cabal install -p --ghc-option=-fprof-auto --ghc-option=-prof
