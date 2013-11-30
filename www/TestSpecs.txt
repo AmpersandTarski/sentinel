@@ -4,7 +4,7 @@
 -- Note: Ampersand and Prototype use exit code 1 to signal a fatal error. Other errors yield higher exit codes.
 
 [ TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["+RTS","-xc","-RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Ampersand/AmpersandData/RepoRap/RAP.adl"
@@ -17,7 +17,7 @@
          ]
      }
 , TestSpec 
-     { getTestExecutable = Ampersand, getTestArgs = ["--haskell","+RTS","-xc","-RTS"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
