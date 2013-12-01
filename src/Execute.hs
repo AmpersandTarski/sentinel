@@ -32,13 +32,13 @@ testBuild project flags targetDescr = mkExecutionTest testDescr $
 testInstall :: String -> [String] -> String -> IO TestResult
 testInstall project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
-    ; result <- cabal "install" project (flags) -- pass flags directly to install (cabal install ignores cabal configure)
+    ; result <- cabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
     ; return result
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
 cabalUpdate :: IO ()
-cabalUpdate = failOnError ("error during cabal update") $
+cabalUpdate = failOnError "error during cabal update" $
   cabal "update" "." [] -- just pass . as project dir
  
 cabalClean :: String -> [String] -> IO ()
@@ -114,7 +114,7 @@ executeIO cmd args dir =
     ; bracketOnError (createProcess cp)                           -- wait for process to prevent creation of zombies
                      (\(_,_,_,pHandle)-> terminateProcess pHandle >> waitForProcess pHandle) $
       \(_, mStdOut, mStdErr, pHandle) -> 
-       do { case (mStdOut, mStdErr) of
+            case (mStdOut, mStdErr) of
               (Nothing, _) -> error "no output handle"
               (_, Nothing) -> error "no error handle"
               (Just stdOutH, Just stdErrH) ->
@@ -133,6 +133,6 @@ executeIO cmd args dir =
                                                                 "\nstdout:\n"  ++ outputStr ++ -- also show stdout, since many programs
                                                                 "\nstderr:\n"  ++ errStr    -- show errors on stdout instead of stderr
                   }
-          }
+      
     }
 

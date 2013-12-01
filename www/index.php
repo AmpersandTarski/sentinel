@@ -54,7 +54,7 @@ function runSentinel() {
   <p>
   <button onclick="runSentinel()">Run Sentinel</button> (<a href="/ampersand/">view generated prototypes</a>)
   <p>
-  <a href=logs>View Sentinel logs</a>
+  <a href="logs/?C=M;O=A">View Sentinel logs</a>
 <hr/>
 <?php
 function isNoComment($author)
