@@ -47,7 +47,7 @@ function runSentinel() {
   
   </head>
 <body>
-  <h1>Gefeliciteerd met je verjaardag Han!</h1>
+  
   <p>
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
