@@ -23,8 +23,7 @@ testBuild :: String -> [String] -> String -> IO TestResult
 testBuild project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
     ; cabalConfigure project flags 
-    ; result <- cabal "build" project []
-    ; return result
+    ; cabal "build" project []
     }
  where testDescr = "Building "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
@@ -32,8 +31,7 @@ testBuild project flags targetDescr = mkExecutionTest testDescr $
 testInstall :: String -> [String] -> String -> IO TestResult
 testInstall project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
-    ; result <- cabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
-    ; return result
+    ; cabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
@@ -52,8 +50,7 @@ cabalConfigure project flags = failOnError ("error during cabal configure for "+
 cabal :: String -> String -> [String] -> IO ExecutionOutcome
 cabal cmd project flags =
  do { svnDir <- getSvnDir
-    ; result <- execute "cabal" (cmd : flags ) $ combine svnDir project
-    ; return result -- when cabal fails silently, add --verbose
+    ; execute "cabal" (cmd : flags ) $ combine svnDir project
     }
 
 svnUpdate :: String -> IO ()

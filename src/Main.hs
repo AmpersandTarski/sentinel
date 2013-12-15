@@ -152,7 +152,7 @@ performTests opts =
                                "An unexpected exception has occurred during Sentinel execution.\n" ++
                                show (e :: SomeException) ++ "\nTesting was aborted."
                        ; putStrLn $ "\n\nERROR: " ++ message
-                       ; return $ (0,0, Just message)
+                       ; return (0,0, Just message)
                        }
                        
 initialize :: IO ()

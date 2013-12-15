@@ -74,8 +74,8 @@ getAuthors =
     }
         
 notifyByMail :: [String] -> String -> String -> IO ()
-notifyByMail recipients subject message =
-  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipients ("[Sentinel] "++subject) message
+notifyByMail recipients subject  =
+  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipients ("[Sentinel] "++subject) 
 
 sendMail :: String -> String -> [String] -> String -> String -> IO ()
 sendMail sender senderName recipients subject body =
