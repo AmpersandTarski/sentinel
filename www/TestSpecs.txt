@@ -55,7 +55,7 @@
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
          , "Prototype/apps/INDOORS/DemoBeslissingen.adl"
-         , "Prototype/apps/INDOORS/DemoBestuurZaakgegevens.adl"
+--         , "Prototype/apps/INDOORS/DemoBestuurZaakgegevens.adl"
          , "Prototype/apps/INDOORS/DemoCivielZaakgegevens.adl"
          , "Prototype/apps/INDOORS/DemoHogerberoep.adl"
          , "Prototype/apps/INDOORS/DemoINDOORS.adl"
