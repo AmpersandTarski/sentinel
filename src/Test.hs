@@ -8,6 +8,8 @@ import Types
 import Utils
 import Execute
 import Defaults
+import UTF8(writeFile,readFile,getContents,putStr,putStrLn)
+import Prelude hiding (writeFile,readFile,getContents,putStr,putStrLn)
 
 runTestSpec :: Options -> TestSpec -> IO [TestResult]
 runTestSpec opts testSpec =
