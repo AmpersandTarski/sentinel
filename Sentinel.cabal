@@ -16,7 +16,8 @@ executable sentinel
                    options >= 0.1 && < 0.2,
                    time,
                    old-locale,
-                   utf8-string
+                   utf8-string,
+                   bytestring >= 0.9.2.1
   ghc-options:     -Wall -threaded
   other-modules:   
                    Test,
