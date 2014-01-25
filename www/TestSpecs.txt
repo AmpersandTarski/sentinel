@@ -55,7 +55,6 @@
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
          , "Prototype/apps/INDOORS/DemoBeslissingen.adl"
-         , "Prototype/apps/INDOORS/DemoINDOORS.adl"
          , "Prototype/apps/INDOORS/DemoLamicie301.adl"
          , "Prototype/apps/INDOORS/DemoLamicieCode105.adl"
          , "Prototype/apps/INDOORS/DemoLamicieCode106.adl"
