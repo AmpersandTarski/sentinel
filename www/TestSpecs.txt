@@ -1,4 +1,4 @@
--- format is a bit awkward because Haskell's read is not very powerful
+﻿-- format is a bit awkward because Haskell's read is not very powerful
 -- note that comments have to start at the beginning of the line
   
 -- Note: Ampersand and Prototype use exit code 1 to signal a fatal error. Other errors yield higher exit codes.
@@ -55,9 +55,6 @@
          [ "Prototype/apps/Simple"
          , "Prototype/apps/Misc"
          , "Prototype/apps/INDOORS/DemoBeslissingen.adl"
---         , "Prototype/apps/INDOORS/DemoBestuurZaakgegevens.adl"
-         , "Prototype/apps/INDOORS/DemoCivielZaakgegevens.adl"
-         , "Prototype/apps/INDOORS/DemoHogerberoep.adl"
          , "Prototype/apps/INDOORS/DemoINDOORS.adl"
          , "Prototype/apps/INDOORS/DemoLamicie301.adl"
          , "Prototype/apps/INDOORS/DemoLamicieCode105.adl"
