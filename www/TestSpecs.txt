@@ -66,8 +66,6 @@
          , "Prototype/apps/INDOORS/DemoRaadRechtsbijstand.adl"
          , "Prototype/apps/INDOORS/DemoRegisters.adl"
          , "Prototype/apps/INDOORS/DemoStrafblad.adl"
-         , "Prototype/apps/INDOORS/DemoStrafZaakgegevens.adl"
-         , "Prototype/apps/INDOORS/DemoZaakgegevens.adl"
          , "Prototype/apps/INDOORS/DemoZittinggegevens.adl"
          , "Prototype/apps/VOGDemo/DEMO_VOG.adl"
          ]
