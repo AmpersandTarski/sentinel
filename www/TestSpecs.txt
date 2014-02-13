@@ -8,6 +8,8 @@
      , getTestFileSpecs = 
          [ "Prototype/apps/Simple"
          , "Ampersand/AmpersandData/FormalAmpersand/RAP.adl"
+         , "Ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
+         , "Ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
          , "Prototype/apps/Mandatering/ToevoegenMandaat.adl"
          , "Prototype/apps/Misc"
          , "Prototype/apps/INDOORS/INDOORS.adl"
