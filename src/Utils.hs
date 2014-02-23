@@ -132,6 +132,7 @@ mkMailStr senderName sender recipients subject body =
        [ ""
        , "." -- this is the trigger for smtp to end the mail body
        , ""
-       , "QUIT"
+       , "quit"
+       , ""
        ]
  
