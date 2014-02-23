@@ -90,7 +90,7 @@ sendMail sender senderName recipients subject body =
     ; putStrLn "connected"
 
     ; let mailStr = mkMailStr sender senderName recipients subject body
-    --; putStrLn $ "Output to mail server:\n" ++ mailStr
+    ; putStrLn $ "Output to mail server:\n" ++ mailStr
     ; hPutStr handle mailStr
     ; hFlush handle
     ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
