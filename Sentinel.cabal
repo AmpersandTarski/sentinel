@@ -20,10 +20,11 @@ executable sentinel
                    bytestring >= 0.10
   ghc-options:     -Wall -threaded
   other-modules:   
-                   Test,
-                   Utils,
                    Defaults,
                    Execute,
+                   Test,
                    TestSpecs,
-                   Types
+                   Types,
+                   UTF8,
+                   Utils
 

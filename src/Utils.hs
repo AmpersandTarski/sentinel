@@ -75,7 +75,7 @@ getAuthors =
         
 notifyByMail :: [String] -> String -> String -> IO ()
 notifyByMail recipients subject  =
-  sendMail "Ampersand Sentinel" "Stef.Joosten@ordina.nl" recipients ("[Sentinel] "++subject) 
+  sendMail "Ampersand Sentinel" "noreply@sentinel.tarski.nl" recipients ("[Sentinel] "++subject) 
 
 sendMail :: String -> String -> [String] -> String -> String -> IO ()
 sendMail sender senderName recipients subject body =
@@ -115,15 +115,23 @@ sendMail sender senderName recipients subject body =
 
 mkMailStr :: String -> String -> [String] -> String -> String -> String
 mkMailStr senderName sender recipients subject body =
-            "HELO amprersand.oblomov.com\n"  -- <-- staat hier een tiepfout?
-         ++ "MAIL From: "++ sender ++ "\n"
-         ++ unlines [ "RCPT To: "++recipient | recipient <- recipients ]
-         ++ "DATA\n"
-         ++ "X-Mailer: Ampersand Sentinel\n"
-         ++ "From: " ++ senderName ++ " <" ++ sender ++ ">\n"
-         ++ "To: " ++ intercalate ", " recipients ++ "\n"
-         ++ "Subject: " ++ subject ++ "\n\n"
-         ++ body ++ "\n"
-         ++ ".\n"       
-         ++ "QUIT\n"
+   unlines $
+       [ "HELO sentinel.tarski.nl"
+       , "MAIL From: "++ sender
+       ]
+       ++ [ "RCPT To: "++recipient | recipient <- recipients ]
+       ++ 
+       [ "DATA"
+       , "X-Mailer: Ampersand Sentinel"
+       , "From: " ++ senderName ++ " <" ++ sender ++ ">"
+       , "To: " ++ intercalate ", " recipients
+       , "Subject: " ++ subject
+       , ""
+       ]  
+       ++ filter (/= ".") (lines body) ++
+       [ ""
+       , "." -- this is the trigger for smtp to end the mail body
+       , ""
+       , "QUIT"
+       ]
  
