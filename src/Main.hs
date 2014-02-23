@@ -63,7 +63,7 @@ main = runCommand $ \opts _ ->
  do { initialize
     ; isTestSrv <- isTestServer
     ; (nrOfFailed, totalNrOfTests, mFailureMessage) <- performTests opts
-    ; when (optMail opts && False) $
+    ; when (optMail opts) $
         case mFailureMessage of
           Nothing -> return ()
           Just failureMessage -> when isTestSrv $
