@@ -91,12 +91,14 @@ sendMail sender senderName recipients subject body =
     ; putStrLn "connected"
 
     ; let mailStr = mkMailStr sender senderName recipients subject body
-    ; putStrLn $ "Output to mail server:\n" ++ mailStr
+    ; let mailStr2 = "Output to mail server:\n" ++ mailStr ++ "\n("++(show. length. lines) mailStr++" lines)"
+    ; putStrLn mailStr2 
+    ; writeFile "serverOutput.tmp" mailStr2
     ; mapM_ (hPutStrLn handle) (lines mailStr)
-    ; hFlush handle
-    ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
-    ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
-                          -- Might be buffer related, but changing Buffering mode does not help    
+--    ; hFlush handle
+--    ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
+--    ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
+--                          -- Might be buffer related, but changing Buffering mode does not help    
     ; (success,mmsg) <- processResponse handle
     ; if success then putStrLn "message sent" 
                  else putStrLn ("Sending mail failed: "++fromMaybe "(EoF)" mmsg)
