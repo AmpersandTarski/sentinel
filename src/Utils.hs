@@ -109,7 +109,9 @@ sendMail sender senderName recipients subject body =
                      ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
                           "Message accepted for delivery" `isInfixOf` message -- InterNLnet
                        then return True 
-                       else processResponse handle
+                       else if "Timeout waiting for client input" `isInfixOf` message
+                            then return False
+                            else processResponse handle
                      }
            }
 
