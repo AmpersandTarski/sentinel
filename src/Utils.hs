@@ -110,9 +110,9 @@ sendMail sender senderName recipients subject body =
                      ; putStrLn $ "SMTP server:" ++ message
                      ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
                           "Message accepted for delivery" `isInfixOf` message -- InterNLnet
-                       then return (True,message) 
+                       then return (True,Just message) 
                        else if "Timeout waiting for client input" `isInfixOf` message
-                            then return (False,message)
+                            then return (False,Just message)
                             else processResponse handle
                      }
            }
