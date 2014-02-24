@@ -91,7 +91,7 @@ sendMail sender senderName recipients subject body =
 
     ; let mailStr = mkMailStr sender senderName recipients subject body
     ; putStrLn $ "Output to mail server:\n" ++ mailStr
-    ; hPutStr handle mailStr
+    ; mapM_ (hPutStrLn handle) (lines mailStr)
     ; hFlush handle
     ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
     ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
@@ -105,7 +105,7 @@ sendMail sender senderName recipients subject body =
            ; if eof 
              then return False
              else do { message <- hGetLine handle
---                     ; putStrLn $ "SMTP server:" ++ message
+                     ; putStrLn $ "SMTP server:" ++ message
                      ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
                           "Message accepted for delivery" `isInfixOf` message -- InterNLnet
                        then return True 
