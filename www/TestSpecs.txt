@@ -107,5 +107,10 @@
          [ "Prototype/apps/Bugs/Current/SQLFail"
          ]
      }
-
+, TestSpec
+     { getTestExecutable = Ampersand, getTestArgs = ["--rap"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "Ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
+         ]
+     }
 ]
