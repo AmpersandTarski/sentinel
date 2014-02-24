@@ -96,21 +96,22 @@ sendMail sender senderName recipients subject body =
     ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
     ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
                           -- Might be buffer related, but changing Buffering mode does not help    
-    ; success <- processResponse handle
-    ; if success then putStrLn "message sent" else error "Sending mail failed"
+    ; (success,mmsg) <- processResponse handle
+    ; if success then putStrLn "message sent" 
+                 else putStrLn ("Sending mail failed: "++fromMaybe "(EoF)" mmsg)
     ; hClose handle
     }
  where processResponse handle = 
         do { eof <- hIsEOF handle
            ; if eof 
-             then return False
+             then return (False,Nothing)
              else do { message <- hGetLine handle
                      ; putStrLn $ "SMTP server:" ++ message
                      ; if "Queued mail for delivery" `isInfixOf` message ||   -- KPN
                           "Message accepted for delivery" `isInfixOf` message -- InterNLnet
-                       then return True 
+                       then return (True,message) 
                        else if "Timeout waiting for client input" `isInfixOf` message
-                            then return False
+                            then return (False,message)
                             else processResponse handle
                      }
            }
