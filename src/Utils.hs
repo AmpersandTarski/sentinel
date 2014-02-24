@@ -96,9 +96,9 @@ sendMail sender senderName recipients subject body =
     ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at
     ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
                           -- Might be buffer related, but changing Buffering mode does not help    
-
     ; success <- processResponse handle
     ; if success then putStrLn "message sent" else error "Sending mail failed"
+    ; hClose handle
     }
  where processResponse handle = 
         do { eof <- hIsEOF handle
