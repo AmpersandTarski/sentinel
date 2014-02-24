@@ -116,12 +116,12 @@ sendMail sender senderName recipients subject body =
 mkMailStr :: String -> String -> [String] -> String -> String -> String
 mkMailStr senderName sender recipients subject body =
    unlines $
-       [ "HELO sentinel.tarski.nl"
-       , "MAIL From: "++ sender
+       [ "helo sentinel.tarski.nl"
+       , "mail From: "++ sender
        ]
-       ++ [ "RCPT To: "++recipient | recipient <- recipients ]
+       ++ [ "rcpt To: "++recipient | recipient <- recipients ]
        ++ 
-       [ "DATA"
+       [ "data"
        , "X-Mailer: Ampersand Sentinel"
        , "From: " ++ senderName ++ " <" ++ sender ++ ">"
        , "To: " ++ intercalate ", " recipients

@@ -1,2 +1,0 @@
-# called by crontab
-$HOME/svn/Sentinel/scripts/runSentinel --mail
