@@ -9,7 +9,8 @@ import Network
 import Network.BSD
 import Types
 import Defaults
-    
+import Data.Maybe
+
 failOnError :: String -> IO ExecutionOutcome -> IO ()
 failOnError errMsg test =
  do { result <- test
