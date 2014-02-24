@@ -133,10 +133,7 @@ mkMailStr senderName sender recipients subject body =
        , ""
        ]  
        ++ filter (/= ".") (lines body) ++
-       [ ""
-       , "." -- this is the trigger for smtp to end the mail body
-       , ""
+       [ "." -- this is the trigger for smtp to end the mail body
        , "quit"
-       , ""
        ]
  
