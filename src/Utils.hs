@@ -91,7 +91,7 @@ sendMail sender senderName recipients subject body =
     ; putStrLn "connected"
 
     ; let mailStr = mkMailStr sender senderName recipients subject body
-    ; let mailStr2 = "Output to mail server:\n" ++ mailStr ++ "\n("++(show. length. lines) mailStr++" lines)"
+    ; let mailStr2 = "Output to mail server:\n" ++ mailStr ++ "\n("++(show. length. lines) mailStr++" lines)\n"
     ; putStrLn mailStr2 
     ; writeFile "serverOutput.tmp" mailStr2
     ; mapM_ (hPutStrLn handle) (lines mailStr)
@@ -137,5 +137,6 @@ mkMailStr senderName sender recipients subject body =
        ++ filter (/= ".") (lines body) ++
        [ "." -- this is the trigger for smtp to end the mail body
        , "quit"
+       , ""
        ]
  
