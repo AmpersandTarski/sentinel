@@ -84,16 +84,11 @@ sendMail sender senderName recipients subject body =
     ; let mailServer = if thisIstheTestserver 
                        then "mail.kpnmail.nl"
                        else "smtp1.inter.NL.net"
-    ; putStrLn $ "connnecting to " ++ mailServer
+    ; putStrLn $ "connecting to " ++ mailServer
     
     ; handle <- connectTo mailServer (PortNumber 25)
     ; hSetNewlineMode handle $ NewlineMode LF CRLF -- NOTE: The output line mode needs to be CRLF for KPN
-    ; putStrLn "connected"
-
     ; let mailStr = mkMailStr sender senderName recipients subject body
-    ; let mailStr2 = "Output to mail server:\n" ++ mailStr ++ "\n("++(show. length. lines) mailStr++" lines)\n"
-    ; putStrLn mailStr2 
-    ; writeFile "serverOutput.tmp" mailStr2
     ; mapM_ (hPutStrLn handle) (lines mailStr)
 --    ; hFlush handle
 --    ; hPutStrLn handle "" -- no clue why this extra line+flush is necessary, but without it, sending mail hangs at

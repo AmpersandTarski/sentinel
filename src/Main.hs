@@ -63,9 +63,9 @@ main = runCommand $ \opts _ ->
  do { initialize
     ; isTestSrv <- isTestServer
     ; (nrOfFailed, totalNrOfTests, mFailureMessage) <- performTests opts
-    ; when (optMail opts || True) $
+    ; when (optMail opts) $
         case mFailureMessage of
-          Nothing -> return ()
+          Nothing -> putStrLn $ "\n\nNo need to wake anybody by sending a mail, for there were no failures."
           Just failureMessage -> when isTestSrv $
            do { authors <- getAuthors
               ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
