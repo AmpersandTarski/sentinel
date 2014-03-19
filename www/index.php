@@ -19,7 +19,7 @@ var refreshTimer;
 
 $(document).ready(function(){
   if (sentinelIsRunning)
-    refreshPageIn(5000);
+    refreshPageIn(10000);
 });
 
 function refreshPageIn (ms) {
