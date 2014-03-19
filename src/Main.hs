@@ -65,7 +65,7 @@ main = runCommand $ \opts _ ->
     ; (nrOfFailed, totalNrOfTests, mFailureMessage) <- performTests opts
     ; when (optMail opts) $
         case mFailureMessage of
-          Nothing -> putStrLn $ "\n\nNo need to wake anybody by sending a mail, for there were no failures."
+          Nothing -> putStrLn "\n\nNo need to wake anybody by sending a mail, for there were no failures."
           Just failureMessage -> when isTestSrv $
            do { authors <- getAuthors
               ; putStrLn $ "\n\nNotifying "++intercalate ", " authors
@@ -99,7 +99,7 @@ performTests opts =
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" []                 "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
             ; putStrLn "Cleaning Prototype"
             ; cabalClean "Prototype" []
-            ; t3 <- reportTestResult opts $ testInstall "Prototype" [] "the prototype generator"
+            ; t3 <- reportTestResult opts $ testInstall "Prototype" ["-rtsopts","+RTS","-K4000000001","-RTS"] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
