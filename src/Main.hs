@@ -99,7 +99,7 @@ performTests opts =
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" []                 "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
             ; putStrLn "Cleaning Prototype"
             ; cabalClean "Prototype" []
-            ; t3 <- reportTestResult opts $ testInstall "Prototype" ["--with-rtsopts=+RTS -K4000000002 -RTS"] "the prototype generator"
+            ; t3 <- reportTestResult opts $ testInstall "Prototype" [] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
