@@ -18,7 +18,7 @@ executable sentinel
                    old-locale,
                    utf8-string,
                    bytestring >= 0.10
-  ghc-options:     -Wall -threaded
+  ghc-options:     -Wall -threaded -rtsopts +RTS -K4000000003 -RTS
   other-modules:   
                    Defaults,
                    Execute,
