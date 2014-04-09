@@ -8,7 +8,7 @@ import Types
 import Utils
 import Execute
 import Defaults
-import UTF8(writeFile,readFile,getContents,putStr,putStrLn)
+import UTF8(readFile,putStrLn)
 import Prelude hiding (writeFile,readFile,getContents,putStr,putStrLn)
 
 runTestSpec :: Options -> TestSpec -> IO [TestResult]
@@ -43,7 +43,7 @@ collectFilePaths absFileSpec =
           }
       else
        do { filesOrDirs <- getProperDirectoryContents absFileSpec
-          ; fmap concat $ mapM (\fOrD -> collectFilePaths (combine absFileSpec fOrD)) filesOrDirs
+          ; fmap concat (mapM (collectFilePaths . combine absFileSpec) filesOrDirs)
           }
     }
    
@@ -55,7 +55,7 @@ collectFilePaths absFileSpec =
 -- allow filename to be used in the test spec (e.g. ["--outputDir=$OUTPUTDIR/$FILENAME/fSpec"])
 runTest :: Options -> TestSpec -> FilePath -> IO TestResult
 runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile =
- do { putStrLn $ testDescr
+ do { putStrLn testDescr
     ; svnDir <- getSvnDir
     ; let executable =
             case exec of
