@@ -95,8 +95,10 @@ sendMail sender senderName recipients subject body =
 --    ; hFlush handle       -- Start mail input; end with <CRLF>.<CRLF>
 --                          -- Might be buffer related, but changing Buffering mode does not help    
     ; (success,mmsg) <- processResponse handle
-    ; if success then putStrLn "message sent" 
-                 else putStrLn ("Sending mail failed: "++fromMaybe "(EoF)" mmsg)
+    ; putStrLn 
+        (if success 
+         then "message sent" 
+         else "Sending mail failed: " ++ fromMaybe "(EoF)" mmsg)
     ; hClose handle
     }
  where processResponse handle = 
