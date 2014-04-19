@@ -7,7 +7,7 @@ exit 1
 else
 noExtension=${1%\.*}  # is filename without extension
 echo prototype -p$HOME/www/$noExtension $1 --verbose $2 $3 $4 $5 $6 $7 $8 $9
-$HOME/svn/Prototype/dist/build/prototype/prototype -p$HOME/www/$noExtension $1 --verbose $2 $3 $4 $5 $6 $7 $8 $9
+$HOME/svn/Prototype/dist/build/prototype/prototype -p$HOME/www/$noExtension $1 --sqlPwd=anaxagoras0 --sqlLogin=sentinel --verbose $2 $3 $4 $5 $6 $7 $8 $9
 # for a sql password: --sqlPwd=<password>
 fi
 fi
