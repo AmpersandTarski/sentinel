@@ -31,7 +31,7 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
+         [ "Prototype/apps/Simple/Delivery.adl"
 --         , "Prototype/apps/Misc"
 --         , "Prototype/apps/Tests/ShouldSucceed"
 --         , "Prototype/apps/INDOORS/INDOORS.adl"
