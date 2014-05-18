@@ -31,11 +31,11 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple/Delivery.adl"
---         , "Prototype/apps/Misc"
---         , "Prototype/apps/Tests/ShouldSucceed"
---         , "Prototype/apps/INDOORS/INDOORS.adl"
---         , "Prototype/apps/Bugs/Fixed"
+         [ "Prototype/apps/Simple"
+         , "Prototype/apps/Misc"
+         , "Prototype/apps/Tests/ShouldSucceed"
+         , "Prototype/apps/INDOORS/INDOORS.adl"
+         , "Prototype/apps/Bugs/Fixed"
          ]
      }
 
@@ -94,19 +94,19 @@
          [ "Prototype/apps/Bugs/Current/Other"
          ]
      }
---, TestSpec 
---     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
---     , getTestFileSpecs = 
---         [ "Prototype/apps/Bugs/Current/SQL"
---         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
---         ]
---     }
---, TestSpec 
---     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
---     , getTestFileSpecs = 
---         [ "Prototype/apps/Bugs/Current/SQLFail"
---         ]
---     }
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "Prototype/apps/Bugs/Current/SQL"
+         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
+         ]
+     }
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
+     , getTestFileSpecs = 
+         [ "Prototype/apps/Bugs/Current/SQLFail"
+         ]
+     }
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = ["--rap"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
