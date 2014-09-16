@@ -124,7 +124,7 @@ executeIO cmd args dir =
                 , std_err       = CreatePipe
                 , close_fds     = False -- no need to close all other file descriptors
                 , create_group  = False
-                , delegate_ctlc = False -- don't let Ampersand handle ctrl-c
+                , delegate_ctlc = False -- don't let child process handle ctrl-c
                 }
                  
 --    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
