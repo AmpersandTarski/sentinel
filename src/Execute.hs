@@ -23,7 +23,7 @@ testBuild :: String -> [String] -> String -> IO TestResult
 testBuild project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
     ; cabalConfigure project flags 
-    ; cabal "build" project []
+    ; executeCabal "build" project []
     }
  where testDescr = "Building "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
@@ -31,24 +31,44 @@ testBuild project flags targetDescr = mkExecutionTest testDescr $
 testInstall :: String -> [String] -> String -> IO TestResult
 testInstall project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
-    ; cabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
+    ; executeCabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
 cabalUpdate :: IO ()
 cabalUpdate = failOnError "error during cabal update" $
-  cabal "update" "." [] -- just pass . as project dir
+  executeCabal "update" "." [] -- just pass . as project dir
+
+cabalDeleteSandbox :: String -> IO ()
+cabalDeleteSandbox project = -- cannot fail on error, as delete fails if there is no sandbox
+ do { result <- executeCabal "sandbox" project ["delete"]
+    ; case result of
+        ExecSuccess _     -> return ()
+        ExecFailure _ err -> putStr $ err
+    }
+  
+cabalInitSandbox :: String -> [String] -> IO ()
+cabalInitSandbox project flags = failOnError ("error during \'cabal sandbox init\' for "++project++": ") $
+  executeCabal "sandbox" project ("init" : flags) 
  
 cabalClean :: String -> [String] -> IO ()
-cabalClean project flags = failOnError ("error during cabal clean for "++project++": ") $
-  cabal "clean" project flags
+cabalClean project flags = cabalCmd "clean" project flags
   
 cabalConfigure :: String -> [String] -> IO ()
-cabalConfigure project flags = failOnError ("error during cabal configure for "++project++": ") $
-  cabal "configure" project flags
-   
-cabal :: String -> String -> [String] -> IO ExecutionOutcome
-cabal cmd project flags =
+cabalConfigure project flags = cabalCmd "configure" project flags
+
+cabalCopy :: String -> [String] -> IO ()
+cabalCopy project flags = cabalCmd "copy" project flags
+
+cabalRegister :: String -> [String] -> IO ()
+cabalRegister project flags = cabalCmd "register" project flags
+
+cabalCmd :: String -> String -> [String] -> IO ()
+cabalCmd cmd project flags = failOnError ("error during \'cabal "++cmd++"\' for "++project++": ") $
+  executeCabal cmd project flags
+
+executeCabal :: String -> String -> [String] -> IO ExecutionOutcome
+executeCabal cmd project flags =
  do { svnDir <- getSvnDir
     ; execute "cabal" (cmd : flags ) $ combine svnDir project
     }
