@@ -1,5 +1,5 @@
 # called by php to clean sentinel and re-create sandbox
 cd $HOME/svn/Sentinel
-cabal clean
+cabal clean  -- clean probably not necessary since we use cabal install rather than cabal build
 rm -rf .cabal-sandbox
 cabal sandbox init
