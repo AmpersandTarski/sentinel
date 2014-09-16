@@ -93,14 +93,15 @@ execute cmd args dir =
 executeIO :: String -> [String] -> String -> IO ExecutionOutcome
 executeIO cmd args dir =
  do { let cp = CreateProcess
-                { cmdspec      = RawCommand cmd args
-                , cwd          = Just dir
-                , env          = Nothing -- environment
-                , std_in       = Inherit 
-                , std_out      = CreatePipe
-                , std_err      = CreatePipe
-                , close_fds    = False -- no need to close all other file descriptors
-                , create_group = False
+                { cmdspec       = RawCommand cmd args
+                , cwd           = Just dir
+                , env           = Nothing -- environment
+                , std_in        = Inherit 
+                , std_out       = CreatePipe
+                , std_err       = CreatePipe
+                , close_fds     = False -- no need to close all other file descriptors
+                , create_group  = False
+                , delegate_ctlc = False -- don't let Ampersand handle ctrl-c
                 }
                  
 --    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
