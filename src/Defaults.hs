@@ -18,5 +18,6 @@ authorsFile = "Sentinel/www/Authors.txt"
 outputDir :: String
 outputDir = "Sentinel/www/ampersand"
 
+binDir :: String
 binDir = "/home/sentinel/.cabal/bin"
 --binDir = "/Users/martijn/.cabal/bin"

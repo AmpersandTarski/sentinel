@@ -96,10 +96,13 @@ performTests opts =
             ; putStrLn "Cleaning Ampersand"
             
             ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
-            ; cabalDeleteSandbox "Ampersand"
+            
+            ; when (not $ optKeepSandbox opts) $
+               do { cabalDeleteSandbox "Ampersand"
+                  ; putStrLn $ "\n\nAbout to perform a clean install, including dependencies. This may take a while.\n" 
+                  }
             ; cabalInitSandbox "Ampersand" []
             
-            ; putStrLn $ "About to perform a clean install (including dependencies.) This may take a while.\n"
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
 
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["--bindir="++binDir] 
