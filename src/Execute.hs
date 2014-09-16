@@ -23,25 +23,27 @@ testBuild :: String -> [String] -> String -> IO TestResult
 testBuild project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
     ; cabalConfigure project flags 
-    ; executeCabal "build" project []
+    ; executeCabal True "build" project []
     }
  where testDescr = "Building "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
--- doing install without also building is not possible with cabal
+-- doing install without also building is not possible with cabal. UPDATE: maybe no longer true with recent cabal versions
 testInstall :: String -> [String] -> String -> IO TestResult
 testInstall project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
-    ; executeCabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
+    -- cabal install may take a long time because of the dependencies, so we disable the time limit (it will always finish)
+    ; executeCabal False "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
 cabalUpdate :: IO ()
 cabalUpdate = failOnError "error during cabal update" $
-  executeCabal "update" "." [] -- just pass . as project dir
+  executeCabal True "update" "." [] -- just pass . as project dir
 
 cabalDeleteSandbox :: String -> IO ()
 cabalDeleteSandbox project = -- cannot fail on error, as delete fails if there is no sandbox
- do { result <- executeCabal "sandbox" project ["delete"]
+ do { putStrLn $ "Deleting "++project++" sandbox. May give show a harmless error message if no sandbox was present"
+    ; result <- executeCabal True "sandbox" project ["delete"]
     ; case result of
         ExecSuccess _     -> return ()
         ExecFailure _ err -> putStr $ err
@@ -49,7 +51,7 @@ cabalDeleteSandbox project = -- cannot fail on error, as delete fails if there i
   
 cabalInitSandbox :: String -> [String] -> IO ()
 cabalInitSandbox project flags = failOnError ("error during \'cabal sandbox init\' for "++project++": ") $
-  executeCabal "sandbox" project ("init" : flags) 
+  executeCabal True "sandbox" project ("init" : flags) 
  
 cabalClean :: String -> [String] -> IO ()
 cabalClean project flags = cabalCmd "clean" project flags
@@ -65,18 +67,18 @@ cabalRegister project flags = cabalCmd "register" project flags
 
 cabalCmd :: String -> String -> [String] -> IO ()
 cabalCmd cmd project flags = failOnError ("error during \'cabal "++cmd++"\' for "++project++": ") $
-  executeCabal cmd project flags
+  executeCabal True cmd project flags
 
-executeCabal :: String -> String -> [String] -> IO ExecutionOutcome
-executeCabal cmd project flags =
+executeCabal :: Bool -> String -> String -> [String] -> IO ExecutionOutcome
+executeCabal hasTimeLimit cmd project flags =
  do { svnDir <- getSvnDir
-    ; execute "cabal" (cmd : flags ) $ combine svnDir project
+    ; execute hasTimeLimit "cabal" (cmd : flags ) $ combine svnDir project
     }
 
 svnUpdate :: String -> IO ()
 svnUpdate project =
  do { svnDir <- getSvnDir
-    ; result <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
+    ; result <- execute True "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
                                          -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
     ; case result of
         ExecSuccess _     -> do { revStr <- getRevisionStr project
@@ -88,7 +90,7 @@ svnUpdate project =
 getRevisionStr :: String -> IO String
 getRevisionStr project =
  do { svnDir <- getSvnDir
-    ; result <- execute "svnversion" [] $ combine svnDir project
+    ; result <- execute True "svnversion" [] $ combine svnDir project
     ; case result of
              ExecSuccess rev@(_:_) -> return $ init rev -- only remove the newline
              ExecSuccess rev       -> error $ "incorrect response from svnversion: "++rev
@@ -103,9 +105,10 @@ getRevision project =
       else error $ "incorrect revision for "++project++": "++show revStr -- happens when a revision was locally modified
     }
 
-execute :: String -> [String] -> String -> IO ExecutionOutcome
-execute cmd args dir =
- do { result <- timeout (maxTimeInSeconds*1000000) $ executeIO cmd args dir
+execute :: Bool -> String -> [String] -> String -> IO ExecutionOutcome
+execute hasTimeLimit cmd args dir =
+ do { result <- (if hasTimeLimit then timeout (maxTimeInSeconds*1000000) else fmap Just) $ 
+                  executeIO cmd args dir
     ; case result  of
         Just executionOutcome -> return executionOutcome
         Nothing -> return $ ExecFailure timeoutExitCode $ "Timeout: Execution time exceeded "++show maxTimeInSeconds++" seconds."
