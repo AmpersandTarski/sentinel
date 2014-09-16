@@ -42,7 +42,7 @@ cabalUpdate = failOnError "error during cabal update" $
 
 cabalDeleteSandbox :: String -> IO ()
 cabalDeleteSandbox project = -- cannot fail on error, as delete fails if there is no sandbox
- do { putStrLn $ "Deleting "++project++" sandbox. May give show a harmless error message if no sandbox was present"
+ do { putStrLn $ "Deleting "++project++" sandbox, may show a harmless error message if no sandbox was present."
     ; result <- executeCabal True "sandbox" project ["delete"]
     ; case result of
         ExecSuccess _     -> return ()
