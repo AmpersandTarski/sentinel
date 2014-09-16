@@ -59,8 +59,8 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
     ; svnDir <- getSvnDir
     ; let executable =
             case exec of
-              Ampersand -> svnDir ++ "/Ampersand/dist/build/ampersand/ampersand"
-              Prototype -> svnDir ++ "/Prototype/dist/build/prototype/prototype"
+              Ampersand -> binDir ++ "/ampersand"
+              Prototype -> binDir ++ "/prototype"
     ; let absOutputDir = joinPath $ [svnDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     ["fSpec" | exec == Ampersand] 
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir

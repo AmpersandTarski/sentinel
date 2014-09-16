@@ -9,6 +9,7 @@ import Options (runCommand)
 import Data.List
 import Data.Time
 import Types
+import Defaults
 import Utils
 import Test
 import Execute
@@ -90,16 +91,21 @@ performTests opts =
             ; svnUpdate "Ampersand"
             ; putStrLn "Performing svn update for Prototype"
             ; svnUpdate "Prototype"
-            -- also update and build Sentinel? Or do we want to keep this an explicit action on the server?
             ; putStrLn "Performing cabal update"
             ; cabalUpdate
             ; putStrLn "Cleaning Ampersand"
-            ; cabalClean "Ampersand" []
+            
+            ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
+            ; cabalDeleteSandbox "Ampersand"
+            ; cabalInitSandbox "Ampersand" []
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
-            ; t1 <- reportTestResult opts $ testInstall "Ampersand" []                 "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
+
+            ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["--bindir="++binDir] 
+                                                        "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
             ; putStrLn "Cleaning Prototype"
-            ; cabalClean "Prototype" []
-            ; t3 <- reportTestResult opts $ testInstall "Prototype" [] "the prototype generator"
+            ; cabalClean "Prototype" [] -- clean probably not necessary since we use cabal install rather than cabal build
+            ; cabalInitSandbox "Prototype" ["--sandbox=../Ampersand/.cabal-sandbox"] -- we use the Ampersand sandbox, so no need to delete first
+            ; t3 <- reportTestResult opts $ testInstall "Prototype" ["--bindir="++binDir] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
