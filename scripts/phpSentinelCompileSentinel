@@ -17,6 +17,7 @@ cd /home/sentinel/svn/Sentinel
 svn cleanup
 svn update
 
-echo before cabal
-cabal clean 
-cabal install
+echo Cleaning Sentinel and installing sandbox
+scripts/cleanSentinel
+echo Running cabal install on sentinel 
+cabal install --bindir=$HOME/.cabal/bin

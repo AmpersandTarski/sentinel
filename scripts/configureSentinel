@@ -1,2 +1,3 @@
+# for command-line use, not called by php or crontab
 cd $HOME/svn/Sentinel
 cabal configure
