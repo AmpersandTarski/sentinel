@@ -26,7 +26,7 @@ svn cleanup
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
 
 # execute Sentinel with extra arguments passed to this script ($@)
-/home/sentinel/svn/Sentinel/dist/build/sentinel/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
+/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
 
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator
