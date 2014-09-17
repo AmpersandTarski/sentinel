@@ -96,20 +96,13 @@ performTests opts =
             ; putStrLn "Cleaning Ampersand"
             
             ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
-            
-            ; when (not $ optKeepSandbox opts) $
-               do { cabalDeleteSandbox "Ampersand"
-                  ; putStrLn $ "\n\nAbout to perform a clean install, including dependencies. This may take a while.\n" 
-                  }
-            ; cabalInitSandbox "Ampersand" []
-            
+                        
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
 
             ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["--bindir="++binDir] 
                                                         "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
             ; putStrLn "Cleaning Prototype"
             ; cabalClean "Prototype" [] -- clean probably not necessary since we use cabal install rather than cabal build
-            ; cabalInitSandbox "Prototype" ["--sandbox=../Ampersand/.cabal-sandbox"] -- we use the Ampersand sandbox, so no need to delete first
             ; t3 <- reportTestResult opts $ testInstall "Prototype" ["--bindir="++binDir] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
