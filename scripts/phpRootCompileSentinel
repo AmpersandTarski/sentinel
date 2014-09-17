@@ -3,4 +3,4 @@ echo Running phpRootCompileSentinel
 
 #whoami
 killall --quiet sentinel
-sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelCompileSentinel
+sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/phpSentinelCompileSentinel > /home/sentinel/svn/Sentinel/www/compileSentinel.log 2>&1
