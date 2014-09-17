@@ -45,7 +45,7 @@ cd /home/sentinel/svn/Ampersand
 # init is neutral if sandbox already exists
 cabal sandbox init
 if [ $deleteSandbox -ne 0 ]; then
-echo "Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log\">runSentinel.log</a>)" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
+echo "Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 echo ""
 echo ""
 cabal sandbox delete
@@ -57,7 +57,7 @@ cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
 
 
 # execute Sentinel with extra arguments passed to this script ($@)
-/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
+/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
 
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator
