@@ -2,4 +2,4 @@ echo Running phpRootRunSentinel
 # wrapper script that is called by the www server as root (from php)
 # and calls runSentinel as user 'sentinel' with optional --deleteSandbox arg
 
-sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/runSentinel $1 > /home/sentinel/svn/Sentinel/www/runSentinel.log 2>&1
+sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/runSentinel $1 > /home/sentinel/svn/Sentinel/www/logs/runSentinel.log 2>&1
