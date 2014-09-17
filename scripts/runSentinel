@@ -34,14 +34,21 @@ do
     deleteSandbox=1
   fi
 done
-echo  > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
-if [ $deleteSandbox -ne 0 ]; then
-echo "Deleting sandbox" >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
-else
-echo "Keeping sandbox" >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
-fi
 
-exit 1
+# Init sandboxes (and delete Ampersand sandbox, if necessary)
+
+cd /home/sentinel/svn/Ampersand
+if [ $deleteSandbox -ne 0 ]; then
+echo "Deleting sandbox" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
+cabal sandbox delete
+else
+echo "Keeping sandbox" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
+fi
+# init is neutral if sandbox already exists
+cabal sandbox init
+cd /home/sentinel/svn/Prototype
+cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
+
 
 # execute Sentinel with extra arguments passed to this script ($@)
 /home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
