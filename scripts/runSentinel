@@ -38,14 +38,16 @@ done
 # Init sandboxes (and delete Ampersand sandbox, if necessary)
 
 cd /home/sentinel/svn/Ampersand
+# init is neutral if sandbox already exists
+cabal sandbox init
 if [ $deleteSandbox -ne 0 ]; then
 echo "Deleting sandbox" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 cabal sandbox delete
+cabal sandbox init
+cabal install --only-dependencies
 else
 echo "Keeping sandbox" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 fi
-# init is neutral if sandbox already exists
-cabal sandbox init
 cd /home/sentinel/svn/Prototype
 cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
 
