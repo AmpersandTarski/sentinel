@@ -35,8 +35,8 @@ function compileSentinel() {
   location.href='CompileSentinel.php';
 }
 
-function runSentinel(keepSandbox) {
-  $.ajax({ url: keepSandbox ? 'RunSentinelKeepSandbox.php' : 'RunSentinel.php',
+function runSentinel(deleteSandbox) {
+  $.ajax({ url: deleteSandbox ? 'RunSentinelDeleteSandbox.php' : 'RunSentinel.php',
            cache: false,
            success: function(data){ refreshPageIn(250);
            // delay reload with 250ms to ensure sentinel process has started
@@ -52,7 +52,7 @@ function runSentinel(keepSandbox) {
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
-  <button onclick="runSentinel(false)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(true)">Run Sentinel normal</button> (<a href="/ampersand/">view generated prototypes</a>)
+  <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> (<a href="/ampersand/">view generated prototypes</a>)
   <p>
   <a href="logs/?C=M;O=D">View Sentinel logs</a>
 <hr/>

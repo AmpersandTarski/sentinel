@@ -38,6 +38,6 @@ data TestSpec = TestSpec { getTestExecutable :: TestExecutable
 
 defineOptions "Options" $ do { boolOption "optHtml" "html" False "Generate html output."
                              ; boolOption "optMail" "mail" False "Notify authors by e-mail."
-                             ; boolOption "optKeepSandbox" "keepSandbox" False "Keep existing sandbox with installed dependencies."
+                             ; boolOption "optDeleteSandbox" "deleteSandbox" False "Unused option: sandbox is handled by runSentinel"
                              }
           

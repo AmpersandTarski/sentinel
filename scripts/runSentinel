@@ -1,7 +1,7 @@
 echo Running runSentinel \(extra arguments are \'$@\'\)
 
 # script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
-# it cleans up svn, executes the Haskell sentinal and stores its output in SentinelOutput.txt and logs/
+# it cleans up svn, executes the Haskell sentinel and stores its output in SentinelOutput.txt and logs/
 
 # has absolute paths instead of $HOME
 # NOTE: make sure that www directory of SentinelOutput is writable for 'other'
@@ -24,6 +24,23 @@ svn cleanup
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
+
+# Check for --deleteSandbox argument
+deleteSandbox=0
+for var in "$@"
+do
+  if [ $var == "--deleteSandbox" ]; then
+    deleteSandbox=1
+  fi
+done
+
+if [ $deleteSandbox -ne 0 ]; then
+echo "Deleting sandbox"
+else
+echo "Keeping sandbox"
+fi
+
+exit 1
 
 # execute Sentinel with extra arguments passed to this script ($@)
 /home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
