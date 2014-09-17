@@ -91,8 +91,6 @@ performTests opts =
             ; svnUpdate "Ampersand"
             ; putStrLn "Performing svn update for Prototype"
             ; svnUpdate "Prototype"
-            ; putStrLn "Performing cabal update"
-            ; cabalUpdate
             ; putStrLn "Cleaning Ampersand"
             
             ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build

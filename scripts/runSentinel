@@ -37,6 +37,7 @@ done
 # Init sandboxes (and delete Ampersand sandbox, if necessary)
 
 cd /home/sentinel/svn/Ampersand
+cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
 if [ $deleteSandbox -ne 0 ]; then
