@@ -37,13 +37,12 @@ done
 # Init sandboxes (and delete Ampersand sandbox, if necessary)
 
 cd /home/sentinel/svn/Ampersand
+echo Performing cabal update > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
 if [ $deleteSandbox -ne 0 ]; then
-echo "Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
-echo ""
-echo ""
+echo "Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n\n" >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
