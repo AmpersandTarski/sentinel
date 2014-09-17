@@ -15,7 +15,11 @@ export HOME
 export LANG
 export PATH
 
+# Kill 'em all
 killall --quiet sentinel
+killall --quiet cabal
+killall --quiet ghc
+
 rm -rf /home/sentinel/svn/Ampersand/dist
 rm -rf /home/sentinel/svn/Prototype/dist
 cd /home/sentinel/svn/Ampersand
@@ -41,12 +45,12 @@ cd /home/sentinel/svn/Ampersand
 # init is neutral if sandbox already exists
 cabal sandbox init
 if [ $deleteSandbox -ne 0 ]; then
-echo "Deleting sandbox" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
+echo "Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log\">runSentinel.log</a>)" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
+echo ""
+echo ""
 cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
-else
-echo "Keeping sandbox" > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 fi
 cd /home/sentinel/svn/Prototype
 cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
