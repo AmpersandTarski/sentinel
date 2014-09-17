@@ -1,5 +1,5 @@
 echo Running phpRootRunSentinel
 # wrapper script that is called by the www server as root (from php)
-# and calls sentinel as user 'sentinel' with optional --keepSandbox arg
+# and calls runSentinel as user 'sentinel' with optional --deleteSandbox arg
 
 sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/runSentinel $1
