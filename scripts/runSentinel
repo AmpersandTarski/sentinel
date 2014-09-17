@@ -1,3 +1,4 @@
+#!/bin/bash
 echo Running runSentinel \(extra arguments are \'$@\'\)
 
 # script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
@@ -33,11 +34,11 @@ do
     deleteSandbox=1
   fi
 done
-
+echo  > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 if [ $deleteSandbox -ne 0 ]; then
-echo "Deleting sandbox"
+echo "Deleting sandbox" >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 else
-echo "Keeping sandbox"
+echo "Keeping sandbox" >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
 fi
 
 exit 1
