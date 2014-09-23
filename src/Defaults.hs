@@ -19,5 +19,5 @@ outputDir :: String
 outputDir = "sentinel/www/ampersand"
 
 binDir :: String
---binDir = "/home/sentinel/.cabal/bin"
-binDir = "/Users/martijn/.cabal/bin"
+binDir = "/home/sentinel/.cabal/bin"
+--binDir = "/Users/martijn/.cabal/bin"
