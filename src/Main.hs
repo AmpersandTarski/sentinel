@@ -87,12 +87,7 @@ performTests opts =
     ; (ampersandOk, prototypeOk, buildTestResults) <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
-         do { putStrLn "Performing svn update for Ampersand"
-            ; svnUpdate "Ampersand"
-            ; putStrLn "Performing svn update for Prototype"
-            ; svnUpdate "Prototype"
-            ; putStrLn "Cleaning Ampersand"
-            
+         do { putStrLn "Cleaning Ampersand"
             ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
                         
             ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
