@@ -6,36 +6,36 @@
 [ TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
---       , "Ampersand/AmpersandData/RepoRap/RAP.adl"
-         , "Ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
-         , "Ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
-         , "Prototype/apps/Mandatering/ToevoegenMandaat.adl"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/INDOORS/overzichten/uitgangsscripts/VIROarch.adl"
-         , "Prototype/apps/VOGDemo/DEMO_VOG.adl"
---       , "Prototype/apps/Bugs/Fixed"
+         [ "ampersand-models/Simple"
+--       , "ampersand/AmpersandData/RepoRap/RAP.adl"
+         , "ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
+         , "ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
+         , "ampersand-models/Mandatering/ToevoegenMandaat.adl"
+         , "ampersand-models/Misc"
+         , "ampersand-models/INDOORS/INDOORS.adl"
+         , "ampersand-models/INDOORS/overzichten/uitgangsscripts/VIROarch.adl"
+         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
+--       , "ampersand-models/Bugs/Fixed"
          ]
      }
 , TestSpec 
      { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/Tests/ShouldSucceed"
-         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Bugs/Fixed"
+         [ "ampersand-models/Simple"
+         , "ampersand-models/Misc"
+         , "ampersand-models/Tests/ShouldSucceed"
+         , "ampersand-models/INDOORS/INDOORS.adl"
+         , "ampersand-models/Bugs/Fixed"
          ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/Tests/ShouldSucceed"
-         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Bugs/Fixed"
+         [ "ampersand-models/Simple"
+         , "ampersand-models/Misc"
+         , "ampersand-models/Tests/ShouldSucceed"
+         , "ampersand-models/INDOORS/INDOORS.adl"
+         , "ampersand-models/Bugs/Fixed"
          ]
      }
 
@@ -43,9 +43,9 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Tests/ShouldSucceed"
-         , "Prototype/apps/INDOORS/INDOORS.adl"
-         , "Prototype/apps/Bugs/Fixed"
+         [ "ampersand-models/Tests/ShouldSucceed"
+         , "ampersand-models/INDOORS/INDOORS.adl"
+         , "ampersand-models/Bugs/Fixed"
          ]
      }
 
@@ -54,22 +54,22 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Simple"
-         , "Prototype/apps/Misc"
-         , "Prototype/apps/INDOORS/DemoBeslissingen.adl"
-         , "Prototype/apps/INDOORS/DemoLamicie301.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode105.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode106.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode303.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode701.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode702.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode703.adl"
-         , "Prototype/apps/INDOORS/DemoLamicieCode708.adl"
-         , "Prototype/apps/INDOORS/DemoRaadRechtsbijstand.adl"
-         , "Prototype/apps/INDOORS/DemoRegisters.adl"
-         , "Prototype/apps/INDOORS/DemoStrafblad.adl"
-         , "Prototype/apps/INDOORS/DemoZittinggegevens.adl"
-         , "Prototype/apps/VOGDemo/DEMO_VOG.adl"
+         [ "ampersand-models/Simple"
+         , "ampersand-models/Misc"
+         , "ampersand-models/INDOORS/DemoBeslissingen.adl"
+         , "ampersand-models/INDOORS/DemoLamicie301.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode105.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode106.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode303.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode701.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode702.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode703.adl"
+         , "ampersand-models/INDOORS/DemoLamicieCode708.adl"
+         , "ampersand-models/INDOORS/DemoRaadRechtsbijstand.adl"
+         , "ampersand-models/INDOORS/DemoRegisters.adl"
+         , "ampersand-models/INDOORS/DemoStrafblad.adl"
+         , "ampersand-models/INDOORS/DemoZittinggegevens.adl"
+         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
          ]
      }
 
@@ -77,13 +77,13 @@
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs =
-         [ "Prototype/apps/Tests/ShouldSucceed"
+         [ "ampersand-models/Tests/ShouldSucceed"
          ]
      }
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
-         [ "Prototype/apps/Tests/ShouldFail"
+         [ "ampersand-models/Tests/ShouldFail"
          ]
      }
 
@@ -91,26 +91,26 @@
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs =
-         [ "Prototype/apps/Bugs/Current/Other"
+         [ "ampersand-models/Bugs/Current/Other"
          ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/Bugs/Current/SQL"
-         , "Prototype/apps/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
+         [ "ampersand-models/Bugs/Current/SQL"
+         , "ampersand-models/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
          ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs = 
-         [ "Prototype/apps/Bugs/Current/SQLFail"
+         [ "ampersand-models/Bugs/Current/SQLFail"
          ]
      }
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = ["--rap"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "Prototype/apps/INDOORS/INDOORS.adl"
+         [ "ampersand-models/INDOORS/INDOORS.adl"
          ]
      }
 ]

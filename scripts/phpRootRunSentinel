@@ -8,4 +8,4 @@ killall --quiet sentinel
 killall --quiet cabal
 killall --quiet ghc
 
-sudo -u sentinel /home/sentinel/svn/Sentinel/scripts/runSentinel $* > /home/sentinel/svn/Sentinel/www/logs/runSentinel.log.txt 2>&1
+sudo -u sentinel /home/sentinel/git/sentinel/scripts/runSentinel $* > /home/sentinel/git/sentinel/www/logs/runSentinel.log.txt 2>&1
