@@ -12,11 +12,17 @@ export LANG
 export PATH
 
 cd /home/sentinel/git/sentinel
+echo Sentinel is on branch `git rev-parse --abbrev-ref HEAD`
+echo Fetching and pulling latest commit
 git fetch
 git pull
 
 echo "Cleaning Sentinel and installing sandbox (if not already installed)"
-scripts/cleanSentinel
+
+cabal clean 
+rm -rf .cabal-sandbox
+cabal sandbox init
+
 echo Running cabal update and cabal install on sentinel
 cabal update
 cabal install --bindir=/home/sentinel/.cabal/bin/
