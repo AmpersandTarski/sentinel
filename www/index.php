@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+$refreshInterval = 10;
 $sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 $sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
 
@@ -19,7 +20,7 @@ var refreshTimer;
 
 $(document).ready(function(){
   if (sentinelIsRunning)
-    refreshPageIn(10000);
+    refreshPageIn(<?php echo $refreshInterval ?> * 1000);
 });
 
 function refreshPageIn (ms) {
@@ -70,7 +71,7 @@ echo '<hr/></br><div style="font-size: 120%">';
 
 $sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 if ($sentinelIsRunning)
-  echo '<span style="color: darkblue">Tests are still running (this page is refreshed every 5 seconds to show the results).</span>';
+  echo "<span style=\"color: darkblue\">Tests are still running (this page is refreshed every $refreshInterval seconds to show the results).</span>";
 else {
   echo 'Results of the last test run: ';
   $matches = array();
