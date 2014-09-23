@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-$sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
+$sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 $sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
 
 ?>
@@ -68,7 +68,7 @@ echo "Authors that will be notified on nightly tests: ".implode(", ", $authors);
 
 echo '<hr/></br><div style="font-size: 120%">';
 
-$sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
+$sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 if ($sentinelIsRunning)
   echo '<span style="color: darkblue">Tests are still running (this page is refreshed every 5 seconds to show the results).</span>';
 else {

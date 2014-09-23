@@ -40,12 +40,12 @@ done
 # Init sandboxes (and delete Ampersand sandbox, if necessary)
 
 cd /home/sentinel/git/ampersand
-echo $'Performing cabal update\n' > /home/sentinel/git/sentinel/www/ampersand/SentinelOutput.txt
+echo $'Performing cabal update\n' > /home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 #cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
 if [ $deleteSandbox -ne 0 ]; then
-echo $'Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> /home/sentinel/git/sentinel/www/ampersand/SentinelOutput.txt
+echo $'Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> /home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
@@ -55,13 +55,13 @@ cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
 
 
 # execute Sentinel with extra arguments passed to this script ($@)
-/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null >> /home/sentinel/git/sentinel/www/ampersand/SentinelOutput.txt 2>&1
+/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null >> /home/sentinel/git/sentinel/www/logs/SentinelOutput.txt 2>&1
 
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator
-NrOfFailed=`grep "Number of failed tests:" /home/sentinel/git/sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
+NrOfFailed=`grep "Number of failed tests:" /home/sentinel/git/sentinel/www/logs/SentinelOutput.txt | cut -d" " -f5`
 # take the 5th field using space as separator
-NrOfTests=`grep "Total number of tests:" /home/sentinel/git/sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
+NrOfTests=`grep "Total number of tests:" /home/sentinel/git/sentinel/www/logs/SentinelOutput.txt | cut -d" " -f5`
 
 # if NrOfFailed is empty then testing was aborted
 if [ -z "$NrOfFailed" ]; then
@@ -82,4 +82,4 @@ Filename=Sentinel_${Timestamp}__${Results}__Amp=${AmpersandRevision}_Pro=${Proto
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
-sed 's/$/<\/br>/' /home/sentinel/git/sentinel/www/ampersand/SentinelOutput.txt > /home/sentinel/git/sentinel/www/logs/$Filename
+sed 's/$/<\/br>/' /home/sentinel/git/sentinel/www/logs/SentinelOutput.txt > /home/sentinel/git/sentinel/www/logs/$Filename
