@@ -17,6 +17,11 @@ export PATH
 
 sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
+# get timestamp at the start of sentinel execution
+Timestamp=`date +%Y-%m-%d_%H.%M.%S`
+echo "Script runSentinel started at $Timestamp"$'\n' > $sentinelOut
+
+
 rm -rf /home/sentinel/git/ampersand/dist
 rm -rf /home/sentinel/git/prototype/dist
 
@@ -27,8 +32,6 @@ git reset --hard
 cd /home/sentinel/git/prototype
 git reset --hard
 
-# get timestamp at the start of sentinel execution
-Timestamp=`date +%Y-%m-%d_%H.%M.%S`
 
 # Check for --deleteSandbox argument
 deleteSandbox=0
@@ -62,7 +65,6 @@ AmpersandGitInfoHtml=`getGitInfoHtml ampersand`
 PrototypeGitInfoHtml=`getGitInfoHtml prototype`
 SentinelGitInfoHtml=`getGitInfoHtml sentinel`
 
-echo "Script runSentinel started at $Timestamp"$'\n' > $sentinelOut
 echo "Git info: Ampersand[$AmpersandGitInfoHtml], Prototype[$PrototypeGitInfoHtml], Sentinel[$SentinelGitInfoHtml]"$'\n' >> $sentinelOut
 
 

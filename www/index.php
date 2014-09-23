@@ -40,7 +40,7 @@ function compileSentinel() {
 function runSentinel(deleteSandbox) {
   $.ajax({ url: deleteSandbox ? 'RunSentinelDeleteSandbox.php' : 'RunSentinel.php',
            cache: false,
-           success: function(data){ refreshPageIn(1000); }
+           success: function(data){ refreshPageIn(250); }
            // delay reload with 250ms to ensure sentinel process has started
   });
 }
