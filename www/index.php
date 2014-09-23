@@ -28,6 +28,7 @@ function refreshPageIn (ms) {
     clearTimeout(refreshTimer);
 
   refreshTimer = setTimeout( function () { window.location.reload()}, ms);
+  console.log('reload');
   // extra function() is necessary to make reload lazy
 }
 
@@ -39,9 +40,8 @@ function compileSentinel() {
 function runSentinel(deleteSandbox) {
   $.ajax({ url: deleteSandbox ? 'RunSentinelDeleteSandbox.php' : 'RunSentinel.php',
            cache: false,
-           success: function(data){ refreshPageIn(250);
+           success: function(data){ refreshPageIn(1000); }
            // delay reload with 250ms to ensure sentinel process has started
-         }
   });
 }
   </script>

@@ -17,11 +17,7 @@ import Execute
 {-
 todo:
 
-Avoid needing root and martijn permissions for executing server.
-Make scripts more robust and allow svn update without first having to remove everything.
-Currently we need to clean everything every time, so an Ampersand or Prototype compilation fail
-will also cause a lot of test fails. (there is an ugly fix for this now)
-Maybe we should even manually keep old versions of the executables, since doing things incremental might be more fragile
+Avoid needing root and sentinel permissions for executing server.
 
 fix module names and structure, as well as refactor test data types. Everything is rather messy now.
 keep track of what has been reported
@@ -29,8 +25,6 @@ maybe create a type TestCase, a list of which is created from TestSpec
 if the message is not in the result we can print it before executing the test
 Also keep desired result in TestResult, so we can give a less confusing message (e.g. this test succeeded but should have failed)
 and only print output in case of failed run, rather than a failed test (output from successful tests that should have failed is probably not interesting)
-
-Use a Haskell server, so calling svn and cabal will be much easier. (Sentinel installation will also be easier).
 
 Fix hanging of sentinel when Ampersand hangs (for example for bug #327)
 
@@ -80,23 +74,22 @@ main = runCommand $ \opts _ ->
 
 performTests :: Options -> IO (Int, Int, Maybe String)
 performTests opts =
- do { svnUpdate "Sentinel/www" -- update the www directory for the latest Authors.txt and TestSpecs.txt
-    ; testSpecs <- parseTestSpecs opts
+ do { testSpecs <- parseTestSpecs opts
  
     ; isTestSrv <- isTestServer
     ; (ampersandOk, prototypeOk, buildTestResults) <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
          do { putStrLn "Cleaning Ampersand"
-            ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
+            ; cabalClean "ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
                         
-            ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
+            ; t2 <- reportTestResult opts $ testInstall "ampersand" ["-f-executable"] "the Ampersand library"
 
-            ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["--bindir="++binDir] 
+            ; t1 <- reportTestResult opts $ testInstall "ampersand" ["--bindir="++binDir] 
                                                         "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
             ; putStrLn "Cleaning Prototype"
-            ; cabalClean "Prototype" [] -- clean probably not necessary since we use cabal install rather than cabal build
-            ; t3 <- reportTestResult opts $ testInstall "Prototype" ["--bindir="++binDir] "the prototype generator"
+            ; cabalClean "prototype" [] -- clean probably not necessary since we use cabal install rather than cabal build
+            ; t3 <- reportTestResult opts $ testInstall "prototype" ["--bindir="++binDir] "the prototype generator"
             ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
             -- TODO: probably want a monad here, since it's too easy to miss tests now
             }
@@ -148,10 +141,9 @@ initialize :: IO ()
 initialize =
  do { hSetBuffering stdout LineBuffering
     ; hSetBuffering stderr LineBuffering
-    ; revStr <- getRevisionStr "Sentinel"
     ; hName <- getHostName
     ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
-    ; putStrLn $ "######## Sentinel (r"++revStr++") started on "++hName++" at "++time++" ########\n\n"
+    ; putStrLn $ "######## Sentinel started on "++hName++" at "++time++" ########\n\n"
     }
     
 exit :: IO ()

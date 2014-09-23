@@ -24,8 +24,8 @@ runTestSpec opts testSpec =
 -}
 getTestFiles :: [String] -> IO [String]   
 getTestFiles fileSpecs =
- do { svnDir <- getSvnDir
-    ; let absFileSpecs = map (combine svnDir) fileSpecs
+ do { gitDir <- getGitDir
+    ; let absFileSpecs = map (combine gitDir) fileSpecs
     ; filePathss <- mapM collectFilePaths absFileSpecs
     ; return $ concat filePathss
     }
@@ -49,19 +49,19 @@ collectFilePaths absFileSpec =
    
 
 -- execute project executable in directory of testFile (which is absolute). First arg is testFile
--- an implicit --outputDir/--proto is added for  $svnDir / outputDir / filename ( and /fSpec for Ampersand) 
+-- an implicit --outputDir/--proto is added for  gitDir / outputDir / filename ( and /fSpec for Ampersand) 
 -- Because the prototype generator does not respect outputDir, we need to use protoDir, which also forces
 -- generation of a prototype. However, this implicit argument will be replaced by a more general mechanism to
 -- allow filename to be used in the test spec (e.g. ["--outputDir=$OUTPUTDIR/$FILENAME/fSpec"])
 runTest :: Options -> TestSpec -> FilePath -> IO TestResult
 runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile =
  do { putStrLn testDescr
-    ; svnDir <- getSvnDir
+    ; gitDir <- getGitDir
     ; let executable =
             case exec of
               Ampersand -> binDir ++ "/ampersand"
               Prototype -> binDir ++ "/prototype"
-    ; let absOutputDir = joinPath $ [svnDir, outputDir, dropExtension (takeFileName testFile)] ++
+    ; let absOutputDir = joinPath $ [gitDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     ["fSpec" | exec == Ampersand] 
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
     ; result <- execute executable (testFile : absOutputDirArg 
@@ -90,8 +90,8 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
 -- yes, parse is a rather big word for this function
 parseTestSpecs :: Options -> IO [TestSpec]
 parseTestSpecs opts =
- do { svnDir <- getSvnDir
-    ; let testSpecsFilePath = combine svnDir testSpecsFile
+ do { gitDir <- getGitDir
+    ; let testSpecsFilePath = combine gitDir testSpecsFile
     ; testSpecsStr <- readFile testSpecsFilePath
     ; let lexedTestSpecsStr = reverse . dropWhile isSpace . reverse -- read doesn't like trailing whitespace 
                             . unlines . filter (not . ("--" `isPrefixOf`)) . lines   -- line comments are only allowed at start of line 
