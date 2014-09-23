@@ -12,6 +12,7 @@ export LANG
 export PATH
 
 cd /home/sentinel/git/sentinel
+git fetch
 git pull
 
 echo "Cleaning Sentinel and installing sandbox (if not already installed)"
