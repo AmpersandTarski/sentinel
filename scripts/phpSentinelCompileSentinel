@@ -14,7 +14,7 @@ export PATH
 cd /home/sentinel/git/sentinel
 git pull
 
-echo Cleaning Sentinel and installing sandbox (if not already installed)
+echo "Cleaning Sentinel and installing sandbox (if not already installed)"
 scripts/cleanSentinel
 echo Running cabal update and cabal install on sentinel
 cabal update
