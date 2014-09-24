@@ -19,7 +19,7 @@ sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
-echo "Script runSentinel started at $Timestamp"$'\n' > $sentinelOut
+echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
 
 rm -rf /home/sentinel/git/ampersand/dist
@@ -82,7 +82,7 @@ cabal sandbox init
 cabal install --only-dependencies
 fi
 cd /home/sentinel/git/prototype
-cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
+cabal sandbox init --sandbox=../ampersand/.cabal-sandbox
 
 
 # execute Sentinel with extra arguments passed to this script ($@)
