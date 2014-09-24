@@ -99,6 +99,8 @@ parseTestSpecs opts =
     ; putStrLn $ bracketHtml opts "<div style='font-family: courier; font-size:85%; color:blue'>" "</div>" $
                    "Parsing test specs:\n" ++ lexedTestSpecsStr ++ "\n\n"
     ; case readMaybe lexedTestSpecsStr :: Maybe [TestSpec] of
-        Nothing  -> error $ "ERROR: cannot parse file "++testSpecsFilePath
+        Nothing  -> error $ "ERROR: cannot read file " ++ testSpecsFilePath ++
+                            "\n\nMake sure comments in TestSpecs.txt are at the start of the line," ++ 
+                            " otherwise they are interpreted as options (e.g. 'getTestArgs = [\"--haskell\"]').\n"
         Just tss -> return tss
     }
