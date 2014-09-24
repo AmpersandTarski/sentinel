@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-$refreshInterval = 10;
+$refreshInterval = 5;
 $sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 $sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
 
