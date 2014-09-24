@@ -53,7 +53,7 @@ function runSentinel(deleteSandbox) {
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
-  <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> (<a href="/ampersand/">view generated prototypes</a>)
+  <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> (<a href="/logs/runSentinel.log.txt">View output/errors of runSentinel script</a>, <a href="/ampersand/">View generated prototypes</a>)
   <p>
   <a href="logs/?C=M;O=D">View Sentinel logs</a>
 <hr/>
