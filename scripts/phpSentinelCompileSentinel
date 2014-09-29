@@ -5,20 +5,24 @@ echo Running phpSentinelCompileSentinel
 
 HOME="/home/sentinel"
 LANG=en_US.UTF-8
-PATH=/home/sentinel/svn/Sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+PATH=/home/sentinel/git/sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
 
 export HOME
 export LANG
 export PATH
 
-# leaving the dist sometimes causes cabal clean problems
-rm -rf /home/sentinel/svn/Sentinel/dist
-cd /home/sentinel/svn/Sentinel
-svn cleanup
-svn update
+cd /home/sentinel/git/sentinel
+echo Sentinel is on branch `git rev-parse --abbrev-ref HEAD`
+echo Fetching and pulling latest commit
+git fetch
+git pull
 
-echo Cleaning Sentinel and installing sandbox
-scripts/cleanSentinel
+echo "Cleaning Sentinel and installing sandbox (if not already installed)"
+
+cabal clean 
+rm -rf .cabal-sandbox
+cabal sandbox init
+
 echo Running cabal update and cabal install on sentinel
 cabal update
 cabal install --bindir=/home/sentinel/.cabal/bin/

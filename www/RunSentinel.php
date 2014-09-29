@@ -1,3 +1,3 @@
 <?php
-exec('sudo /home/sentinel/svn/Sentinel/scripts/phpRootRunSentinel > /dev/null &');
+exec('sudo /home/sentinel/git/sentinel/scripts/phpRootRunSentinel > /dev/null &');
 ?>

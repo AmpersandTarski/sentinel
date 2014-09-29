@@ -7,7 +7,6 @@ import System.IO
 import System.FilePath 
 import Control.Exception
 import Data.List              
-import Data.Char
 import Utils
 import Types
 
@@ -57,38 +56,8 @@ cabalCmd cmd project flags = failOnError ("error during \'cabal "++cmd++"\' for 
 
 executeCabal :: String -> String -> [String] -> IO ExecutionOutcome
 executeCabal cmd project flags =
- do { svnDir <- getSvnDir
-    ; execute "cabal" (cmd : flags ) $ combine svnDir project
-    }
-
-svnUpdate :: String -> IO ()
-svnUpdate project =
- do { svnDir <- getSvnDir
-    ; result <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
-                                         -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
-    ; case result of
-        ExecSuccess _     -> do { revStr <- getRevisionStr project
-                                ; putStrLn $ project ++ " revision: " ++ revStr 
-                                }
-        ExecFailure _ err -> error $ "error during svn update: " ++ err -- exit code is already included in errMsg
-    }
-
-getRevisionStr :: String -> IO String
-getRevisionStr project =
- do { svnDir <- getSvnDir
-    ; result <- execute "svnversion" [] $ combine svnDir project
-    ; case result of
-             ExecSuccess rev@(_:_) -> return $ init rev -- only remove the newline
-             ExecSuccess rev       -> error $ "incorrect response from svnversion: "++rev
-             ExecFailure _ err     -> error $ "error from svnversion: "++err -- exit code is already included in errMsg                                               
-    }
-
-getRevision :: String -> IO Int
-getRevision project =
- do { revStr <- getRevisionStr project
-    ; if all isDigit revStr
-      then return $ read revStr
-      else error $ "incorrect revision for "++project++": "++show revStr -- happens when a revision was locally modified
+ do { gitDir <- getGitDir
+    ; execute "cabal" (cmd : flags ) $ combine gitDir project
     }
 
 execute :: String -> [String] -> String -> IO ExecutionOutcome
@@ -112,7 +81,7 @@ executeIO cmd args dir =
                 , delegate_ctlc = False -- don't let child process handle ctrl-c
                 }
                  
---    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
+    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
 
     -- Use bracketOnError to kill the process on an exception. Otherwise processes that time out continue running.
     -- To keep things easy, we don't collect output in case of an exception. (not really necessary when testing 

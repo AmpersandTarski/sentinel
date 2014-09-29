@@ -32,7 +32,7 @@ data TestSpec = TestSpec { getTestExecutable :: TestExecutable
                          , getPanicExitCodes :: [Int]    -- exit codes for which the TestOutcome will always be TestFailure, 
                                                          -- even when the DesiredOutcome is ShouldFail
                          , getDesiredOutcome :: DesiredOutcome
-                         , getTestFileSpecs  :: [String] -- relative to svn directory
+                         , getTestFileSpecs  :: [String] -- relative to git directory
                          } deriving (Show, Read)
 
 
