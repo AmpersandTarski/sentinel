@@ -1,5 +1,7 @@
 #!/bin/bash
+
 echo Running runSentinel \(extra arguments are \'$@\'\)
+# note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
 
 # script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
 # it resets to the latest git commits, executes the Haskell sentinel and stores its output in SentinelOutput.txt and logs/
@@ -19,7 +21,7 @@ sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
-# show date both in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and SentinelOutput.txt
+# show date both in runSentinel.log.txt and SentinelOutput.txt
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' 
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
@@ -83,7 +85,7 @@ echo $'Performing cabal update\n' >> $sentinelOut
 #cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
-# note that this echo ends up in runSentinel.log and not on sentinelOutput
+
 echo "unregistering ampersand lib, may yield a harmless error if it wasn't installed before"
 cabal sandbox hc-pkg unregister ampersand
 if [ $deleteSandbox -ne 0 ]; then
