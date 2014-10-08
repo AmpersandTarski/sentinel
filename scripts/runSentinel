@@ -28,10 +28,14 @@ rm -rf /home/sentinel/git/ampersand/dist
 rm -rf /home/sentinel/git/prototype/dist
 
 # force latest version of ampersand and prototype without risking merge problems (reset leaves ignored build directories intact)
-git fetch
 cd /home/sentinel/git/ampersand
+git fetch
 git reset --hard
 cd /home/sentinel/git/prototype
+git fetch
+git reset --hard
+cd /home/sentinel/git/ampersand-models
+git fetch
 git reset --hard
 
 
@@ -61,13 +65,15 @@ function getGitInfo {
 
 AmpersandGitInfo=`getGitInfo ampersand`
 PrototypeGitInfo=`getGitInfo prototype`
+AmpersandModelsGitInfo=`getGitInfo ampersand-models`
 SentinelGitInfo=`getGitInfo sentinel`
 
 AmpersandGitInfoHtml=`getGitInfoHtml ampersand`
 PrototypeGitInfoHtml=`getGitInfoHtml prototype`
+AmpersandModelsGitInfoHtml=`getGitInfoHtml ampersand-models`
 SentinelGitInfoHtml=`getGitInfoHtml sentinel`
 
-echo "Git info: Ampersand[$AmpersandGitInfoHtml], Prototype[$PrototypeGitInfoHtml], Sentinel[$SentinelGitInfoHtml]"$'\n' >> $sentinelOut
+echo "Git info: ampersand[$AmpersandGitInfoHtml], prototype[$PrototypeGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$SentinelGitInfoHtml]"$'\n' >> $sentinelOut
 
 
 # Init sandboxes (and delete Ampersand sandbox, if necessary)
@@ -106,7 +112,7 @@ else
 Results=${NrOfFailed}_of_${NrOfTests}
 fi
 
-Filename=Sentinel_${Timestamp}__${Results}__Amp=${AmpersandGitInfo}_Pro=${PrototypeGitInfo}_Sen=${SentinelGitInfo}.html
+Filename=Sentinel_${Timestamp}__${Results}__amp=${AmpersandGitInfo}_pro=${PrototypeGitInfo}_mdl=${AmpersandModelsGitInfo}_sen=${SentinelGitInfo}.html
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
