@@ -31,14 +31,15 @@ rm -rf /home/sentinel/git/prototype/dist
 
 # force latest version of ampersand and prototype without risking merge problems (reset leaves ignored build directories intact)
 cd /home/sentinel/git/ampersand
-git fetch
+# reset --hard to prevent merge problems, we could also reset --hard to origin/master, but then we can't easily test other branches
 git reset --hard
+git pull
 cd /home/sentinel/git/prototype
-git fetch
 git reset --hard
+git pull
 cd /home/sentinel/git/ampersand-models
-git fetch
 git reset --hard
+git pull
 
 
 # Check for --deleteSandbox argument
