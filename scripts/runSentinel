@@ -19,7 +19,7 @@ sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
-# show date both in runSentinel.log.txt (to which stdout&stderr are redirected) and SentinelOutput.txt
+# show date both in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and SentinelOutput.txt
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' 
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
@@ -63,20 +63,20 @@ function getGitInfo {
   echo `git rev-parse --abbrev-ref HEAD`:`git rev-parse --short HEAD`
 }
 
-AmpersandGitInfo=`getGitInfo ampersand`
-PrototypeGitInfo=`getGitInfo prototype`
-AmpersandModelsGitInfo=`getGitInfo ampersand-models`
-SentinelGitInfo=`getGitInfo sentinel`
+ampersandGitInfo=`getGitInfo ampersand`
+prototypeGitInfo=`getGitInfo prototype`
+ampersandModelsGitInfo=`getGitInfo ampersand-models`
+sentinelGitInfo=`getGitInfo sentinel`
 
-AmpersandGitInfoHtml=`getGitInfoHtml ampersand`
-PrototypeGitInfoHtml=`getGitInfoHtml prototype`
-AmpersandModelsGitInfoHtml=`getGitInfoHtml ampersand-models`
-SentinelGitInfoHtml=`getGitInfoHtml sentinel`
+ampersandGitInfoHtml=`getGitInfoHtml ampersand`
+prototypeGitInfoHtml=`getGitInfoHtml prototype`
+ampersandModelsGitInfoHtml=`getGitInfoHtml ampersand-models`
+sentinelGitInfoHtml=`getGitInfoHtml sentinel`
 
-echo "Git info: ampersand[$AmpersandGitInfoHtml], prototype[$PrototypeGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$SentinelGitInfoHtml]"$'\n' >> $sentinelOut
+echo "Git info: ampersand[$ampersandGitInfoHtml], prototype[$prototypeGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$sentinelGitInfoHtml]"$'\n' >> $sentinelOut
 
 
-# Init sandboxes (and delete Ampersand sandbox, if necessary)
+# Init sandboxes (and delete ampersand sandbox, if necessary)
 
 cd /home/sentinel/git/ampersand
 echo $'Performing cabal update\n' >> $sentinelOut
@@ -87,7 +87,7 @@ cabal sandbox init
 echo "unregistering ampersand lib, may yield a harmless error if it wasn't installed before"
 cabal sandbox hc-pkg unregister ampersand
 if [ $deleteSandbox -ne 0 ]; then
-echo $'Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
+echo $'Deleting ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
 cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
@@ -112,7 +112,7 @@ else
 Results=${NrOfFailed}_of_${NrOfTests}
 fi
 
-Filename=Sentinel_${Timestamp}__${Results}__amp=${AmpersandGitInfo}_pro=${PrototypeGitInfo}_mdl=${AmpersandModelsGitInfo}_sen=${SentinelGitInfo}.html
+Filename=Sentinel_${Timestamp}__${Results}__amp=${ampersandGitInfo}_pro=${prototypeGitInfo}_mdl=${ampersandModelsGitInfo}_sen=${sentinelGitInfo}.html
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
