@@ -19,6 +19,8 @@ sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
+# show date both in runSentinel.log.txt (to which stdout&stderr are redirected) and SentinelOutput.txt
+echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' 
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
 
