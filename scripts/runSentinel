@@ -1,5 +1,7 @@
 #!/bin/bash
+
 echo Running runSentinel \(extra arguments are \'$@\'\)
+# note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
 
 # script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
 # it resets to the latest git commits, executes the Haskell sentinel and stores its output in SentinelOutput.txt and logs/
@@ -19,6 +21,8 @@ sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
+# show date both in runSentinel.log.txt and SentinelOutput.txt
+echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' 
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
 
@@ -26,11 +30,16 @@ rm -rf /home/sentinel/git/ampersand/dist
 rm -rf /home/sentinel/git/prototype/dist
 
 # force latest version of ampersand and prototype without risking merge problems (reset leaves ignored build directories intact)
-git fetch
 cd /home/sentinel/git/ampersand
+# reset --hard to prevent merge problems, we could also reset --hard to origin/master, but then we can't easily test other branches
 git reset --hard
+git pull
 cd /home/sentinel/git/prototype
 git reset --hard
+git pull
+cd /home/sentinel/git/ampersand-models
+git reset --hard
+git pull
 
 
 # Check for --deleteSandbox argument
@@ -57,29 +66,31 @@ function getGitInfo {
   echo `git rev-parse --abbrev-ref HEAD`:`git rev-parse --short HEAD`
 }
 
-AmpersandGitInfo=`getGitInfo ampersand`
-PrototypeGitInfo=`getGitInfo prototype`
-SentinelGitInfo=`getGitInfo sentinel`
+ampersandGitInfo=`getGitInfo ampersand`
+prototypeGitInfo=`getGitInfo prototype`
+ampersandModelsGitInfo=`getGitInfo ampersand-models`
+sentinelGitInfo=`getGitInfo sentinel`
 
-AmpersandGitInfoHtml=`getGitInfoHtml ampersand`
-PrototypeGitInfoHtml=`getGitInfoHtml prototype`
-SentinelGitInfoHtml=`getGitInfoHtml sentinel`
+ampersandGitInfoHtml=`getGitInfoHtml ampersand`
+prototypeGitInfoHtml=`getGitInfoHtml prototype`
+ampersandModelsGitInfoHtml=`getGitInfoHtml ampersand-models`
+sentinelGitInfoHtml=`getGitInfoHtml sentinel`
 
-echo "Git info: Ampersand[$AmpersandGitInfoHtml], Prototype[$PrototypeGitInfoHtml], Sentinel[$SentinelGitInfoHtml]"$'\n' >> $sentinelOut
+echo "Git info: ampersand[$ampersandGitInfoHtml], prototype[$prototypeGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$sentinelGitInfoHtml]"$'\n' >> $sentinelOut
 
 
-# Init sandboxes (and delete Ampersand sandbox, if necessary)
+# Init sandboxes (and delete ampersand sandbox, if necessary)
 
 cd /home/sentinel/git/ampersand
 echo $'Performing cabal update\n' >> $sentinelOut
 #cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
-# note that this echo ends up in runSentinel.log and not on sentinelOutput
+
 echo "unregistering ampersand lib, may yield a harmless error if it wasn't installed before"
 cabal sandbox hc-pkg unregister ampersand
 if [ $deleteSandbox -ne 0 ]; then
-echo $'Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
+echo $'Deleting ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
 cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
@@ -104,7 +115,7 @@ else
 Results=${NrOfFailed}_of_${NrOfTests}
 fi
 
-Filename=Sentinel_${Timestamp}__${Results}__Amp=${AmpersandGitInfo}_Pro=${PrototypeGitInfo}_Sen=${SentinelGitInfo}.html
+Filename=Sentinel_${Timestamp}__${Results}__amp=${ampersandGitInfo}_pro=${prototypeGitInfo}_mdl=${ampersandModelsGitInfo}_sen=${sentinelGitInfo}.html
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
