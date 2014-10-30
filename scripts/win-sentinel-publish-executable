@@ -1,5 +1,12 @@
-# Upload $1.exe and its version info in $1-version.txt from cabal bin to sentinel.tarski.nl/windowsExecutables/beta
 # To be run from a Windows bash
+
+if [ $# -eq 0 ]; then
+echo Please specify an executable.
+exit 1
+fi
+
+echo "Uploading $1.exe and its version info (in $1-version.txt from)"
+echo cabal bin to sentinel.tarski.nl/windowsExecutables/beta
 
 # scp doesn't like colons in $APPDATA, so first copy everything to a temp directory
 tempDirName=/tmp/sentinel-publish
