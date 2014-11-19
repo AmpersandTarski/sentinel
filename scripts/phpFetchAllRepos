@@ -5,8 +5,8 @@ set -e
 # exit script on error
 
 cd ../../ampersand
-git fetch 2>&1 
+git fetch --prune 2>&1 
 cd ../prototype
-git fetch 2>&1
+git fetch --prune 2>&1
 cd ../ampersand-models
-git fetch 2>&1 
+git fetch --prune 2>&1 
