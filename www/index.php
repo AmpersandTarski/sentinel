@@ -38,7 +38,11 @@ function compileSentinel() {
 }
 
 function runSentinel(deleteSandbox) {
-  $.ajax({ url: deleteSandbox ? 'RunSentinelDeleteSandbox.php' : 'RunSentinel.php',
+  $.ajax({ url: 'RunSentinel.php',
+           data: {args: '-a ' + $('#branch-selector-'+'ampersand').val() +
+             						' -p ' + $('#branch-selector-'+'prototype').val() +
+             						' -m ' + $('#branch-selector-'+'ampersand-models').val() +
+                        (deleteSandbox ? ' --deleteSandbox' : '')},
            cache: false,
            success: function(data){ refreshPageIn(250); }
            // delay reload with 250ms to ensure sentinel process has started
@@ -48,7 +52,11 @@ function runSentinel(deleteSandbox) {
   
   </head>
 <body>
-  
+  <?php 
+  mkBranchSelector('ampersand');
+  mkBranchSelector('prototype');
+  mkBranchSelector('ampersand-models');
+  ?>
   <p>
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
@@ -59,6 +67,20 @@ function runSentinel(deleteSandbox) {
   <a style="float: right; margin-right: 3em" href="windowsExecutables/beta">Executables for Windows (not necessarily recent)</a>
 <hr/>
 <?php
+
+function mkBranchSelector($repo) {
+  exec("cd ../../$repo; git branch --list -r", $branches);
+
+  echo $repo.': <select id="branch-selector-'.$repo.'">';
+  foreach ($branches as $branchStr) {
+    $branch= substr( explode(' ', $branchStr)[2] , 7);
+    if ($branch!='HEAD') {
+      echo '<option'. ($branch=='master' ? ' selected' : '') .'>'.$branch.'</option>';
+    }
+  }
+  echo "</select>&nbsp;&nbsp;\n";
+}
+
 function isNoComment($author)
 {
   return !preg_match("/^--/", $author);
