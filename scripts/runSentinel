@@ -32,6 +32,9 @@ rm -rf /home/sentinel/git/prototype/dist
 # force latest version of ampersand and prototype without risking merge problems (reset leaves ignored build directories intact)
 cd /home/sentinel/git/ampersand
 # reset --hard to prevent merge problems, we could also reset --hard to origin/master, but then we can't easily test other branches
+# TODO: this still goes wrong if a forced push was done that affects commit objects already checked out by sentinel
+# TODO: fix by fetching, resetting to origin/branch and removing untracked files with 'git clean -f -d', as soon as branch selection is implemented
+
 git reset --hard
 git pull
 cd /home/sentinel/git/prototype
