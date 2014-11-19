@@ -1,6 +1,6 @@
 echo Running phpRootRunSentinel
-# wrapper script that is called by the www server as root (from php)
-# and calls runSentinel as user 'sentinel' with args passed to phpRootRunSentinel
+# wrapper script that is called by the www server as user sentinel (from php)
+# and calls runSentinel with args passed to phpRootRunSentinel, after killing all relevant processes
 
 # Kill 'em all
 killall --quiet runSentinel
@@ -8,4 +8,4 @@ killall --quiet sentinel
 killall --quiet cabal
 killall --quiet ghc
 
-sudo -u sentinel /home/sentinel/git/sentinel/scripts/runSentinel $* > /home/sentinel/git/sentinel/www/logs/runSentinel.log.txt 2>&1
+/home/sentinel/git/sentinel/scripts/runSentinel $* > /home/sentinel/git/sentinel/www/logs/runSentinel.log.txt 2>&1
