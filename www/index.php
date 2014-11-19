@@ -48,6 +48,20 @@ function runSentinel(deleteSandbox) {
            // delay reload with 250ms to ensure sentinel process has started
   });
 }
+
+function fetchAllRepos() {
+  $.ajax({ url: 'FetchAllRepos.php',
+    cache: false,
+    success: function(data){ 
+      if (data) 
+        alert(data);
+      else {
+        alert('Branch selectors have been updated by fetching all repos.');
+        refreshPageIn(0);
+      }
+    }
+});
+}
   </script>
   
   </head>
@@ -57,6 +71,7 @@ function runSentinel(deleteSandbox) {
   mkBranchSelector('prototype');
   mkBranchSelector('ampersand-models');
   ?>
+  <button onclick="fetchAllRepos()">Update branches (fetch)</button>
   <p>
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)

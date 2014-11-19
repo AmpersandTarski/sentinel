@@ -1,0 +1,12 @@
+#!/bin/bash
+# wrapper script that is called by the www server as user sentinel (from php)
+# and does a git fetch on all ampersand repositories except sentinel
+set -e
+# exit script on error
+
+cd ../../ampersand
+git fetch 2>&1 
+cd ../prototype
+git fetch 2>&1
+cd ../ampersand-models
+git fetch 2>&1 
