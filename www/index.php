@@ -71,7 +71,7 @@ function fetchAllRepos() {
   mkBranchSelector('prototype');
   mkBranchSelector('ampersand-models');
   ?>
-  <button onclick="fetchAllRepos()">Update branches (fetch)</button>
+  <button onclick="fetchAllRepos()">Refresh branches (fetch)</button>
   <p>
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
