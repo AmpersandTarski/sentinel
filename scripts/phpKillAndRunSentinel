@@ -1,6 +1,12 @@
+#!/bin/bash
+# Wrapper script that is called by the www server as user sentinel (from php.)
+# Valls runSentinel with args passed to this script, after killing all relevant processes.
+
+# NOTE: to allow the www server to execute this script as sentinel,
+# add the following line (without #) to the sudoers file with: sudo visudo 
+#www-data ALL=(sentinel) NOPASSWD: /home/sentinel/git/sentinel/scripts/phpKillAndRunSentinel
+
 echo Running phpKillAndRunSentinel
-# wrapper script that is called by the www server as user sentinel (from php)
-# and calls runSentinel with args passed to this script, after killing all relevant processes
 
 # Kill 'em all
 killall --quiet runSentinel

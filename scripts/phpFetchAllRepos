@@ -1,8 +1,16 @@
 #!/bin/bash
-# wrapper script that is called by the www server as user sentinel (from php)
-# and does a git fetch on all ampersand repositories except sentinel
-set -e
+# Wrapper script that is called by the www server as user sentinel (from php.)
+# Does a git fetch on all ampersand repositories except sentinel, to update
+# branch-selection menus on sentinel www page.
+
+# NOTE: to allow the www server to execute this script as sentinel,
+# add the following line (without #) to the sudoers file with: sudo visudo 
+#www-data ALL=(sentinel) NOPASSWD: /home/sentinel/git/sentinel/scripts/phpFetchAllRepos
+
+echo Running phpFetchAllRepos
+
 # exit script on error
+set -e
 
 cd ../../ampersand
 git fetch --prune 2>&1 

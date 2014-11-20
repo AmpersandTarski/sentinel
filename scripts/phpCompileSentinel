@@ -1,7 +1,12 @@
-echo Running phpCompileSentinel
-
-# script that is called by the www server as user sentinel (from php)
+#!/bin/bash
+# Script that is called by the www server as user sentinel (from php.)
 # Resets to latest sentinel master from GitHub and cabal installs it.
+
+# NOTE: to allow the www server to execute this script as sentinel,
+# add the following line (without #) to the sudoers file with: sudo visudo 
+#www-data ALL=(sentinel) NOPASSWD: /home/sentinel/git/sentinel/scripts/phpCompileSentinel
+
+echo Running phpCompileSentinel
 
 # set path and env
 HOME="/home/sentinel"
