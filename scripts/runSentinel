@@ -4,7 +4,7 @@
 #
 # Usage: runSentinel [-a AMPERSANDBRANCH] [-p PROTOTYPEBRANCH] [-m MODELBRANCH] [--deleteSandbox] [--mail] [--html] 
 
-echo Running runSentinel \(extra arguments are \'$@\'\)
+echo Running runSentinel \(extra arguments are \'$*\'\)
 # note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
 
 HOME="/home/sentinel"
@@ -148,8 +148,8 @@ cd /home/sentinel/git/prototype
 cabal sandbox init --sandbox=../ampersand/.cabal-sandbox
 
 
-# execute Sentinel with extra arguments passed to this script ($@)
-/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null >> $sentinelOut 2>&1
+# execute Sentinel with -- arguments passed to this script ($dashdashArgs)
+/home/sentinel/.cabal/bin/sentinel --html $dashdashArgs < /dev/null >> $sentinelOut 2>&1
 
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator
