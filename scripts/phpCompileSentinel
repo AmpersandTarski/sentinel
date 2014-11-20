@@ -1,8 +1,9 @@
-echo Running phpSentinelCompileSentinel
+echo Running phpCompileSentinel
 
-# script that is called by root with user sentinel
-# path and env are not set correctly though
+# script that is called by the www server as user sentinel (from php)
+# Resets to latest sentinel master from GitHub and cabal installs it.
 
+# set path and env
 HOME="/home/sentinel"
 LANG=en_US.UTF-8
 PATH=/home/sentinel/git/sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
@@ -11,11 +12,18 @@ export HOME
 export LANG
 export PATH
 
+killall --quiet sentinel
+
 cd /home/sentinel/git/sentinel
 echo Sentinel is on branch `git rev-parse --abbrev-ref HEAD`
-echo Fetching and pulling latest commit
-git fetch
-git pull
+echo Resetting to latest commit on master
+git fetch --prune
+
+git checkout --track origin/master
+# this may fail if master already exists, in which case no checkout is done, so we need another git checkout:
+git checkout master
+
+git reset origin --hard
 
 echo "Cleaning Sentinel and installing sandbox (if not already installed)"
 
