@@ -84,11 +84,11 @@ function fetchAllRepos() {
 <?php
 
 function mkBranchSelector($repo) {
-  exec("cd ../../$repo; git branch --list -r", $branches);
+  exec("cd ../../$repo; git for-each-ref --format='%(refname:short)' refs/remotes/origin", $branches);
 
   echo $repo.': <select id="branch-selector-'.$repo.'">';
   foreach ($branches as $branchStr) {
-    $branch= substr( explode(' ', $branchStr)[2] , 7);
+    $branch= substr($branchStr, 7); # remove leading "origin/"
     if ($branch!='HEAD') {
       echo '<option'. ($branch=='master' ? ' selected' : '') .'>'.$branch.'</option>';
     }
