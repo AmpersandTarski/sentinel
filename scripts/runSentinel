@@ -3,7 +3,7 @@
 echo Running runSentinel \(extra arguments are \'$@\'\)
 # note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
 
-# script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
+# script that is called by the phpKillAndRunSentinel (from the www server) and crontabRunSentinel
 # it resets to the latest git commits, executes the Haskell sentinel and stores its output in SentinelOutput.txt and logs/
 
 # has absolute paths instead of $HOME

@@ -1,6 +1,6 @@
-echo Running phpRootRunSentinel
+echo Running phpKillAndRunSentinel
 # wrapper script that is called by the www server as user sentinel (from php)
-# and calls runSentinel with args passed to phpRootRunSentinel, after killing all relevant processes
+# and calls runSentinel with args passed to this script, after killing all relevant processes
 
 # Kill 'em all
 killall --quiet runSentinel
