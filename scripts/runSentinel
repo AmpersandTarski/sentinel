@@ -1,13 +1,11 @@
 #!/bin/bash
+# Script that is called by the phpKillAndRunSentinel (from the www server) and crontabRunSentinel scripts.
+# Resets to the latest git commits, executes the Haskell sentinel, and stores its output in SentinelOutput.txt and logs/
+#
+# Usage: runSentinel [-a AMPERSANDBRANCH] [-p PROTOTYPEBRANCH] [-m MODELBRANCH] [--deleteSandbox] [--mail] [--html] 
 
 echo Running runSentinel \(extra arguments are \'$@\'\)
 # note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
-
-# script that is called by the phpKillAndRunSentinel (from the www server) and crontabRunSentinel
-# it resets to the latest git commits, executes the Haskell sentinel and stores its output in SentinelOutput.txt and logs/
-
-# has absolute paths instead of $HOME
-# NOTE: make sure that www directory of SentinelOutput is writable for 'other'
 
 HOME="/home/sentinel"
 LANG=en_US.UTF-8
@@ -26,33 +24,79 @@ echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n'
 echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
 
-rm -rf /home/sentinel/git/ampersand/dist
-rm -rf /home/sentinel/git/prototype/dist
+# Process command-line arguments
 
-# force latest version of ampersand and prototype without risking merge problems (reset leaves ignored build directories intact)
-cd /home/sentinel/git/ampersand
-# reset --hard to prevent merge problems, we could also reset --hard to origin/master, but then we can't easily test other branches
-# TODO: this still goes wrong if a forced push was done that affects commit objects already checked out by sentinel
-# TODO: fix by fetching, resetting to origin/branch and removing untracked files with 'git clean -f -d', as soon as branch selection is implemented
+dashdashArgs=''; # all -- arguments
+filteredArgs=''; # arguments without -- arguments
 
-git reset --hard
-git pull
-cd /home/sentinel/git/prototype
-git reset --hard
-git pull
-cd /home/sentinel/git/ampersand-models
-git reset --hard
-git pull
-
-
-# Check for --deleteSandbox argument
+# Check for --deleteSandbox argument and filter all -- arguments
 deleteSandbox=0
-for var in "$@"
+for var in $*
 do
-  if [ $var == "--deleteSandbox" ]; then
-    deleteSandbox=1
+  if [[ $var = --* ]]; then
+    dashdashArgs="$dashdashArgs $var"
+    if [ $var == "--deleteSandbox" ]; then
+      deleteSandbox=1
+    fi
+  else
+    filteredArgs="$filteredArgs $var"
   fi
 done
+
+# default branches if no -a -p or -n arguments are present
+ampersandBranch=master
+prototypeBranch=master
+modelsBranch=master
+
+# set branches accorging to -a -p and -n arguments
+# leading ':' allows better error message for missing argument
+# NOTE: repeated options are not disallowed: e.g. runSentinel -a branch1 -a branch2
+while getopts ":a:p:m:" opt $filteredArgs; do
+  case $opt in
+    a)
+      ampersandBranch=$OPTARG
+      ;;
+    p)
+      prototypeBranch=$OPTARG
+      ;;
+    m)
+      modelsBranch=$OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+echo Parsed arguments:
+#echo filtered: $filteredArgs
+echo Haskell sentinel args: \"$dashdashArgs\"
+echo Branches: ampersand=$ampersandBranch, prototype=$prototypeBranch, models=$modelsBranch
+echo Delete sandbox: $deleteSandbox
+echo
+
+# Force latest version of a branch without risking merge problems.
+# We need a checkout --track to ensure the branch exists locally. However, if the local branch already exists this fails without
+# actually checking it out, so we need an additional git checkout.
+# NOTE: files not in the repo (and not ignored) are not removed, as they are harmless.
+# TODO: automatically cleanup old local branches that are deleted on origin. There does not seem to be a nice way to do this in git.
+function hardResetToOriginBranch {
+  # usage: hardResetToOriginBranch repo branch
+  cd /home/sentinel/git/$1
+  git fetch
+  git checkout --track origin/$2 2> /dev/null
+  git checkout $2
+  git reset origin --hard
+}
+
+hardResetToOriginBranch ampersand $ampersandBranch
+hardResetToOriginBranch prototype $prototypeBranch
+hardResetToOriginBranch ampersand-models $modelsBranch
 
 # get git commit information
 
@@ -81,6 +125,8 @@ sentinelGitInfoHtml=`getGitInfoHtml sentinel`
 
 echo "Git info: ampersand[$ampersandGitInfoHtml], prototype[$prototypeGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$sentinelGitInfoHtml]"$'\n' >> $sentinelOut
 
+rm -rf /home/sentinel/git/ampersand/dist
+rm -rf /home/sentinel/git/prototype/dist
 
 # Init sandboxes (and delete ampersand sandbox, if necessary)
 
