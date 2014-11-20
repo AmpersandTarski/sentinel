@@ -51,30 +51,34 @@ modelsBranch=master
 # set branches accorging to -a -p and -n arguments
 # leading ':' allows better error message for missing argument
 # NOTE: repeated options are not disallowed: e.g. runSentinel -a branch1 -a branch2
-while getopts ":a:p:m:" opt $filteredArgs; do
-  case $opt in
-    a)
-      ampersandBranch=$OPTARG
-      ;;
-    p)
-      prototypeBranch=$OPTARG
-      ;;
-    m)
-      modelsBranch=$OPTARG
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
-  esac
-done
+
+if [[ $filteredArgs != "" ]]; then # don't run getopts if $filteredArgs is empty, because it will resort to using $* args
+  while getopts ":a:p:m:" opt $filteredArgs; do
+    echo In while. opt=$opt  OPTARG=$OPTARG
+    case $opt in
+      a)
+        ampersandBranch=$OPTARG
+        ;;
+      p)
+        prototypeBranch=$OPTARG
+        ;;
+      m)
+        modelsBranch=$OPTARG
+        ;;
+      \?)
+        echo "Invalid option: -$OPTARG" >&2
+        exit 1
+        ;;
+      :)
+        echo "Option -$OPTARG requires an argument." >&2
+        exit 1
+        ;;
+    esac
+  done
+fi
 
 echo Parsed arguments:
-#echo filtered: $filteredArgs
+#echo filtered: \"$filteredArgs\"
 echo Haskell sentinel args: \"$dashdashArgs\"
 echo Branches: ampersand=$ampersandBranch, prototype=$prototypeBranch, models=$modelsBranch
 echo Delete sandbox: $deleteSandbox
@@ -87,6 +91,7 @@ echo
 # TODO: automatically cleanup old local branches that are deleted on origin. There does not seem to be a nice way to do this in git.
 function hardResetToOriginBranch {
   # usage: hardResetToOriginBranch repo branch
+  echo Resetting $1 to branch $2 
   cd /home/sentinel/git/$1
   git fetch
   git checkout --track origin/$2 2> /dev/null
