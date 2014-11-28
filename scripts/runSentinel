@@ -96,7 +96,7 @@ function hardResetToOriginBranch {
   git fetch
   git checkout --track origin/$2 2> /dev/null
   git checkout $2
-  git reset origin --hard
+  git reset origin/$2 --hard
 }
 
 hardResetToOriginBranch ampersand $ampersandBranch
