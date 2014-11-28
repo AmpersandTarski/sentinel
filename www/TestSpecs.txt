@@ -113,4 +113,20 @@
          [ "ampersand-models/INDOORS/INDOORS.adl"
          ]
      }
+
+---- Compile NVWA model to https://sentinel.tarski.nl/ampersand/NVWA/FSpec
+---- Latex
+--,  TestSpec
+--     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=latex", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs =
+--         [ "ampersand-models/NVWA DTV/DTV.adl"
+--         ]
+--     }
+---- RTF
+--, TestSpec
+--     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=rtf", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs =
+--         [ "ampersand-models/NVWA DTV/DTV.adl"
+--         ]
+--     }
 ]
