@@ -70,6 +70,7 @@
          , "ampersand-models/INDOORS/DemoStrafblad.adl"
          , "ampersand-models/INDOORS/DemoZittinggegevens.adl"
          , "ampersand-models/VOGDemo/DEMO_VOG.adl"
+         , "ampersand-models/NVWA DTV/DTV.adl"
          ]
      }
 
