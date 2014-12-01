@@ -103,6 +103,11 @@ hardResetToOriginBranch ampersand $ampersandBranch
 hardResetToOriginBranch prototype $prototypeBranch
 hardResetToOriginBranch ampersand-models $modelsBranch
 
+# for sentinel, pull to get the latest www/TestSpecs.txt
+# (no hard reset, so we can run modified versions of sentinel without destroying changes)
+cd /home/sentinel/git/sentinel
+git pull
+
 # get git commit information
 
 # with html links, for sentinel output page
