@@ -50,7 +50,6 @@
      }
 
 -- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
--- Fixed: all Koppelvlakdemos should be listed here
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
@@ -70,7 +69,6 @@
          , "ampersand-models/INDOORS/DemoStrafblad.adl"
          , "ampersand-models/INDOORS/DemoZittinggegevens.adl"
          , "ampersand-models/VOGDemo/DEMO_VOG.adl"
-         , "ampersand-models/NVWA DTV/DTV.adl"
          ]
      }
 
@@ -115,19 +113,29 @@
          ]
      }
 
----- Compile NVWA model to https://sentinel.tarski.nl/ampersand/NVWA/FSpec
----- Latex
---,  TestSpec
---     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=latex", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
---     , getTestFileSpecs =
---         [ "ampersand-models/NVWA DTV/DTV.adl"
---         ]
---     }
----- RTF
---, TestSpec
---     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=rtf", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
---     , getTestFileSpecs =
---         [ "ampersand-models/NVWA DTV/DTV.adl"
---         ]
---     }
+---- Compile NVWA model to secure directory ----
+
+-- Latex: https://sentinel.tarski.nl/ampersand/NVWA/FSpec/DTV.pdf
+,  TestSpec
+     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=latex", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs =
+         [ "ampersand-models/NVWA DTV/DTV.adl"
+         ]
+     }
+     
+-- RTF: https://sentinel.tarski.nl/ampersand/NVWA/FSpec/DTV.rtf
+, TestSpec
+     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=rtf", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs =
+         [ "ampersand-models/NVWA DTV/DTV.adl"
+         ]
+     }
+     
+-- Prototype: https://sentinel.tarski.nl/ampersand/NVWA
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "ampersand-models/NVWA DTV/DTV.adl"
+         ]
+     }
 ]
