@@ -133,7 +133,7 @@
      
 -- Prototype: https://sentinel.tarski.nl/ampersand/NVWA
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5", "--proto=/home/sentinel/git/sentinel/www/ampersand/NVWA"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/NVWA DTV/DTV.adl"
          ]
