@@ -22,7 +22,14 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 # add scripts and cabal bin for ghc
-PATH="$HOME/svn/Sentinel/scripts:$HOME/.cabal/bin/:$PATH"
+PATH="$HOME/git/sentinel/scripts:$HOME/.cabal/bin/:$PATH"
 
-alias e=emacs
 alias plat="pdflatex -halt-on-error"
+
+# arrow keys select in history. Note: create ^[[A and ^[[B in nano with verbatim mode ESC-V Arrow Up/Down
+bind '"[A":history-search-backward'
+bind '"[B":history-search-forward'
+
+# default -al args for ls
+alias ls="ls -al"
+
