@@ -2,7 +2,7 @@
 # Script that is called by the phpKillAndRunSentinel (from the www server) and crontabRunSentinel scripts.
 # Resets to the latest git commits, executes the Haskell sentinel, and stores its output in SentinelOutput.txt and logs/
 #
-# Usage: runSentinel [-a AMPERSANDBRANCH] [-p PROTOTYPEBRANCH] [-m MODELBRANCH] [--deleteSandbox] [--mail] [--html] 
+# Usage: runSentinel [-a AMPERSANDBRANCH] [-m MODELBRANCH] [--deleteSandbox] [--mail] [--html] 
 
 echo Running runSentinel \(extra arguments are \'$*\'\)
 # note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
@@ -45,7 +45,6 @@ done
 
 # default branches if no -a -p or -n arguments are present
 ampersandBranch=master
-prototypeBranch=master
 modelsBranch=master
 
 # set branches accorging to -a -p and -n arguments
@@ -58,9 +57,6 @@ if [[ $filteredArgs != "" ]]; then # don't run getopts if $filteredArgs is empty
     case $opt in
       a)
         ampersandBranch=$OPTARG
-        ;;
-      p)
-        prototypeBranch=$OPTARG
         ;;
       m)
         modelsBranch=$OPTARG
@@ -80,7 +76,7 @@ fi
 echo Parsed arguments:
 #echo filtered: \"$filteredArgs\"
 echo Haskell sentinel args: \"$dashdashArgs\"
-echo Branches: ampersand=$ampersandBranch, prototype=$prototypeBranch, models=$modelsBranch
+echo Branches: ampersand=$ampersandBranch, models=$modelsBranch
 echo Delete sandbox: $deleteSandbox
 echo
 
@@ -100,7 +96,6 @@ function hardResetToOriginBranch {
 }
 
 hardResetToOriginBranch ampersand $ampersandBranch
-hardResetToOriginBranch prototype $prototypeBranch
 hardResetToOriginBranch ampersand-models $modelsBranch
 
 # for sentinel, pull to get the latest www/TestSpecs.txt
@@ -124,19 +119,16 @@ function getGitInfo {
 }
 
 ampersandGitInfo=`getGitInfo ampersand`
-prototypeGitInfo=`getGitInfo prototype`
 ampersandModelsGitInfo=`getGitInfo ampersand-models`
 sentinelGitInfo=`getGitInfo sentinel`
 
 ampersandGitInfoHtml=`getGitInfoHtml ampersand`
-prototypeGitInfoHtml=`getGitInfoHtml prototype`
 ampersandModelsGitInfoHtml=`getGitInfoHtml ampersand-models`
 sentinelGitInfoHtml=`getGitInfoHtml sentinel`
 
-echo "Git info: ampersand[$ampersandGitInfoHtml], prototype[$prototypeGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$sentinelGitInfoHtml]"$'\n' >> $sentinelOut
+echo "Git info: ampersand[$ampersandGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$sentinelGitInfoHtml]"$'\n' >> $sentinelOut
 
 rm -rf /home/sentinel/git/ampersand/dist
-rm -rf /home/sentinel/git/prototype/dist
 
 # Init sandboxes (and delete ampersand sandbox, if necessary)
 
@@ -154,9 +146,6 @@ cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
 fi
-cd /home/sentinel/git/prototype
-cabal sandbox init --sandbox=../ampersand/.cabal-sandbox
-
 
 # execute Sentinel with -- arguments passed to this script ($dashdashArgs)
 /home/sentinel/.cabal/bin/sentinel --html $dashdashArgs < /dev/null >> $sentinelOut 2>&1
@@ -174,7 +163,7 @@ else
 Results=${NrOfFailed}_of_${NrOfTests}
 fi
 
-Filename=Sentinel_${Timestamp}__${Results}__amp=${ampersandGitInfo}_pro=${prototypeGitInfo}_mdl=${ampersandModelsGitInfo}_sen=${sentinelGitInfo}.html
+Filename=Sentinel_${Timestamp}__${Results}__amp=${ampersandGitInfo}_mdl=${ampersandModelsGitInfo}_sen=${sentinelGitInfo}.html
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
