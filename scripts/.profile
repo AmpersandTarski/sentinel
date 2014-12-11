@@ -25,7 +25,4 @@ fi
 PATH="$HOME/svn/Sentinel/scripts:$HOME/.cabal/bin/:$PATH"
 
 alias e=emacs
-alias amp="$HOME/svn/Ampersand/dist/build/ampersand/ampersand"
-alias proto="$HOME/svn/Prototype/dist/build/prototype/prototype"
-alias apps="cd $HOME/svn/Prototype/apps"
 alias plat="pdflatex -halt-on-error"

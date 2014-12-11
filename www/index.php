@@ -40,8 +40,7 @@ function compileSentinel() {
 function runSentinel(deleteSandbox) {
   $.ajax({ url: 'RunSentinel.php',
            data: {args: '-a ' + $('#branch-selector-'+'ampersand').val() +
-             						' -p ' + $('#branch-selector-'+'prototype').val() +
-             						' -m ' + $('#branch-selector-'+'ampersand-models').val() +
+                       ' -m ' + $('#branch-selector-'+'ampersand-models').val() +
                         (deleteSandbox ? ' --deleteSandbox' : '')},
            cache: false,
            success: function(data){ refreshPageIn(250); }
@@ -68,7 +67,6 @@ function fetchAllRepos() {
 <body>
   <?php 
   mkBranchSelector('ampersand');
-  mkBranchSelector('prototype');
   mkBranchSelector('ampersand-models');
   ?>
   <button onclick="fetchAllRepos()">Refresh branches (fetch)</button>
