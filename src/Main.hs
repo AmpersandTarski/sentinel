@@ -9,7 +9,6 @@ import Options (runCommand)
 import Data.List
 import Data.Time
 import Types
-import Defaults
 import Utils
 import Test
 import Execute
@@ -77,34 +76,27 @@ performTests opts =
  do { testSpecs <- parseTestSpecs opts
  
     ; isTestSrv <- isTestServer
-    ; (ampersandOk, prototypeOk, buildTestResults) <-
+    ; (ampersandOk, buildTestResults) <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
          do { putStrLn "Cleaning Ampersand"
             ; cabalClean "ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
                         
-            ; t2 <- reportTestResult opts $ testInstall "ampersand" ["-f-executable"] "the Ampersand library"
+            ; t1 <- reportTestResult opts $ testInstall "ampersand" [] "the Ampersand compiler"
 
-            ; t1 <- reportTestResult opts $ testInstall "ampersand" ["--bindir="++binDir] 
-                                                        "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
-            ; putStrLn "Cleaning Prototype"
-            ; cabalClean "prototype" [] -- clean probably not necessary since we use cabal install rather than cabal build
-            ; t3 <- reportTestResult opts $ testInstall "prototype" ["--bindir="++binDir] "the prototype generator"
-            ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
-            -- TODO: probably want a monad here, since it's too easy to miss tests now
+            ; return (isTestSuccessful t1, [t1]) 
             }
         else
-            return (True, True, [])
-            
-            
-            
+            return (True, [])
+
+
     ; let getTestResultsFor _          False = return []
           getTestResultsFor executable True  =
             fmap concat $ mapM (runTestSpec opts) [ ts | ts <- testSpecs, getTestExecutable ts == executable ]
     -- only execute tests if building the executable succeeded
     -- not very elegant, but only here until we can use the old executables in case of build failures
     ; ampersandExecTestResults <- getTestResultsFor Ampersand ampersandOk
-    ; prototypeExecTestResults <- getTestResultsFor Prototype prototypeOk
+    ; prototypeExecTestResults <- getTestResultsFor Prototype ampersandOk
     ; let executionTestResults = ampersandExecTestResults ++ prototypeExecTestResults
     ; let allTestResults = buildTestResults ++ executionTestResults
     

@@ -7,7 +7,7 @@ testServerGitPath :: String
 testServerGitPath = "git"
 
 oblomovGitPath :: String
-oblomovGitPath = "git/Ampersand" -- used if we're not on testServer
+oblomovGitPath = "git/Ampersand" -- used if we're not on the dedicated test server
 
 testSpecsFile :: String
 testSpecsFile = "sentinel/www/TestSpecs.txt"

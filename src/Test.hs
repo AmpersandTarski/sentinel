@@ -16,12 +16,7 @@ runTestSpec opts testSpec =
  do { testFiles <- getTestFiles $ getTestFileSpecs testSpec
     ; mapM (reportTestResult opts . runTest opts testSpec) testFiles
     }
-{-
-    ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
-    ; sequence_ $ map (reportResult . runTest "Ampersand" []) testFiles
-    ; sequence_ $ map (reportResult . runTest "Prototype" []) testFiles
 
--}
 getTestFiles :: [String] -> IO [String]   
 getTestFiles fileSpecs =
  do { gitDir <- getGitDir
@@ -57,10 +52,7 @@ runTest :: Options -> TestSpec -> FilePath -> IO TestResult
 runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile =
  do { putStrLn testDescr
     ; gitDir <- getGitDir
-    ; let executable =
-            case exec of
-              Ampersand -> binDir ++ "/ampersand"
-              Prototype -> binDir ++ "/prototype"
+    ; let executable = binDir ++ "/ampersand"
     ; let absOutputDir = joinPath $ [gitDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     ["fSpec" | exec == Ampersand] 
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
