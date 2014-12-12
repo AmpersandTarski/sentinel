@@ -35,6 +35,9 @@ data TestSpec = TestSpec { getTestExecutable :: TestExecutable
                          , getTestFileSpecs  :: [String] -- relative to git directory
                          } deriving (Show, Read)
 
+getTestSpecsForExecutable :: [TestSpec] -> TestExecutable -> [TestSpec]
+getTestSpecsForExecutable testSpecs executable =
+  filter ((==executable) . getTestExecutable) testSpecs
 
 defineOptions "Options" $ do { boolOption "optHtml" "html" False "Generate html output."
                              ; boolOption "optMail" "mail" False "Notify authors by e-mail."

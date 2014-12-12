@@ -3,11 +3,16 @@ module Defaults where
 testServerHostname :: String
 testServerHostname = "Sentinel"
 
-testServerGitPath :: String
-testServerGitPath = "git"
+gitPath :: Bool -> String
+gitPath True  = "git"           -- path on dedicated test server
+gitPath False = "git/Ampersand"
 
-oblomovGitPath :: String
-oblomovGitPath = "git/Ampersand" -- used if we're not on the dedicated test server
+binDir :: Bool -> String
+binDir True  = "/home/sentinel/.cabal/bin" -- path on dedicated test server
+binDir False = "/Users/martijn/.cabal/bin"
+
+outputDir :: String
+outputDir = "sentinel/www/ampersand"
 
 testSpecsFile :: String
 testSpecsFile = "sentinel/www/TestSpecs.txt"
@@ -15,9 +20,3 @@ testSpecsFile = "sentinel/www/TestSpecs.txt"
 authorsFile :: String
 authorsFile = "sentinel/www/Authors.txt"
 
-outputDir :: String
-outputDir = "sentinel/www/ampersand"
-
-binDir :: String
-binDir = "/home/sentinel/.cabal/bin"
---binDir = "/Users/martijn/.cabal/bin"

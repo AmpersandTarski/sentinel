@@ -54,9 +54,7 @@ getGitDir :: IO FilePath
 getGitDir =
  do { homeDir <- getHomeDirectory
     ; isTestSrv <- isTestServer  
-    ; return $ combine homeDir (if isTestSrv
-                                then testServerGitPath
-                                else oblomovGitPath) 
+    ; return $ combine homeDir $ gitPath isTestSrv 
     }
 
 getProperDirectoryContents :: FilePath -> IO [String]

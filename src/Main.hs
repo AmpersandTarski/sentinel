@@ -68,7 +68,7 @@ main = runCommand $ \opts _ ->
                   failureMessage ++ "\n\n"++
                   "Please consult http://sentinel.tarski.nl for more details."
               } 
-    ; exit
+    ; logExit
     }
 
 performTests :: Options -> IO (Int, Int, Maybe String)
@@ -76,33 +76,35 @@ performTests opts =
  do { testSpecs <- parseTestSpecs opts
  
     ; isTestSrv <- isTestServer
-    ; (ampersandOk, buildTestResults) <-
+    ; buildTestResults <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
          do { putStrLn "Cleaning Ampersand"
             ; cabalClean "ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
                         
-            ; t1 <- reportTestResult opts $ testInstall "ampersand" [] "the Ampersand compiler"
+            ; res <- reportTestResult opts $ testInstall "ampersand" [] "the Ampersand compiler"
 
-            ; return (isTestSuccessful t1, [t1]) 
+            ; return [res] 
             }
         else
-            return (True, [])
+            return []
 
-
-    ; let getTestResultsFor _          False = return []
-          getTestResultsFor executable True  =
-            fmap concat $ mapM (runTestSpec opts) [ ts | ts <- testSpecs, getTestExecutable ts == executable ]
-    -- only execute tests if building the executable succeeded
-    -- not very elegant, but only here until we can use the old executables in case of build failures
-    ; ampersandExecTestResults <- getTestResultsFor Ampersand ampersandOk
-    ; prototypeExecTestResults <- getTestResultsFor Prototype ampersandOk
-    ; let executionTestResults = ampersandExecTestResults ++ prototypeExecTestResults
+    -- sort test based on fSpec/prototype generation.
+    ; execTests <- fmap concat $ mapM (createTests opts) $ 
+                      getTestSpecsForExecutable testSpecs Ampersand ++
+                      getTestSpecsForExecutable testSpecs Prototype
+    
+    ; executionTestResults <- if all isTestSuccessful buildTestResults
+                              then sequence execTests
+                              else return []
+        
     ; let allTestResults = buildTestResults ++ executionTestResults
     
     ; let failedTestResults = filter (not . isTestSuccessful) allTestResults
           nrOfFailed = length failedTestResults
-          totalNrOfTests = length allTestResults
+          totalNrOfTests = length allTestResults 
+    -- nrOfFailed and totalNrOfTests only include tests that were actually run. We could also use the total number of specified tests as a base,
+    -- but then a compile fail would suggest a large number of failed tests.
     
     ; putStr $ if optHtml opts then "<hr/>" else "\n\n--------"
     ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>\n" "</p>" $
@@ -138,8 +140,8 @@ initialize =
     ; putStrLn $ "######## Sentinel started on "++hName++" at "++time++" ########\n\n"
     }
     
-exit :: IO ()
-exit =
+logExit :: IO ()
+logExit =
  do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
     ; putStrLn $ "\n######## Sentinel exited at "++time++" ########\n\n" -- NOTE: www/index.php depends on the exact format of this line.
     }

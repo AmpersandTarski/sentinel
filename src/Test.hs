@@ -11,10 +11,10 @@ import Defaults
 import UTF8(readFile,putStrLn)
 import Prelude hiding (writeFile,readFile,getContents,putStr,putStrLn)
 
-runTestSpec :: Options -> TestSpec -> IO [TestResult]
-runTestSpec opts testSpec =
+createTests :: Options -> TestSpec -> IO [IO TestResult]
+createTests opts testSpec =
  do { testFiles <- getTestFiles $ getTestFileSpecs testSpec
-    ; mapM (reportTestResult opts . runTest opts testSpec) testFiles
+    ; return $ map (reportTestResult opts . runTest opts testSpec) testFiles
     }
 
 getTestFiles :: [String] -> IO [String]   
@@ -52,7 +52,8 @@ runTest :: Options -> TestSpec -> FilePath -> IO TestResult
 runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile =
  do { putStrLn testDescr
     ; gitDir <- getGitDir
-    ; let executable = binDir ++ "/ampersand"
+    ; isTestSrv <- isTestServer  
+    ; let executable = binDir isTestSrv ++ "/ampersand"
     ; let absOutputDir = joinPath $ [gitDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     ["fSpec" | exec == Ampersand] 
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
