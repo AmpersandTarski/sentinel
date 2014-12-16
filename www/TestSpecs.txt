@@ -130,12 +130,13 @@
          [ "ampersand-models/NVWA DTV/DTV.adl"
          ]
      }
-     
+
+-- Uitgecommentaard, omdat ik een stabiele versie nodig heb...  (SJ, 16 dec 2014) 
 -- Prototype: https://sentinel.tarski.nl/ampersand/NVWA
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5", "--proto=/home/sentinel/git/sentinel/www/ampersand/NVWA"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand-models/NVWA DTV/DTV.adl"
-         ]
-     }
+--, TestSpec 
+--     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5", "--proto=/home/sentinel/git/sentinel/www/ampersand/NVWA"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+--     , getTestFileSpecs = 
+--         [ "ampersand-models/NVWA DTV/DTV.adl"
+--         ]
+--     }
 ]
