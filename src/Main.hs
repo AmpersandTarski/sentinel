@@ -12,6 +12,7 @@ import Types
 import Utils
 import Test
 import Execute
+import Defaults
 
 {-
 todo:
@@ -79,15 +80,12 @@ performTests opts =
     ; buildTestResults <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
-         do { putStrLn "Cleaning Ampersand"
-            ; cabalClean "ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
-                        
-            ; res <- reportTestResult opts $ testInstall "ampersand" [] "the Ampersand compiler"
-
+         do { res <- reportTestResult opts $ testInstall "ampersand" ["--bindir="++binDir isTestSrv] "the Ampersand compiler"
+            
             ; return [res] 
             }
         else
-            return []
+          return []
 
     -- sort test based on fSpec/prototype generation.
     ; execTests <- fmap concat $ mapM (createTests opts) $ 
