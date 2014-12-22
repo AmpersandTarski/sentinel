@@ -8,6 +8,7 @@ import System.FilePath
 import Control.Exception
 import Data.List              
 import Utils
+import Defaults
 import Types
 
 maxTimeInSeconds :: Int
@@ -54,6 +55,16 @@ cabalCmd :: String -> String -> [String] -> IO ()
 cabalCmd cmd project flags = failOnError ("error during \'cabal "++cmd++"\' for "++project++": ") $
   executeCabal cmd project flags
 
+logExecutableVersion :: IO ()
+logExecutableVersion =
+ do { isTestSrv <- isTestServer
+    ; let executable = binDir isTestSrv ++ "/ampersand"
+    ; result <- execute executable ["--version"] "."
+    ; case result of
+        ExecSuccess versionInfo -> putStrLn versionInfo
+        ExecFailure _ err       -> putStrLn $ "Error while obtaining version for " ++ executable ++ ":\n" ++ err
+    }                              -- This is not one of the tests, so we simply print the error
+    
 executeCabal :: String -> String -> [String] -> IO ExecutionOutcome
 executeCabal cmd project flags =
  do { gitDir <- getGitDir

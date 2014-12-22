@@ -95,7 +95,10 @@ performTests opts =
                       getTestSpecsForExecutable testSpecs Prototype
     
     ; executionTestResults <- if all isTestSuccessful buildTestResults
-                              then sequence execTests
+                              then do { putStrLn "Version of executable used for testing:"
+                                      ; logExecutableVersion
+                                      ; sequence execTests
+                                      }
                               else return []
         
     ; let allTestResults = buildTestResults ++ executionTestResults
