@@ -17,7 +17,7 @@ executable sentinel
                    process == 1.2.*,
                    time == 1.4.*,
                    utf8-string == 0.3.*
-  ghc-options:     -Wall -threaded -rtsopts +RTS -K4000000003 -RTS
+  ghc-options:     -Wall  
   other-modules:   
                    Defaults,
                    Execute,
