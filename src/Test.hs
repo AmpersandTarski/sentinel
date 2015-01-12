@@ -86,11 +86,12 @@ parseTestSpecs opts =
  do { gitDir <- getGitDir
     ; let testSpecsFilePath = combine gitDir testSpecsFile
     ; testSpecsStr <- readFile testSpecsFilePath
+    ; putStrLn $ "Contents of " ++ testSpecsFile ++ ":"
+    ; putStrLn $ bracketHtml opts "<div style='font-family: courier; font-size:85%; color:blue'>" "</div>" $
+                   "\n" ++ testSpecsStr ++ "\n\n"
     ; let lexedTestSpecsStr = reverse . dropWhile isSpace . reverse -- read doesn't like trailing whitespace 
                             . unlines . filter (not . ("--" `isPrefixOf`)) . lines   -- line comments are only allowed at start of line 
                             $ testSpecsStr                          -- (otherwise we also need to escape strings for "--validate")
-    ; putStrLn $ bracketHtml opts "<div style='font-family: courier; font-size:85%; color:blue'>" "</div>" $
-                   "Parsing test specs:\n" ++ lexedTestSpecsStr ++ "\n\n"
     ; case readMaybe lexedTestSpecsStr :: Maybe [TestSpec] of
         Nothing  -> error $ "ERROR: cannot read file " ++ testSpecsFilePath ++
                             "\n\nMake sure comments in TestSpecs.txt are at the start of the line," ++ 
