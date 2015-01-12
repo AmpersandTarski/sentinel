@@ -114,6 +114,31 @@
      }
 
 
+---- Edit validation ----
+
+-- First build the prototype:
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "ampersand-models/ISAtest/Limorange.adl"
+         ]
+     }
+
+-- Then run some validation tests:
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--validateEdit=Limorange-EditValidation/AddOwnedCitrus"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "ampersand-models/ISAtest/Limorange.adl"
+         ]
+     }
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--validateEdit=Limorange-EditValidation/AddOwnedLimorange"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "ampersand-models/ISAtest/Limorange.adl"
+         ]
+     }
+
+
 -- NVWA DTV Prototype (In normal location, for daily checking. This is not a secure directory, but it can only be found if actively looked for.)
 
 , TestSpec 
