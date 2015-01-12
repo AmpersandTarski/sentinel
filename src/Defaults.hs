@@ -9,7 +9,7 @@ gitPath False = "git/Ampersand"
 
 binDir :: Bool -> String
 binDir True  = "/home/sentinel/.cabal/bin" -- path on dedicated test server
-binDir False = "/Users/martijn/.cabal/bin"
+binDir False = "/Users/martijn/git/Ampersand/ampersand/.cabal-sandbox/bin/"
 
 outputDir :: String
 outputDir = "sentinel/www/ampersand"
