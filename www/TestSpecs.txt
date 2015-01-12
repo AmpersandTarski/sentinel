@@ -113,7 +113,17 @@
          ]
      }
 
----- Compile NVWA model to secure directory ----
+
+-- NVWA DTV Prototype (In normal location, for daily checking. This is not a secure directory, but it can only be found if actively looked for.)
+
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "ampersand-models/NVWA DTV/DTV.adl"
+         ]
+     }
+
+---- Compile NVWA DTV model to secure directory (which can be shared with others) ----
 
 -- Latex: https://sentinel.tarski.nl/ampersand/NVWA/FSpec/DTV.pdf
 ,  TestSpec
@@ -130,6 +140,7 @@
          [ "ampersand-models/NVWA DTV/DTV.adl"
          ]
      }
+
 
 -- Uitgecommentaard, omdat ik een stabiele versie nodig heb...  (SJ, 16 dec 2014) 
 -- Prototype: https://sentinel.tarski.nl/ampersand/NVWA
