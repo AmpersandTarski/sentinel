@@ -12,7 +12,7 @@ import Defaults
 import Types
 
 maxTimeInSeconds :: Int
-maxTimeInSeconds = 10 * 60
+maxTimeInSeconds = 2 * 60 -- Timeout is only 2 minutes as ampersand is fast enough nowadays. We can increase it when we get unexpected timeouts 
 
 timeoutExitCode :: Int
 timeoutExitCode = -1 -- -1 is not used by unix processes
