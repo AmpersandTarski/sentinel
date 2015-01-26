@@ -113,6 +113,15 @@
          ]
      }
 
+---- New frontend ----
+
+, TestSpec 
+     { getTestExecutable = Prototype, getTestArgs = ["--newFrontend"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     , getTestFileSpecs = 
+         [ "ampersand-models/NewFrontend/CB/CB.adl"
+         , "ampersand-models/NewFrontend/WebWijzer/WebWijzer.adl"
+         ]
+     }
 
 ---- Edit validation ----
 
