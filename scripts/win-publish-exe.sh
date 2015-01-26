@@ -1,5 +1,7 @@
 # To be run from a Windows bash
 
+set -u # fail on uninitialized variables
+
 if [ $# -eq 0 ]; then
 echo Please specify an executable.
 exit 1
