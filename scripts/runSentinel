@@ -138,8 +138,6 @@ echo $'Performing cabal update\n' >> $sentinelOut
 # init is neutral if sandbox already exists
 cabal sandbox init
 
-echo "unregistering ampersand lib, may yield a harmless error if it wasn't installed before"
-cabal sandbox hc-pkg unregister ampersand
 if [ $deleteSandbox -ne 0 ]; then
 echo $'Deleting ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
 cabal sandbox delete
