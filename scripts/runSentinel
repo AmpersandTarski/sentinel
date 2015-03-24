@@ -134,7 +134,7 @@ rm -rf /home/sentinel/git/ampersand/dist
 
 cd /home/sentinel/git/ampersand
 echo $'Performing cabal update\n' >> $sentinelOut
-#cabal update
+cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
 
