@@ -15,7 +15,7 @@
          , "ampersand-models/INDOORS/INDOORS.adl"
          , "ampersand-models/INDOORS/overzichten/uitgangsscripts/VIROarch.adl"
          , "ampersand-models/VOGDemo/DEMO_VOG_Dummy.adl"
-         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
+--         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
 -- By testing this dummy, we still get a sentinel failure, but without the 10 minute delay that the original VOG_Demo causes 
 -- (due to a normalizer bug, see https://sourceforge.net/p/ampersand/tickets/451)
 
