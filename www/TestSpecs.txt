@@ -109,8 +109,9 @@
          [ "ampersand-models/Bugs/Current/SQLFail"
          ]
      }
+---- Formal Ampersand and Generics (Meta-ampersand stuff) ----
 , TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["--rap"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Ampersand, getTestArgs = ["--ast-file"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/INDOORS/INDOORS.adl"
          ]
