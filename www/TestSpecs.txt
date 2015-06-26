@@ -122,8 +122,7 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--newFrontend"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/NewFrontend/CB/CB.adl"
-         , "ampersand-models/NewFrontend/WebWijzer/WebWijzer.adl"
+         [ "ampersand-models/NewFrontend/WebWijzer/WebWijzer.adl"
          , "ampersand-models/NewFrontend/GenerationTest/InterfaceShowcase.adl"
          , "ampersand-models/NewFrontend/FancyViews/FancyViews.adl"
          ]
