@@ -4,7 +4,6 @@ import Control.Exception
 import Control.Monad
 import System.IO
 import Network.BSD
-import System.Locale
 import Options (runCommand)
 import Data.List
 import Data.Time
