@@ -124,7 +124,7 @@
      , getTestFileSpecs = 
          [ "ampersand-models/NewFrontend/WebWijzer/WebWijzer.adl"
          , "ampersand-models/NewFrontend/GenerationTest/InterfaceShowcase.adl"
-         , "ampersand-models/NewFrontend/FancyViews/FancyViews.adl"
+--         , "ampersand-models/NewFrontend/FancyViews/FancyViews.adl"
          ]
      }
 
