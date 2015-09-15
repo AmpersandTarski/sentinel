@@ -102,6 +102,7 @@
          [ "ampersand-models/Bugs/Current/SQL"
          , "ampersand-models/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
          , "ampersand-models/Tests/NoSentinel/Issue191Test.adl"
+         ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
