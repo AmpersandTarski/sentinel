@@ -121,11 +121,11 @@
 ---- New frontend ----
 
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--newFrontend"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/NewFrontend/WebWijzer/WebWijzer.adl"
-         , "ampersand-models/NewFrontend/GenerationTest/InterfaceShowcase.adl"
---         , "ampersand-models/NewFrontend/FancyViews/FancyViews.adl"
+         [ "ampersand-models/ZwolleFrontEnd/WebWijzer/WebWijzer.adl"
+         , "ampersand-models/ZwolleFrontEnd/GenerationTest/InterfaceShowcase.adl"
+--         , "ampersand-models/ZwolleFrontEnd/FancyViews/FancyViews.adl"
          ]
      }
 
