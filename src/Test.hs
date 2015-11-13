@@ -11,21 +11,16 @@ import Defaults
 import UTF8(readFile,putStrLn)
 import Prelude hiding (writeFile,readFile,getContents,putStr,putStrLn)
 
-runTestSpec :: Options -> TestSpec -> IO [TestResult]
-runTestSpec opts testSpec =
+createTests :: Options -> TestSpec -> IO [IO TestResult]
+createTests opts testSpec =
  do { testFiles <- getTestFiles $ getTestFileSpecs testSpec
-    ; mapM (reportTestResult opts . runTest opts testSpec) testFiles
+    ; return $ map (reportTestResult opts . runTest opts testSpec) testFiles
     }
-{-
-    ; testFiles <- getTestFiles ["Prototype/apps/Simple", "Prototype/apps/Misc"]
-    ; sequence_ $ map (reportResult . runTest "Ampersand" []) testFiles
-    ; sequence_ $ map (reportResult . runTest "Prototype" []) testFiles
 
--}
 getTestFiles :: [String] -> IO [String]   
 getTestFiles fileSpecs =
- do { svnDir <- getSvnDir
-    ; let absFileSpecs = map (combine svnDir) fileSpecs
+ do { gitDir <- getGitDir
+    ; let absFileSpecs = map (combine gitDir) fileSpecs
     ; filePathss <- mapM collectFilePaths absFileSpecs
     ; return $ concat filePathss
     }
@@ -49,19 +44,17 @@ collectFilePaths absFileSpec =
    
 
 -- execute project executable in directory of testFile (which is absolute). First arg is testFile
--- an implicit --outputDir/--proto is added for  $svnDir / outputDir / filename ( and /fSpec for Ampersand) 
+-- an implicit --outputDir/--proto is added for  gitDir / outputDir / filename ( and /fSpec for Ampersand) 
 -- Because the prototype generator does not respect outputDir, we need to use protoDir, which also forces
 -- generation of a prototype. However, this implicit argument will be replaced by a more general mechanism to
 -- allow filename to be used in the test spec (e.g. ["--outputDir=$OUTPUTDIR/$FILENAME/fSpec"])
 runTest :: Options -> TestSpec -> FilePath -> IO TestResult
 runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile =
  do { putStrLn testDescr
-    ; svnDir <- getSvnDir
-    ; let executable =
-            case exec of
-              Ampersand -> binDir ++ "/ampersand"
-              Prototype -> binDir ++ "/prototype"
-    ; let absOutputDir = joinPath $ [svnDir, outputDir, dropExtension (takeFileName testFile)] ++
+    ; gitDir <- getGitDir
+    ; isTestSrv <- isTestServer  
+    ; let executable = binDir isTestSrv ++ "/ampersand"
+    ; let absOutputDir = joinPath $ [gitDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     ["fSpec" | exec == Ampersand] 
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
     ; result <- execute executable (testFile : absOutputDirArg 
@@ -90,15 +83,18 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
 -- yes, parse is a rather big word for this function
 parseTestSpecs :: Options -> IO [TestSpec]
 parseTestSpecs opts =
- do { svnDir <- getSvnDir
-    ; let testSpecsFilePath = combine svnDir testSpecsFile
+ do { gitDir <- getGitDir
+    ; let testSpecsFilePath = combine gitDir testSpecsFile
     ; testSpecsStr <- readFile testSpecsFilePath
+    ; putStrLn $ "Contents of " ++ testSpecsFile ++ ":"
+    ; putStrLn $ bracketHtml opts "<div style='font-family: courier; font-size:85%; color:blue'>" "</div>" $
+                   "\n" ++ testSpecsStr ++ "\n\n"
     ; let lexedTestSpecsStr = reverse . dropWhile isSpace . reverse -- read doesn't like trailing whitespace 
                             . unlines . filter (not . ("--" `isPrefixOf`)) . lines   -- line comments are only allowed at start of line 
                             $ testSpecsStr                          -- (otherwise we also need to escape strings for "--validate")
-    ; putStrLn $ bracketHtml opts "<div style='font-family: courier; font-size:85%; color:blue'>" "</div>" $
-                   "Parsing test specs:\n" ++ lexedTestSpecsStr ++ "\n\n"
     ; case readMaybe lexedTestSpecsStr :: Maybe [TestSpec] of
-        Nothing  -> error $ "ERROR: cannot parse file "++testSpecsFilePath
+        Nothing  -> error $ "ERROR: cannot read file " ++ testSpecsFilePath ++
+                            "\n\nMake sure comments in TestSpecs.txt are at the start of the line," ++ 
+                            " otherwise they are interpreted as options (e.g. 'getTestArgs = [\"--haskell\"]').\n"
         Just tss -> return tss
     }

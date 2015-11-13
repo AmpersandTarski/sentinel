@@ -1,2 +1,2 @@
 # called by crontab
-$HOME/svn/Sentinel/scripts/runSentinel --mail $* > /dev/null 2>&1
+$HOME/git/sentinel/scripts/runSentinel --mail $* > /home/sentinel/git/sentinel/www/logs/runSentinel.log.txt 2>&1

@@ -50,17 +50,15 @@ isTestServer =
   fmap (== testServerHostname) getHostName
     
     
-getSvnDir :: IO FilePath
-getSvnDir =
+getGitDir :: IO FilePath
+getGitDir =
  do { homeDir <- getHomeDirectory
     ; isTestSrv <- isTestServer  
-    ; return $ combine homeDir (if isTestSrv
-                                then testServerSvnPath
-                                else oblomovSvnPath) 
+    ; return $ combine homeDir $ gitPath isTestSrv 
     }
 
 getProperDirectoryContents :: FilePath -> IO [String]
-getProperDirectoryContents pth = fmap (filter (`notElem` [".","..",".svn"])) $ getDirectoryContents pth
+getProperDirectoryContents pth = fmap (filter (`notElem` [".",".."])) $ getDirectoryContents pth
 
 readMaybe :: Read a => String -> Maybe a
 readMaybe str = case reads str of
@@ -68,8 +66,8 @@ readMaybe str = case reads str of
                   _        -> Nothing
 getAuthors :: IO [String]
 getAuthors =
- do { svnDir <- getSvnDir
-    ; let authorsFilePath = combine svnDir authorsFile
+ do { gitDir <- getGitDir
+    ; let authorsFilePath = combine gitDir authorsFile
     ; authors <- readFile authorsFilePath
     ; return $ filter (not . null) . filter (not . ("--" `isPrefixOf`)) . lines $ authors
     }

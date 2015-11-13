@@ -7,12 +7,12 @@ import System.IO
 import System.FilePath 
 import Control.Exception
 import Data.List              
-import Data.Char
 import Utils
+import Defaults
 import Types
 
 maxTimeInSeconds :: Int
-maxTimeInSeconds = 10 * 60
+maxTimeInSeconds = 4 * 60 -- Timeout is only 2 minutes as ampersand is fast enough nowadays. We can increase it when we get unexpected timeouts 
 
 timeoutExitCode :: Int
 timeoutExitCode = -1 -- -1 is not used by unix processes
@@ -55,40 +55,20 @@ cabalCmd :: String -> String -> [String] -> IO ()
 cabalCmd cmd project flags = failOnError ("error during \'cabal "++cmd++"\' for "++project++": ") $
   executeCabal cmd project flags
 
+logExecutableVersion :: IO ()
+logExecutableVersion =
+ do { isTestSrv <- isTestServer
+    ; let executable = binDir isTestSrv ++ "/ampersand"
+    ; result <- execute executable ["--version"] "."
+    ; case result of
+        ExecSuccess versionInfo -> putStrLn versionInfo
+        ExecFailure _ err       -> putStrLn $ "Error while obtaining version for " ++ executable ++ ":\n" ++ err
+    }                              -- This is not one of the tests, so we simply print the error
+    
 executeCabal :: String -> String -> [String] -> IO ExecutionOutcome
 executeCabal cmd project flags =
- do { svnDir <- getSvnDir
-    ; execute "cabal" (cmd : flags ) $ combine svnDir project
-    }
-
-svnUpdate :: String -> IO ()
-svnUpdate project =
- do { svnDir <- getSvnDir
-    ; result <- execute "svn" ["update","--non-interactive","--trust-server-cert"] $ combine svnDir project
-                                         -- parameters are because sourceforge sometimes changes the certificate which requires acceptation
-    ; case result of
-        ExecSuccess _     -> do { revStr <- getRevisionStr project
-                                ; putStrLn $ project ++ " revision: " ++ revStr 
-                                }
-        ExecFailure _ err -> error $ "error during svn update: " ++ err -- exit code is already included in errMsg
-    }
-
-getRevisionStr :: String -> IO String
-getRevisionStr project =
- do { svnDir <- getSvnDir
-    ; result <- execute "svnversion" [] $ combine svnDir project
-    ; case result of
-             ExecSuccess rev@(_:_) -> return $ init rev -- only remove the newline
-             ExecSuccess rev       -> error $ "incorrect response from svnversion: "++rev
-             ExecFailure _ err     -> error $ "error from svnversion: "++err -- exit code is already included in errMsg                                               
-    }
-
-getRevision :: String -> IO Int
-getRevision project =
- do { revStr <- getRevisionStr project
-    ; if all isDigit revStr
-      then return $ read revStr
-      else error $ "incorrect revision for "++project++": "++show revStr -- happens when a revision was locally modified
+ do { gitDir <- getGitDir
+    ; execute "cabal" (cmd : flags ) $ combine gitDir project
     }
 
 execute :: String -> [String] -> String -> IO ExecutionOutcome
@@ -112,7 +92,7 @@ executeIO cmd args dir =
                 , delegate_ctlc = False -- don't let child process handle ctrl-c
                 }
                  
---    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
+    ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
 
     -- Use bracketOnError to kill the process on an exception. Otherwise processes that time out continue running.
     -- To keep things easy, we don't collect output in case of an exception. (not really necessary when testing 

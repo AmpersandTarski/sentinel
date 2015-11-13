@@ -1,7 +1,9 @@
-{-# LANGUAGE TemplateHaskell #-}
 module Types where
 
+import Control.Applicative
+import Prelude -- to silence redundant Control.Applicative import for GHC >= 7.10
 import Options hiding (Options)
+import qualified Options
 
 data TestResult = TestResult { getResultOutcome :: TestOutcome
                              , getResultTestDescr :: String
@@ -32,12 +34,22 @@ data TestSpec = TestSpec { getTestExecutable :: TestExecutable
                          , getPanicExitCodes :: [Int]    -- exit codes for which the TestOutcome will always be TestFailure, 
                                                          -- even when the DesiredOutcome is ShouldFail
                          , getDesiredOutcome :: DesiredOutcome
-                         , getTestFileSpecs  :: [String] -- relative to svn directory
+                         , getTestFileSpecs  :: [String] -- relative to git directory
                          } deriving (Show, Read)
 
+getTestSpecsForExecutable :: [TestSpec] -> TestExecutable -> [TestSpec]
+getTestSpecsForExecutable testSpecs executable =
+  filter ((==executable) . getTestExecutable) testSpecs
 
-defineOptions "Options" $ do { boolOption "optHtml" "html" False "Generate html output."
-                             ; boolOption "optMail" "mail" False "Notify authors by e-mail."
-                             ; boolOption "optDeleteSandbox" "deleteSandbox" False "Unused option: sandbox is handled by runSentinel"
-                             }
-          
+data Options = Options
+    { optHtml :: Bool
+    , optMail :: Bool
+    , optDeleteSandbox :: Bool
+    }
+
+instance Options.Options Options where
+    defineOptions = pure Options
+        <*> simpleOption "html"          False "Generate html output."
+        <*> simpleOption "mail"          False "Notify authors by e-mail."
+        <*> simpleOption "deleteSandbox" False "Unused option: sandbox is handled by runSentinel"
+                             

@@ -1,64 +1,158 @@
 #!/bin/bash
-echo Running runSentinel \(extra arguments are \'$@\'\)
+# Script that is called by the phpKillAndRunSentinel (from the www server) and crontabRunSentinel scripts.
+# Resets to the latest git commits, executes the Haskell sentinel, and stores its output in SentinelOutput.txt and logs/
+#
+# Usage: runSentinel [-a AMPERSANDBRANCH] [-m MODELBRANCH] [--deleteSandbox] [--mail] [--html] 
 
-# script that is called by the phpRootRunSentinel (from the www server) and crontabRunSentinel
-# it cleans up svn, executes the Haskell sentinel and stores its output in SentinelOutput.txt and logs/
-
-# has absolute paths instead of $HOME
-# NOTE: make sure that www directory of SentinelOutput is writable for 'other'
+echo Running runSentinel \(extra arguments are \'$*\'\)
+# note that this echo ends up in runSentinel.log.txt (to which stdout&stderr for this script are redirected) and not in SentinelOutput.txt
 
 HOME="/home/sentinel"
 LANG=en_US.UTF-8
-PATH=/home/sentinel/svn/Sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+PATH=/home/sentinel/git/sentinel/scripts:/home/sentinel/.cabal/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
 
 export HOME
 export LANG
 export PATH
 
-rm -rf /home/sentinel/svn/Ampersand/dist
-rm -rf /home/sentinel/svn/Prototype/dist
-cd /home/sentinel/svn/Ampersand
-svn cleanup
-cd /home/sentinel/svn/Prototype
-svn cleanup
+sentinelOut=/home/sentinel/git/sentinel/www/logs/SentinelOutput.txt
 
 # get timestamp at the start of sentinel execution
 Timestamp=`date +%Y-%m-%d_%H.%M.%S`
+# show date both in runSentinel.log.txt and SentinelOutput.txt
+echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' 
+echo "Script runSentinel started at `date \"+%H:%M:%S %d-%h-%y\"`"$'\n' > $sentinelOut
 
-# Check for --deleteSandbox argument
+
+# Process command-line arguments
+
+dashdashArgs=''; # all -- arguments
+filteredArgs=''; # arguments without -- arguments
+
+# Check for --deleteSandbox argument and filter all -- arguments
 deleteSandbox=0
-for var in "$@"
+for var in $*
 do
-  if [ $var == "--deleteSandbox" ]; then
-    deleteSandbox=1
+  if [[ $var = --* ]]; then
+    dashdashArgs="$dashdashArgs $var"
+    if [ $var == "--deleteSandbox" ]; then
+      deleteSandbox=1
+    fi
+  else
+    filteredArgs="$filteredArgs $var"
   fi
 done
 
-# Init sandboxes (and delete Ampersand sandbox, if necessary)
+# default branches if no -a -p or -n arguments are present
+ampersandBranch=master
+modelsBranch=master
 
-cd /home/sentinel/svn/Ampersand
-echo $'Performing cabal update\n' > /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
-#cabal update
+# set branches accorging to -a -p and -n arguments
+# leading ':' allows better error message for missing argument
+# NOTE: repeated options are not disallowed: e.g. runSentinel -a branch1 -a branch2
+
+if [[ $filteredArgs != "" ]]; then # don't run getopts if $filteredArgs is empty, because it will resort to using $* args
+  while getopts ":a:p:m:" opt $filteredArgs; do
+    echo In while. opt=$opt  OPTARG=$OPTARG
+    case $opt in
+      a)
+        ampersandBranch=$OPTARG
+        ;;
+      m)
+        modelsBranch=$OPTARG
+        ;;
+      \?)
+        echo "Invalid option: -$OPTARG" >&2
+        exit 1
+        ;;
+      :)
+        echo "Option -$OPTARG requires an argument." >&2
+        exit 1
+        ;;
+    esac
+  done
+fi
+
+echo Parsed arguments:
+#echo filtered: \"$filteredArgs\"
+echo Haskell sentinel args: \"$dashdashArgs\"
+echo Branches: ampersand=$ampersandBranch, models=$modelsBranch
+echo Delete sandbox: $deleteSandbox
+echo
+
+# Force latest version of a branch without risking merge problems.
+# We need a checkout --track to ensure the branch exists locally. However, if the local branch already exists this fails without
+# actually checking it out, so we need an additional git checkout.
+# NOTE: files not in the repo (and not ignored) are not removed, as they are harmless.
+# TODO: automatically cleanup old local branches that are deleted on origin. There does not seem to be a nice way to do this in git.
+function hardResetToOriginBranch {
+  # usage: hardResetToOriginBranch repo branch
+  echo Resetting $1 to branch $2 
+  cd /home/sentinel/git/$1
+  git fetch
+  git checkout --track origin/$2 2> /dev/null
+  git checkout $2
+  git reset origin/$2 --hard
+}
+
+hardResetToOriginBranch ampersand $ampersandBranch
+hardResetToOriginBranch ampersand-models $modelsBranch
+
+# for sentinel, pull to get the latest www/TestSpecs.txt
+# (no hard reset, so we can run modified versions of sentinel without destroying changes)
+cd /home/sentinel/git/sentinel
+git pull
+
+# get git commit information
+
+# with html links, for sentinel output page
+function getGitInfoHtml {
+  cd /home/sentinel/git/$1
+  sha=`git rev-parse --short HEAD`
+  echo `git rev-parse --abbrev-ref HEAD`:"<a href=\"https://github.com/AmpersandTarski/$1/commit/$sha\">$sha</a>"
+}
+
+# for filename
+function getGitInfo {
+  cd /home/sentinel/git/$1
+  echo `git rev-parse --abbrev-ref HEAD`:`git rev-parse --short HEAD`
+}
+
+ampersandGitInfo=`getGitInfo ampersand`
+ampersandModelsGitInfo=`getGitInfo ampersand-models`
+sentinelGitInfo=`getGitInfo sentinel`
+
+ampersandGitInfoHtml=`getGitInfoHtml ampersand`
+ampersandModelsGitInfoHtml=`getGitInfoHtml ampersand-models`
+sentinelGitInfoHtml=`getGitInfoHtml sentinel`
+
+echo "Git info: ampersand[$ampersandGitInfoHtml], ampersand-models[$ampersandModelsGitInfoHtml], sentinel[$sentinelGitInfoHtml]"$'\n' >> $sentinelOut
+
+rm -rf /home/sentinel/git/ampersand/dist
+
+# Init sandboxes (and delete ampersand sandbox, if necessary)
+
+cd /home/sentinel/git/ampersand
+echo $'Performing cabal update\n' >> $sentinelOut
+cabal update
 # init is neutral if sandbox already exists
 cabal sandbox init
+
 if [ $deleteSandbox -ne 0 ]; then
-echo $'Deleting Ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt
+echo $'Deleting ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
 cabal sandbox delete
 cabal sandbox init
 cabal install --only-dependencies
 fi
-cd /home/sentinel/svn/Prototype
-cabal sandbox init --sandbox=../Ampersand/.cabal-sandbox
 
-
-# execute Sentinel with extra arguments passed to this script ($@)
-/home/sentinel/.cabal/bin/sentinel --html $@ < /dev/null >> /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt 2>&1
+# execute Sentinel with -- arguments passed to this script ($dashdashArgs)
+/home/sentinel/.cabal/bin/sentinel --html $dashdashArgs < /dev/null >> $sentinelOut 2>&1
 
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator
-NrOfFailed=`grep "Number of failed tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
+NrOfFailed=`grep "Number of failed tests:" $sentinelOut | cut -d" " -f5`
 # take the 5th field using space as separator
-NrOfTests=`grep "Total number of tests:" /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt | cut -d" " -f5`
+NrOfTests=`grep "Total number of tests:" $sentinelOut | cut -d" " -f5`
 
 # if NrOfFailed is empty then testing was aborted
 if [ -z "$NrOfFailed" ]; then
@@ -67,16 +161,8 @@ else
 Results=${NrOfFailed}_of_${NrOfTests}
 fi
 
-# get svn revision numbers for all components (after running sentinel, so svn updates are taken into account)
-cd /home/sentinel/svn/Ampersand
-AmpersandRevision=`svnversion | tr ":" "-"`
-cd /home/sentinel/svn/Prototype
-PrototypeRevision=`svnversion | tr ":" "-"`
-cd /home/sentinel/svn/Sentinel
-SentinelRevision=`svnversion | tr ":" "-"`
-
-Filename=Sentinel_${Timestamp}__${Results}__Amp=${AmpersandRevision}_Pro=${PrototypeRevision}_Sen=${SentinelRevision}.html
+Filename=Sentinel_${Timestamp}__${Results}__amp=${ampersandGitInfo}_mdl=${ampersandModelsGitInfo}_sen=${sentinelGitInfo}.html
 # first '=' is assignment, the others are part of the filename
 
 # put a </br> at the end of each line and store in logs directory
-sed 's/$/<\/br>/' /home/sentinel/svn/Sentinel/www/ampersand/SentinelOutput.txt > /home/sentinel/svn/Sentinel/www/logs/$Filename
+sed 's/$/<\/br>/' $sentinelOut > /home/sentinel/git/sentinel/www/logs/$Filename

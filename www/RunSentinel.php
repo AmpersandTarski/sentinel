@@ -1,3 +1,3 @@
 <?php
-exec('sudo /home/sentinel/svn/Sentinel/scripts/phpRootRunSentinel > /dev/null &');
+exec('sudo -u sentinel /home/sentinel/git/sentinel/scripts/phpKillAndRunSentinel '. $_REQUEST['args'] .' > /dev/null &');
 ?>

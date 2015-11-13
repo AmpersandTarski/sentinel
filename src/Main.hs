@@ -4,24 +4,19 @@ import Control.Exception
 import Control.Monad
 import System.IO
 import Network.BSD
-import System.Locale
 import Options (runCommand)
 import Data.List
 import Data.Time
 import Types
-import Defaults
 import Utils
 import Test
 import Execute
+import Defaults
 
 {-
 todo:
 
-Avoid needing root and martijn permissions for executing server.
-Make scripts more robust and allow svn update without first having to remove everything.
-Currently we need to clean everything every time, so an Ampersand or Prototype compilation fail
-will also cause a lot of test fails. (there is an ugly fix for this now)
-Maybe we should even manually keep old versions of the executables, since doing things incremental might be more fragile
+Avoid needing root and sentinel permissions for executing server.
 
 fix module names and structure, as well as refactor test data types. Everything is rather messy now.
 keep track of what has been reported
@@ -29,8 +24,6 @@ maybe create a type TestCase, a list of which is created from TestSpec
 if the message is not in the result we can print it before executing the test
 Also keep desired result in TestResult, so we can give a less confusing message (e.g. this test succeeded but should have failed)
 and only print output in case of failed run, rather than a failed test (output from successful tests that should have failed is probably not interesting)
-
-Use a Haskell server, so calling svn and cabal will be much easier. (Sentinel installation will also be easier).
 
 Fix hanging of sentinel when Ampersand hangs (for example for bug #327)
 
@@ -75,54 +68,43 @@ main = runCommand $ \opts _ ->
                   failureMessage ++ "\n\n"++
                   "Please consult http://sentinel.tarski.nl for more details."
               } 
-    ; exit
+    ; logExit
     }
 
 performTests :: Options -> IO (Int, Int, Maybe String)
 performTests opts =
- do { svnUpdate "Sentinel/www" -- update the www directory for the latest Authors.txt and TestSpecs.txt
-    ; testSpecs <- parseTestSpecs opts
+ do { testSpecs <- parseTestSpecs opts
  
     ; isTestSrv <- isTestServer
-    ; (ampersandOk, prototypeOk, buildTestResults) <-
+    ; buildTestResults <-
         if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
         then
-         do { putStrLn "Performing svn update for Ampersand"
-            ; svnUpdate "Ampersand"
-            ; putStrLn "Performing svn update for Prototype"
-            ; svnUpdate "Prototype"
-            ; putStrLn "Cleaning Ampersand"
+         do { res <- reportTestResult opts $ testInstall "ampersand" ["--bindir="++binDir isTestSrv] "the Ampersand compiler"
             
-            ; cabalClean "Ampersand" [] -- clean probably not necessary since we use cabal install rather than cabal build
-                        
-            ; t2 <- reportTestResult opts $ testInstall "Ampersand" ["-f-executable"] "the Ampersand library"
-
-            ; t1 <- reportTestResult opts $ testInstall "Ampersand" ["--bindir="++binDir] 
-                                                        "the Ampersand executable (and library)" -- cannot build exec without lib because of in-place dependency
-            ; putStrLn "Cleaning Prototype"
-            ; cabalClean "Prototype" [] -- clean probably not necessary since we use cabal install rather than cabal build
-            ; t3 <- reportTestResult opts $ testInstall "Prototype" ["--bindir="++binDir] "the prototype generator"
-            ; return ( isTestSuccessful t1, isTestSuccessful t3, [t1,t2,t3]) 
-            -- TODO: probably want a monad here, since it's too easy to miss tests now
+            ; return [res] 
             }
         else
-            return (True, True, [])
-            
-            
-            
-    ; let getTestResultsFor _          False = return []
-          getTestResultsFor executable True  =
-            fmap concat $ mapM (runTestSpec opts) [ ts | ts <- testSpecs, getTestExecutable ts == executable ]
-    -- only execute tests if building the executable succeeded
-    -- not very elegant, but only here until we can use the old executables in case of build failures
-    ; ampersandExecTestResults <- getTestResultsFor Ampersand ampersandOk
-    ; prototypeExecTestResults <- getTestResultsFor Prototype prototypeOk
-    ; let executionTestResults = ampersandExecTestResults ++ prototypeExecTestResults
+          return []
+
+    -- sort test based on fSpec/prototype generation.
+    ; execTests <- fmap concat $ mapM (createTests opts) $ 
+                      getTestSpecsForExecutable testSpecs Ampersand ++
+                      getTestSpecsForExecutable testSpecs Prototype
+    
+    ; executionTestResults <- if all isTestSuccessful buildTestResults
+                              then do { putStrLn "Version of executable used for testing:"
+                                      ; logExecutableVersion
+                                      ; sequence execTests
+                                      }
+                              else return []
+        
     ; let allTestResults = buildTestResults ++ executionTestResults
     
     ; let failedTestResults = filter (not . isTestSuccessful) allTestResults
           nrOfFailed = length failedTestResults
-          totalNrOfTests = length allTestResults
+          totalNrOfTests = length allTestResults 
+    -- nrOfFailed and totalNrOfTests only include tests that were actually run. We could also use the total number of specified tests as a base,
+    -- but then a compile fail would suggest a large number of failed tests.
     
     ; putStr $ if optHtml opts then "<hr/>" else "\n\n--------"
     ; putStrLn $ bracketHtml opts "<p style='font-weight: bold'>\n" "</p>" $
@@ -153,14 +135,13 @@ initialize :: IO ()
 initialize =
  do { hSetBuffering stdout LineBuffering
     ; hSetBuffering stderr LineBuffering
-    ; revStr <- getRevisionStr "Sentinel"
     ; hName <- getHostName
     ; time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
-    ; putStrLn $ "######## Sentinel (r"++revStr++") started on "++hName++" at "++time++" ########\n\n"
+    ; putStrLn $ "######## Sentinel started on "++hName++" at "++time++" ########\n\n"
     }
     
-exit :: IO ()
-exit =
+logExit :: IO ()
+logExit =
  do { time <- fmap (formatTime defaultTimeLocale "%-T %-d-%b-%y") getZonedTime
     ; putStrLn $ "\n######## Sentinel exited at "++time++" ########\n\n" -- NOTE: www/index.php depends on the exact format of this line.
     }

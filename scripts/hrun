@@ -1,9 +1,0 @@
-#!/bin/sh
-# if no executable is provided, do an ls to find it (fails when there are more than one)
-if [ $# -eq 0 ]; then
-  name=`ls dist/build | sed '/autogen/d'`
-else
-  name=$1
-fi
-echo executing dist/build/$name/$name
-dist/build/$name/$name

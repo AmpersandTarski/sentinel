@@ -2,7 +2,8 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-$sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
+$refreshInterval = 5;
+$sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 $sentinelIsRunning = !preg_match("/######## Sentinel exited/", $sentinelOutput);
 
 ?>
@@ -19,7 +20,7 @@ var refreshTimer;
 
 $(document).ready(function(){
   if (sentinelIsRunning)
-    refreshPageIn(10000);
+    refreshPageIn(<?php echo $refreshInterval ?> * 1000);
 });
 
 function refreshPageIn (ms) {
@@ -27,6 +28,7 @@ function refreshPageIn (ms) {
     clearTimeout(refreshTimer);
 
   refreshTimer = setTimeout( function () { window.location.reload()}, ms);
+  console.log('reload');
   // extra function() is necessary to make reload lazy
 }
 
@@ -36,27 +38,62 @@ function compileSentinel() {
 }
 
 function runSentinel(deleteSandbox) {
-  $.ajax({ url: deleteSandbox ? 'RunSentinelDeleteSandbox.php' : 'RunSentinel.php',
+  $.ajax({ url: 'RunSentinel.php',
+           data: {args: '-a ' + $('#branch-selector-'+'ampersand').val() +
+                       ' -m ' + $('#branch-selector-'+'ampersand-models').val() +
+                        (deleteSandbox ? ' --deleteSandbox' : '')},
            cache: false,
-           success: function(data){ refreshPageIn(250);
+           success: function(data){ refreshPageIn(250); }
            // delay reload with 250ms to ensure sentinel process has started
-         }
   });
+}
+
+function fetchAllRepos() {
+  $.ajax({ url: 'FetchAllRepos.php',
+    cache: false,
+    success: function(data){ 
+      if (data) 
+        alert(data);
+      else {
+        alert('Branch selectors have been updated by fetching all repos.');
+        refreshPageIn(0);
+      }
+    }
+});
 }
   </script>
   
   </head>
 <body>
-  
+  <?php 
+  mkBranchSelector('ampersand');
+  mkBranchSelector('ampersand-models');
+  ?>
+  <button onclick="fetchAllRepos()">Refresh branches (fetch, shows dialog on completion)</button>
   <p>
   <button onclick="compileSentinel()">Update & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
-  <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> (<a href="/ampersand/">view generated prototypes</a>)
+  <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> <a href="/logs/runSentinel.log.txt">View output/errors of runSentinel script</a>, <a href="/ampersand/">View generated prototypes</a>
   <p>
   <a href="logs/?C=M;O=D">View Sentinel logs</a>
+  <a style="float: right; margin-right: 3em" href="windowsExecutables/beta">Executables for Windows (not necessarily recent)</a>
 <hr/>
 <?php
+
+function mkBranchSelector($repo) {
+  exec("cd ../../$repo; git for-each-ref --format='%(refname:short)' refs/remotes/origin", $branches);
+
+  echo $repo.': <select id="branch-selector-'.$repo.'">';
+  foreach ($branches as $branchStr) {
+    $branch= substr($branchStr, 7); # remove leading "origin/"
+    if ($branch!='HEAD') {
+      echo '<option'. ($branch=='master' ? ' selected' : '') .'>'.$branch.'</option>';
+    }
+  }
+  echo "</select>&nbsp;&nbsp;\n";
+}
+
 function isNoComment($author)
 {
   return !preg_match("/^--/", $author);
@@ -68,9 +105,9 @@ echo "Authors that will be notified on nightly tests: ".implode(", ", $authors);
 
 echo '<hr/></br><div style="font-size: 120%">';
 
-$sentinelOutput = implode("<br/>\n", file('ampersand/SentinelOutput.txt'));
+$sentinelOutput = implode("<br/>\n", file('logs/SentinelOutput.txt'));
 if ($sentinelIsRunning)
-  echo '<span style="color: darkblue">Tests are still running (this page is refreshed every 5 seconds to show the results).</span>';
+  echo "<span style=\"color: darkblue\">Tests are still running (this page is refreshed every $refreshInterval seconds to show the results).</span>";
 else {
   echo 'Results of the last test run: ';
   $matches = array();
