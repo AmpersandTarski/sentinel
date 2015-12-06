@@ -126,40 +126,4 @@
      }
 
 
--- NVWA DTV Prototype (In normal location, for daily checking. This is not a secure directory, but it can only be found if actively looked for.)
-
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ 
-         ]
-     }
-
----- Compile NVWA DTV model to secure directory (which can be shared with others) ----
-
--- Latex: https://sentinel.tarski.nl/ampersand/NVWA/FSpec/DTV.pdf
-,  TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=latex", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs =
-         [ "ampersand-models/NVWA DTV/DTV.adl"
-         ]
-     }
-     
--- RTF: https://sentinel.tarski.nl/ampersand/NVWA/FSpec/DTV.rtf
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["--fspec=rtf", "--outputDir=/home/sentinel/git/sentinel/www/ampersand/NVWA/FSpec"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs =
-         [ "ampersand-models/NVWA DTV/DTV.adl"
-         ]
-     }
-
-
--- Uitgecommentaard, omdat ik een stabiele versie nodig heb...  (SJ, 16 dec 2014) 
--- Prototype: https://sentinel.tarski.nl/ampersand/NVWA
---, TestSpec 
---     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5", "--proto=/home/sentinel/git/sentinel/www/ampersand/NVWA"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
---     , getTestFileSpecs = 
---         [ "ampersand-models/NVWA DTV/DTV.adl"
---         ]
---     }
 ]
