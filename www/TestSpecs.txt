@@ -7,15 +7,11 @@
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/Simple"
---       , "ampersand/AmpersandData/RepoRap/RAP.adl"
          , "ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
          , "ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
          , "ampersand-models/Mandatering/ToevoegenMandaat.adl"
          , "ampersand-models/Misc"
-         , "ampersand-models/INDOORS/INDOORS.adl"
-         , "ampersand-models/INDOORS/overzichten/uitgangsscripts/VIROarch.adl"
          , "ampersand-models/VOGDemo/DEMO_VOG.adl"
---       , "ampersand-models/Bugs/Fixed"
          ]
      }
 , TestSpec 
@@ -24,7 +20,6 @@
          [ "ampersand-models/Simple"
          , "ampersand-models/Misc"
          , "ampersand-models/Tests/ShouldSucceed"
-         , "ampersand-models/INDOORS/INDOORS.adl"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
@@ -34,7 +29,6 @@
          [ "ampersand-models/Simple"
          , "ampersand-models/Misc"
          , "ampersand-models/Tests/ShouldSucceed"
-         , "ampersand-models/INDOORS/INDOORS.adl"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
@@ -44,30 +38,16 @@
      { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/Tests/ShouldSucceed"
-         , "ampersand-models/INDOORS/INDOORS.adl"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
 
 -- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/Simple"
          , "ampersand-models/Misc"
-         , "ampersand-models/INDOORS/DemoBeslissingen.adl"
-         , "ampersand-models/INDOORS/DemoLamicie301.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode105.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode106.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode303.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode701.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode702.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode703.adl"
-         , "ampersand-models/INDOORS/DemoLamicieCode708.adl"
-         , "ampersand-models/INDOORS/DemoRaadRechtsbijstand.adl"
-         , "ampersand-models/INDOORS/DemoRegisters.adl"
-         , "ampersand-models/INDOORS/DemoStrafblad.adl"
-         , "ampersand-models/INDOORS/DemoZittinggegevens.adl"
          , "ampersand-models/VOGDemo/DEMO_VOG_Dummy.adl"
 --         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
 -- By testing this dummy, we still get a sentinel failure, but without the 4 minute delay that VOG_Demo prototype generation causes 
@@ -110,22 +90,14 @@
          [ "ampersand-models/Bugs/Current/SQLFail"
          ]
      }
----- Formal Ampersand and Generics (Meta-ampersand stuff) ----
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = ["--ast-file"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand-models/INDOORS/INDOORS.adl"
-         ]
-     }
 
----- New frontend ----
+---- Zwolle frontend ----
 
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/ZwolleFrontEnd/WebWijzer/WebWijzer.adl"
          , "ampersand-models/ZwolleFrontEnd/GenerationTest/InterfaceShowcase.adl"
---         , "ampersand-models/ZwolleFrontEnd/FancyViews/FancyViews.adl"
          ]
      }
 
@@ -159,7 +131,7 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/NVWA DTV/DTV.adl"
+         [ 
          ]
      }
 
