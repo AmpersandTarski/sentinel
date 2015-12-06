@@ -3,22 +3,28 @@
 # explicitly request legacy non-sudo based build environment
 sudo: required
 
-# The following enables several GHC versions to be tested; often it's enough to test only against the last release in a major GHC version. Feel free to omit lines listings versions you don't need/want testing for.
-env:
- - CABALVER=1.18 GHCVER=7.8.1  # see note about Alex/Happy for GHC >= 7.8
- - CABALVER=1.18 GHCVER=7.8.2
- - CABALVER=1.18 GHCVER=7.8.3
- - CABALVER=1.18 GHCVER=7.8.4
- - CABALVER=1.22 GHCVER=7.10.1
- - CABALVER=1.22 GHCVER=7.10.2
- - CABALVER=1.22 GHCVER=7.10.3
- - CABALVER=head GHCVER=head   # see section about GHC HEAD snapshots
+cache:
+  directories:
+    - .cabal-sandbox
 
-allow_failures:
-    - env: CABALVER=1.22 GHCVER=7.10.1
-    - env: CABALVER=1.22 GHCVER=7.10.2
-    - env: CABALVER=1.22 GHCVER=7.10.3
-    - env: CABALVER=head GHCVER=head
+
+# The following enables several GHC versions to be tested; often it's enough to test only against the last release in a major GHC version. Feel free to omit lines listings versions you don't need/want testing for.
+matrix:
+ env:
+  - CABALVER=1.18 GHCVER=7.8.1  # see note about Alex/Happy for GHC >= 7.8
+  - CABALVER=1.18 GHCVER=7.8.2
+  - CABALVER=1.18 GHCVER=7.8.3
+  - CABALVER=1.18 GHCVER=7.8.4
+  - CABALVER=1.22 GHCVER=7.10.1
+  - CABALVER=1.22 GHCVER=7.10.2
+  - CABALVER=1.22 GHCVER=7.10.3
+  - CABALVER=head GHCVER=head   # see section about GHC HEAD snapshots
+
+ allow_failures:
+  - env: CABALVER=1.22 GHCVER=7.10.1
+  - env: CABALVER=1.22 GHCVER=7.10.2
+  - env: CABALVER=1.22 GHCVER=7.10.3
+  - env: CABALVER=head GHCVER=head
 
 # Note: the distinction between `before_install` and `install` is not important.
 before_install:
