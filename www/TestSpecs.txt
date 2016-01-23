@@ -96,7 +96,7 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/ZwolleFrontEnd/WebWijzer/WebWijzer.adl"
+         [ "ampersand-models/ZwolleFrontEnd/GenerationTest/GenTest.adl"
          , "ampersand-models/ZwolleFrontEnd/GenerationTest/InterfaceShowcase.adl"
          ]
      }
