@@ -6,29 +6,23 @@
 [ TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Simple"
-         , "ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
+         [ "ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
          , "ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
          , "ampersand-models/Mandatering/ToevoegenMandaat.adl"
-         , "ampersand-models/Misc"
          , "ampersand-models/VOGDemo/DEMO_VOG.adl"
          ]
      }
 , TestSpec 
      { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Simple"
-         , "ampersand-models/Misc"
-         , "ampersand-models/Tests/ShouldSucceed"
+         [ "ampersand-models/Tests/ShouldSucceed"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Simple"
-         , "ampersand-models/Misc"
-         , "ampersand-models/Tests/ShouldSucceed"
+         [ "ampersand-models/Tests/ShouldSucceed"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
@@ -46,9 +40,7 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Simple"
-         , "ampersand-models/Misc"
-         , "ampersand-models/VOGDemo/DEMO_VOG_Dummy.adl"
+         [ "ampersand-models/VOGDemo/DEMO_VOG_Dummy.adl"
 --         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
 -- By testing this dummy, we still get a sentinel failure, but without the 4 minute delay that VOG_Demo prototype generation causes 
 -- (due to a normalizer bug, see https://sourceforge.net/p/ampersand/tickets/451)
