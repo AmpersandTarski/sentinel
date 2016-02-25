@@ -15,14 +15,14 @@
 , TestSpec 
      { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Tests/ShouldSucceed"
+         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Tests/ShouldSucceed"
+         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
@@ -31,7 +31,7 @@
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/Tests/ShouldSucceed"
+         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
@@ -51,13 +51,13 @@
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs =
-         [ "ampersand-models/Tests/ShouldSucceed"
+         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
          ]
      }
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
-         [ "ampersand-models/Tests/ShouldFail"
+         [ "ampersand/testing/Sentinel/Tests/ShouldFail"
          ]
      }
 
