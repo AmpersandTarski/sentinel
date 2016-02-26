@@ -73,7 +73,7 @@
      , getTestFileSpecs = 
          [ "ampersand-models/Bugs/Current/SQL"
          , "ampersand-models/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
-         , "ampersand-models/Tests/NoSentinel/Issue191Test.adl"
+         , "ampersand/testing/Sentinel/Tests/NoSentinel/Issue191Test.adl"
          ]
      }
 , TestSpec 
