@@ -9,41 +9,22 @@
          [ "ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
          , "ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
          , "ampersand-models/Mandatering/ToevoegenMandaat.adl"
-         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
          ]
      }
 , TestSpec 
-     { getTestExecutable = Ampersand, getTestArgs = ["--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
-         , "ampersand-models/Bugs/Fixed"
-         ]
-     }
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = ["--validate", "--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
          , "ampersand-models/Bugs/Fixed"
          ]
      }
 
--- prototype type-check tests (leaving out --validate automatically builds prototype, --dev means violations are allowed)
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--dev"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
-         , "ampersand-models/Bugs/Fixed"
-         ]
-     }
 
 -- prototype build tests for showcasing in http://sentinel.oblomov.com/www/ampersand/
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
-         [ "ampersand-models/VOGDemo/DEMO_VOG_Dummy.adl"
-         , "ampersand-models/VOGDemo/DEMO_VOG.adl"
--- By testing this dummy, we still get a sentinel failure, but without the 4 minute delay that VOG_Demo prototype generation causes 
--- (due to a normalizer bug, see https://sourceforge.net/p/ampersand/tickets/451)
+         [ "ampersand-models/VOGDemo/DEMO_VOG.adl"
          ]
      }
 
