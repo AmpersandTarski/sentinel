@@ -8,14 +8,12 @@
      , getTestFileSpecs = 
          [ "ampersand/AmpersandData/FormalAmpersand/FormalAmpersand.adl"
          , "ampersand/AmpersandData/FormalAmpersand/ADLTool.adl"
-         , "ampersand-models/Mandatering/ToevoegenMandaat.adl"
          ]
      }
 , TestSpec 
      { getTestExecutable = Prototype, getTestArgs = ["--validate", "--haskell"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
-         , "ampersand-models/Bugs/Fixed"
          ]
      }
 
@@ -28,39 +26,10 @@
          ]
      }
 
--- explicit tests (for Ampersand parser and typechecker only)
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs =
-         [ "ampersand/testing/Sentinel/Tests/ShouldSucceed"
-         ]
-     }
 , TestSpec
      { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
      , getTestFileSpecs =
          [ "ampersand/testing/Sentinel/Tests/ShouldFail"
-         ]
-     }
-
--- known bugs: consider putting “ShouldFail” for known bugs, such that we’ll be notified when they get fixed.
-, TestSpec
-     { getTestExecutable = Ampersand, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs =
-         [ "ampersand-models/Bugs/Current/Other"
-         ]
-     }
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand-models/Bugs/Current/SQL"
-         , "ampersand-models/Bugs/Current MultiFile/Bug388_Retina/RETINABUG.adl"
-         , "ampersand/testing/Sentinel/Tests/NoSentinel/Issue191Test.adl"
-         ]
-     }
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validate"], getPanicExitCodes = [1], getDesiredOutcome = ShouldFail
-     , getTestFileSpecs = 
-         [ "ampersand-models/Bugs/Current/SQLFail"
          ]
      }
 
@@ -70,30 +39,6 @@
      { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/ZwolleFrontEnd/GenerationTest/InterfaceShowcase.adl"
-         ]
-     }
-
----- Edit validation ----
-
--- First build the prototype:
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand-models/ISAtest/Limorange.adl"
-         ]
-     }
-
--- Then run some validation tests:
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validateEdit=Limorange-EditValidation/AddOwnedCitrus"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand-models/ISAtest/Limorange.adl"
-         ]
-     }
-, TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--validateEdit=Limorange-EditValidation/AddOwnedLimorange"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
-     , getTestFileSpecs = 
-         [ "ampersand-models/ISAtest/Limorange.adl"
          ]
      }
 
