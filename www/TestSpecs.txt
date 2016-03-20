@@ -77,7 +77,7 @@
 
 -- First build the prototype:
 , TestSpec 
-     { getTestExecutable = Prototype, getTestArgs = ["--refresh=5"], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
+     { getTestExecutable = Prototype, getTestArgs = [], getPanicExitCodes = [1], getDesiredOutcome = ShouldSucceed
      , getTestFileSpecs = 
          [ "ampersand-models/ISAtest/Limorange.adl"
          ]
