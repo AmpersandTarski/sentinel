@@ -77,7 +77,7 @@ function fetchAllRepos() {
   <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> <a href="/logs/runSentinel.log.txt">View output/errors of runSentinel script</a>, <a href="/ampersand/">View generated prototypes</a>
   <p>
   <a href="logs/?C=M;O=D">View Sentinel logs</a>
-  <a style="float: right; margin-right: 3em" href="https://github.com/AmpersandTarski/webFiles/blob/master/executables/windows/ampersand.zip?raw=true">Download binary executable for Windows</a>
+  <a style="float: right; margin-right: 3em" href="https://github.com/AmpersandTarski/Ampersand/releases">Checkout our latest released software.</a>
 <hr/>
 <?php
 
