@@ -88,7 +88,7 @@ function mkBranchSelector($repo) {
   foreach ($branches as $branchStr) {
     $branch= substr($branchStr, 7); # remove leading "origin/"
     if ($branch!='HEAD') {
-      echo '<option'. ($branch=='master' ? ' selected' : '') .'>'.$branch.'</option>';
+      echo '<option'. ($branch=='development' ? ' selected' : '') .'>'.$branch.'</option>';
     }
   }
   echo "</select>&nbsp;&nbsp;\n";
