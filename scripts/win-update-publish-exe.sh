@@ -9,8 +9,8 @@ git reset origin/master --hard
 # cabal clean gives an error, so use rm
 rm -rf dist
 
-echo Cabal installing ampersand
-cabal install
+echo Stack installing ampersand
+stack install
 
 ~/git/sentinel/scripts/win-publish-exe.sh ampersand
 echo

@@ -14,5 +14,6 @@ killall --quiet sentinel
 killall --quiet cabal
 killall --quiet ghc
 killall --quiet ampersand
+killall --quiet stack
 
 /home/sentinel/git/sentinel/scripts/runSentinel $* > /home/sentinel/git/sentinel/www/logs/runSentinel.log.txt 2>&1

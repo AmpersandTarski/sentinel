@@ -44,7 +44,7 @@ do
 done
 
 # default branches if no -a -p or -n arguments are present
-ampersandBranch=master
+ampersandBranch=development
 modelsBranch=master
 
 # set branches accorging to -a -p and -n arguments
@@ -139,10 +139,9 @@ cabal update
 cabal sandbox init
 
 if [ $deleteSandbox -ne 0 ]; then
-echo $'Deleting ampersand sandbox and reinstalling all dependencies. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
-cabal sandbox delete
-cabal sandbox init
-cabal install --only-dependencies
+echo $'Clean install of ampersand. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
+stack clean
+stack install
 fi
 
 # execute Sentinel with -- arguments passed to this script ($dashdashArgs)

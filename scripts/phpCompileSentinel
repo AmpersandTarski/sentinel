@@ -32,10 +32,7 @@ git reset origin --hard
 
 echo "Cleaning Sentinel and installing sandbox (if not already installed)"
 
-cabal clean 
-rm -rf .cabal-sandbox
-cabal sandbox init
+stack clean 
+stack install
 
-echo Running cabal update and cabal install on sentinel
-cabal update
-cabal install --bindir=/home/sentinel/.cabal/bin/
+echo Running stack install on sentinel
