@@ -40,7 +40,6 @@ function compileSentinel() {
 function runSentinel(deleteSandbox) {
   $.ajax({ url: 'RunSentinel.php',
            data: {args: '-a ' + $('#branch-selector-'+'ampersand').val() +
-                       ' -m ' + $('#branch-selector-'+'ampersand-models').val() +
                         (deleteSandbox ? ' --deleteSandbox' : '')},
            cache: false,
            success: function(data){ refreshPageIn(250); }
@@ -67,11 +66,10 @@ function fetchAllRepos() {
 <body>
   <?php 
   mkBranchSelector('ampersand');
-  mkBranchSelector('ampersand-models');
   ?>
   <button onclick="fetchAllRepos()">Refresh branches (fetch, shows dialog on completion)</button>
   <p>
-  <button onclick="compileSentinel()">Update & recompile Sentinel</button>
+  <button onclick="compileSentinel()">Upgrade Stack & recompile Sentinel</button>
   (Only necessary if the Sentinel source has been modified. Note that no output will be shown until compilation has finished.)
   <p>
   <button onclick="runSentinel(true)">Run Sentinel, clean install (slow)</button> <button onclick="runSentinel(false)">Run Sentinel normal</button> <a href="/logs/runSentinel.log.txt">View output/errors of runSentinel script</a>, <a href="/ampersand/">View generated prototypes</a>
