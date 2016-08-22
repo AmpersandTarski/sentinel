@@ -7,6 +7,12 @@ echo Please specify an executable.
 exit 1
 fi
 
+echo Executables are released via travis. Please head to https://github.com/AmpersandTarski/Ampersand/releases/latest
+exit 1
+
+
+
+
 echo "Uploading $1.exe and its version info (in $1-version.txt from)"
 echo cabal bin to sentinel.tarski.nl/windowsExecutables/beta
 echo

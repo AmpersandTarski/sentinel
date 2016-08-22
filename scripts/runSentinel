@@ -133,10 +133,8 @@ rm -rf /home/sentinel/git/ampersand/dist
 # Init sandboxes (and delete ampersand sandbox, if necessary)
 
 cd /home/sentinel/git/ampersand
-echo $'Performing cabal update\n' >> $sentinelOut
-cabal update
-# init is neutral if sandbox already exists
-cabal sandbox init
+echo $'Performing stack upgrade\n' >> $sentinelOut
+stack upgrade
 
 if [ $deleteSandbox -ne 0 ]; then
 echo $'Clean install of ampersand. This may take a while. (check progress on <a href=\"http://sentinel.tarski.nl/logs/runSentinel.log.txt\">runSentinel.log.txt</a>)\n' >> $sentinelOut
@@ -145,7 +143,7 @@ stack install
 fi
 
 # execute Sentinel with -- arguments passed to this script ($dashdashArgs)
-/home/sentinel/.cabal/bin/sentinel --html $dashdashArgs < /dev/null >> $sentinelOut 2>&1
+/home/sentinel/.local/bin/sentinel --html $dashdashArgs < /dev/null >> $sentinelOut 2>&1
 
 # Rather hacky way to extract some numbers from the test results (shows empty strings when tests did not finish properly)
 # take the 5th field using space as separator

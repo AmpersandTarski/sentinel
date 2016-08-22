@@ -21,8 +21,8 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-# add scripts and cabal bin for ghc
-PATH="$HOME/git/sentinel/scripts:$HOME/.cabal/bin/:$PATH"
+# add scripts 
+PATH="$HOME/git/sentinel/scripts:$HOME/.local/bin:$PATH"
 
 alias plat="pdflatex -halt-on-error"
 
