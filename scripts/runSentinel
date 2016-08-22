@@ -9,7 +9,7 @@ echo Running runSentinel \(extra arguments are \'$*\'\)
 
 HOME="/home/sentinel"
 LANG=en_US.UTF-8
-PATH=/home/sentinel/git/sentinel/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/sentinel/.cabal/bin/
+PATH=/home/sentinel/git/sentinel/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/sentinel/.local/bin/
 
 export HOME
 export LANG
