@@ -1,4 +1,10 @@
-module Utils where
+module Utils 
+  ( mkExecutionTest,isTestServer,getGitDir
+  , bracketHtml,readMaybe
+  , reportTestResult
+  , getProperDirectoryContents
+  , getAuthors, notifyByMail)
+where
 
 import Data.List
 import System.Directory hiding (executable)
@@ -11,14 +17,6 @@ import Types
 import Defaults
 import Data.Maybe
 
-failOnError :: String -> IO ExecutionOutcome -> IO ()
-failOnError errMsg test =
- do { result <- test
-    ; case result of
-        ExecSuccess _  -> return ()
-        ExecFailure _ err -> error $ errMsg ++ err -- exit code is already included in errMsg
-    }
- 
 mkExecutionTest :: String -> IO ExecutionOutcome -> IO TestResult 
 mkExecutionTest testDescr exec =
  do { execOutcome <- exec
@@ -54,7 +52,7 @@ getGitDir :: IO FilePath
 getGitDir =
  do { homeDir <- getHomeDirectory
     ; isTestSrv <- isTestServer  
-    ; return $ combine homeDir $ gitPath isTestSrv 
+    ; return $ homeDir </> gitPath isTestSrv 
     }
 
 getProperDirectoryContents :: FilePath -> IO [String]
@@ -67,7 +65,7 @@ readMaybe str = case reads str of
 getAuthors :: IO [String]
 getAuthors =
  do { gitDir <- getGitDir
-    ; let authorsFilePath = combine gitDir authorsFile
+    ; let authorsFilePath = gitDir </> authorsFile
     ; authors <- readFile authorsFilePath
     ; return $ filter (not . null) . filter (not . ("--" `isPrefixOf`)) . lines $ authors
     }

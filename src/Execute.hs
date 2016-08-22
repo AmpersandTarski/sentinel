@@ -1,4 +1,8 @@
-module Execute where
+module Execute 
+   (testInstall,logExecutableVersion
+   , execute,timeoutExitCode
+   )
+   where
 
 import System.Process
 import System.Timeout
@@ -19,42 +23,16 @@ timeoutExitCode = -1 -- -1 is not used by unix processes
 
 
 
-testBuild :: String -> [String] -> String -> IO TestResult
-testBuild project flags targetDescr = mkExecutionTest testDescr $
- do { putStrLn testDescr
-    ; cabalConfigure project flags 
-    ; executeCabal "build" project []
-    }
- where testDescr = "Building "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
-
--- doing install without also building is not possible with cabal. UPDATE: maybe no longer true with recent cabal versions
+-- doing install without also building is not possible with stack.
 testInstall :: String -> [String] -> String -> IO TestResult
 testInstall project flags targetDescr = mkExecutionTest testDescr $
  do { putStrLn testDescr
-    ; executeCabal "install" project flags -- pass flags directly to install (cabal install ignores cabal configure)
+    ; executeStack "install" project flags -- pass flags directly to install
     }
  where testDescr = "Building and installing "++targetDescr++". (project: "++project++", flags: ["++intercalate ", " flags++"]) {should succeed}"
 
-cabalUpdate :: IO ()
-cabalUpdate = failOnError "error during cabal update" $
-  executeCabal "update" "." [] -- just pass . as project dir
-   
-cabalClean :: String -> [String] -> IO ()
-cabalClean project flags = cabalCmd "clean" project flags
+--data StackCmd = Clean | Build | Install
   
-cabalConfigure :: String -> [String] -> IO ()
-cabalConfigure project flags = cabalCmd "configure" project flags
-
-cabalCopy :: String -> [String] -> IO ()
-cabalCopy project flags = cabalCmd "copy" project flags
-
-cabalRegister :: String -> [String] -> IO ()
-cabalRegister project flags = cabalCmd "register" project flags
-
-cabalCmd :: String -> String -> [String] -> IO ()
-cabalCmd cmd project flags = failOnError ("error during \'cabal "++cmd++"\' for "++project++": ") $
-  executeCabal cmd project flags
-
 logExecutableVersion :: IO ()
 logExecutableVersion =
  do { isTestSrv <- isTestServer
@@ -65,10 +43,10 @@ logExecutableVersion =
         ExecFailure _ err       -> putStrLn $ "Error while obtaining version for " ++ executable ++ ":\n" ++ err
     }                              -- This is not one of the tests, so we simply print the error
     
-executeCabal :: String -> String -> [String] -> IO ExecutionOutcome
-executeCabal cmd project flags =
+executeStack :: String -> String -> [String] -> IO ExecutionOutcome
+executeStack cmd project flags =
  do { gitDir <- getGitDir
-    ; execute "cabal" (cmd : flags ) $ combine gitDir project
+    ; execute "stack" (cmd : flags ) $ combine gitDir project
     }
 
 execute :: String -> [String] -> String -> IO ExecutionOutcome

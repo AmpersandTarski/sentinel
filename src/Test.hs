@@ -1,5 +1,6 @@
-module Test where
-
+module Test
+   (parseTestSpecs,createTests
+   )where
 import Data.Char
 import Data.List
 import System.Directory hiding (executable)

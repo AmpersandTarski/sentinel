@@ -1,5 +1,10 @@
-module Types where
-
+module Types
+   ( TestOutcome(..)
+   , Options(..), TestResult(..), ExecutionOutcome(..), TestSpec(..)
+   , showDesiredOutcome, DesiredOutcome(..)
+   , showTestResult, TestExecutable(..)
+   , getTestSpecsForExecutable, isTestSuccessful
+   ) where
 import Control.Applicative
 import Prelude -- to silence redundant Control.Applicative import for GHC >= 7.10
 import Options hiding (Options)

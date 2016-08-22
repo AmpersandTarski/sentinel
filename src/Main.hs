@@ -8,10 +8,9 @@ import Options (runCommand)
 import Data.List
 import Data.Time
 import Types
-import Utils
-import Test
-import Execute
-import Defaults
+import Utils(isTestServer,getAuthors,notifyByMail,reportTestResult,bracketHtml)
+import Test (parseTestSpecs,createTests)
+import Execute (testInstall,logExecutableVersion)
 
 {-
 todo:
@@ -75,17 +74,11 @@ performTests :: Options -> IO (Int, Int, Maybe String)
 performTests opts =
  do { testSpecs <- parseTestSpecs opts
  
-    ; isTestSrv <- isTestServer
     ; buildTestResults <-
-        if isTestSrv -- allow different behavior on dedicated server and elsewhere for quick testing
-        then
-         do { res <- reportTestResult opts $ testInstall "ampersand" ["--bindir="++binDir isTestSrv] "the Ampersand compiler"
-            
+         do { res <- reportTestResult opts $ testInstall "ampersand" [] "the Ampersand compiler"
             ; return [res] 
             }
-        else
-          return []
-
+        
     -- sort test based on fSpec/prototype generation.
     ; execTests <- fmap concat $ mapM (createTests opts) $ 
                       getTestSpecsForExecutable testSpecs Ampersand ++
