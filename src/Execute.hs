@@ -15,9 +15,6 @@ import Utils
 import Defaults
 import Types
 
-maxTimeInSeconds :: Int
-maxTimeInSeconds = 4 * 60 -- Timeout is only 2 minutes as ampersand is fast enough nowadays. We can increase it when we get unexpected timeouts 
-
 timeoutExitCode :: Int
 timeoutExitCode = -1 -- -1 is not used by unix processes
 
@@ -37,7 +34,8 @@ logExecutableVersion :: IO ()
 logExecutableVersion =
  do { isTestSrv <- isTestServer
     ; let executable = binDir isTestSrv ++ "/ampersand"
-    ; result <- execute executable ["--version"] "."
+          maxTimeInSeconds = 60
+    ; result <- execute maxTimeInSeconds executable ["--version"] "."
     ; case result of
         ExecSuccess versionInfo -> putStrLn versionInfo
         ExecFailure _ err       -> putStrLn $ "Error while obtaining version for " ++ executable ++ ":\n" ++ err
@@ -46,11 +44,12 @@ logExecutableVersion =
 executeStack :: String -> String -> [String] -> IO ExecutionOutcome
 executeStack cmd project flags =
  do { gitDir <- getGitDir
-    ; execute "stack" (cmd : flags ) $ combine gitDir project
+    ; execute maxTimeInSeconds "stack" (cmd : flags ) $ combine gitDir project
     }
+  where maxTimeInSeconds = 60 * 90 -- (90 minutes should be sufficient to build all packages and ampersand itself.)
 
-execute :: String -> [String] -> String -> IO ExecutionOutcome
-execute cmd args dir =
+execute :: Int -> String -> [String] -> String -> IO ExecutionOutcome
+execute maxTimeInSeconds cmd args dir =
  do { result <- timeout (maxTimeInSeconds*1000000) $ executeIO cmd args dir
     ; case result  of
         Just executionOutcome -> return executionOutcome

@@ -58,7 +58,8 @@ runTest opts testSpec@(TestSpec exec args panicExitCodes desOutcome _) testFile 
     ; let absOutputDir = joinPath $ [gitDir, outputDir, dropExtension (takeFileName testFile)] ++
                                     ["fSpec" | exec == Ampersand] 
           absOutputDirArg = (if exec == Ampersand then "--outputDir=" else "--proto=") ++ absOutputDir
-    ; result <- execute executable (testFile : absOutputDirArg 
+          maxTimeInSeconds = 4 * 60
+    ; result <- execute maxTimeInSeconds executable (testFile : absOutputDirArg 
                                    : args ++ ["+RTS", "-M4G"]) $ takeDirectory testFile 
                                    -- We set the max heap size to 4 Gb.
     ; case result of
