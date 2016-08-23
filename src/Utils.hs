@@ -33,8 +33,8 @@ reportTestResult opts test =
     ; case getResultOutcome testResult of
         TestSuccess _ -> putStrLn $ bracketHtml opts "<div style='color: green'>" "</div>"
                                       "Test passed"
-        TestFailure outp -> putStrLn $ bracketHtml opts "<div style='color: red'>" "</div>" "Test did not pass:\n" ++ 
-                                       bracketHtml opts "<div style='font-family:courier; font-size:85%'>" "</div>" outp
+        TestFailure _ -> putStrLn $ bracketHtml opts "<div style='color: red'>" "</div>" "Test did not pass." 
+                                       -- ++ bracketHtml opts "<div style='font-family:courier; font-size:85%'>" "</div>" outp
                             -- todo: only show output for tests that should succeed
     ; return testResult -- return the result, so we can easily add this function to a computation
     } 
