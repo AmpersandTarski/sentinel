@@ -58,15 +58,20 @@ execute maxTimeInSeconds cmd args dir =
 executeIO :: String -> [String] -> String -> IO ExecutionOutcome
 executeIO cmd args dir =
  do { let cp = CreateProcess
-                { cmdspec       = RawCommand cmd args
-                , cwd           = Just dir
-                , env           = Nothing -- environment
-                , std_in        = Inherit 
-                , std_out       = CreatePipe
-                , std_err       = CreatePipe
-                , close_fds     = False -- no need to close all other file descriptors
-                , create_group  = False
-                , delegate_ctlc = False -- don't let child process handle ctrl-c
+                { cmdspec = RawCommand cmd args
+                , cwd = Just dir
+                , env = Nothing
+                , std_in = Inherit
+                , std_out = Inherit
+                , std_err = Inherit
+                , close_fds = False
+                , create_group = False
+                , delegate_ctlc = True
+                , detach_console = False
+                , create_new_console = False
+                , new_session = False
+                , child_group = Nothing
+                , child_user = Nothing
                 }
                  
     ; putStrLn $ "Execute: "++cmd++" "++intercalate " " args ++ "   in "++dir      
